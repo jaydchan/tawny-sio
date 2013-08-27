@@ -1,4 +1,3 @@
-
 (defclass interacting
   :subclass
   process
@@ -20,7 +19,7 @@
   (annotation equivalentTo "biopax:Interaction")
   (annotation (iri "http://purl.org/dc/terms/description") "A chemical
   interaction is a biochemical process in which chemical entities
-  interact through some set of attractive forces." "en")
+  interact through some set of attractive forces." "en"))
 (defclass communicating
   :subclass interacting
   :annotation

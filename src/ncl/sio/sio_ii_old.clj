@@ -9298,9 +9298,12 @@
   is a rural or sub-urban settlement." "en"))
 (annotation-property (iri "http://www.w3.org/2000/01/rdf-schema#comment"))
 
+(clojure.core/load "functions")
+
 (clojure.core/load "atoms")
 (clojure.core/load "behaviour")
 (clojure.core/load "capabilities")
 (clojure.core/load "interacting")
 (clojure.core/load "movement")
 (clojure.core/load "roles")
+(clojure.core/load "quality")

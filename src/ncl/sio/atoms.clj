@@ -4,12 +4,12 @@
   (let [entity (clojure.string/replace name #" " "_")]
     (tawny.read/intern-entity
      (owlclass entity
-               :subclass atom
+               :subclass "atom"
                :annotation
                (label (literal name :lang "en"))))
     (if-not (nil? chebi)
       (add-annotation
-       (ensure-class entity)
+       (owlclass entity)
        (clojure.core/list
         (annotation seeAlso (literal chebi :type :RDF_PLAIN_LITERAL)))))))
 

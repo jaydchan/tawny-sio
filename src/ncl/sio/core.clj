@@ -17,10 +17,11 @@
 (ns ncl.sio.core
   (:use [tawny.owl])
   ;; (:require [ncl.sio sio mysio])
-  (:require [ncl.sio mysio])
+  ;; (:require [ncl.sio mysio])
   ;; (:require [ncl.sio sio])
 
   ;; (:require [ncl.sio mysio quality_generate])
+  (:require [ncl.sio mysio roles_generate])
   (:gen-class))
 
 ;; to run:

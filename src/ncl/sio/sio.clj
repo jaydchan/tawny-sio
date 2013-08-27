@@ -26,8 +26,8 @@
 ;; {true,false,symbol,label,annotation} start with '_' as these can
 ;; not be defined as unique symbols in Clojure
 (def specific-replaces {"true" "_true", "false" "_false",
-                        "symbol" "_symbol", "label" "_label"
-                        "annotation" "_annotation"})
+                        "symbol" "_symbol", "label" "_label",
+                        "annotation" "_annotation", "count" "_count"})
 
 ;; Reads in the sio ontology from the owl file
 (tawny.read/defread sio
