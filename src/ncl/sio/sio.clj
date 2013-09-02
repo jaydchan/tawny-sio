@@ -63,7 +63,7 @@
         (get specific-replaces t t)))))
 
 ;; Overwrites original file
-;; (spit "./src/ncl/sio/sio_ent.txt" "")
+(spit "./src/ncl/sio/sio_ent.txt" "")
 (spit "./src/ncl/sio/sio_ii.clj" "")
 
 ;; Predump everything so that it's all defined before use
@@ -91,7 +91,9 @@
 (let [ent (.getSignature sio)]
   ;; (println ent)
   (doseq [e ent]
-    ;; (spit "./src/ncl/sio/sio_ent.txt" (str e "\n") :append true)
+    (spit "./src/ncl/sio/sio_ent.txt"
+          (str (.toStringID e) "," (tawny.lookup/resolve-entity e) "\n")
+          :append true)
     (try
       (spit "./src/ncl/sio/sio_ii.clj"
             (str (tawny.render/as-form e) "\n")
