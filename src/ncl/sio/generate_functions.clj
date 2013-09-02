@@ -5,8 +5,8 @@
             [ncl.sio.mysio :as m]))
 
 (def specific-replaces {"true" "_true", "false" "_false",
-                        "symbol" "_symbol", "label" "_label"
-                        "annotation" "_annotation"})
+                        "symbol" "_symbol", "label" "_label",
+                        "annotation" "_annotation", "count" "_count"})
 
 (defn create-sio-class0
   "Creates a class with given parent, name and description"
@@ -95,10 +95,13 @@
 (defn get-description-value
   "Returns the description annotation"
   [annotations]
-  (let [description (.getLiteral (.getValue (get-description annotations)))]
+  (let [description (get-description annotations)]
     (if (nil? description)
       ""
-      (str " \"" (clojure.string/replace description #"\"" "'") "\""))))
+      (let [value (.getLiteral (.getValue description))]
+        (if (nil? value)
+          ""
+          (str " \"" (clojure.string/replace value #"\"" "'") "\""))))))
 
 (defn generate-sio-class0
   "Returns the string of the class0 definition for a given parent and
