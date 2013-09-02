@@ -7,8 +7,8 @@
 *behaviour.clj
 *capability.clj
 *chemical_substance.clj
-*compuational_entity.clj
-*covanlently_connected_entity.clj
+*computational_entity.clj
+*covalently_connected_entity.clj
 *description.clj
 *document.clj
 *document_component.clj
