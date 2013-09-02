@@ -29,7 +29,12 @@
    "identifier"
    "atom"])
 
+(spit "./src/ncl/sio/ent.clj" "")
+
 (gf/predump "./src/ncl/sio/ent.clj")
+
+(clojure.core/doseq [t (clojure.core/pop top-dogs)]
+  (spit (clojure.core/str "./src/ncl/sio/" t ".clj") ""))
 
 (clojure.core/doseq [t (clojure.core/pop top-dogs)]
   (gf/generate t (clojure.core/str "./src/ncl/sio/" t ".clj")))
@@ -38,6 +43,8 @@
 
 (clojure.core/doseq [t top-dogs]
   (clojure.core/load t))
+
+(spit "./src/ncl/sio/other.clj" "")
 
 (gf/generate_rest top-dogs "./src/ncl/sio/other.clj")
 
