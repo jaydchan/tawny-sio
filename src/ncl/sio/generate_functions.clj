@@ -125,10 +125,10 @@
 
 (defn output
   "Outputs STRING to OUTPUT-FILE unless there is an ERROR"
-  [output-file string error]
+  [output-file string append error]
    (try
      (spit output-file (shorten string)
-     :append true)
+     :append append)
    (catch
        Exception exp (println error exp))))
 
@@ -142,6 +142,7 @@
       (output
        output-file
        (str "(add-subclass " (r/form clazz) (apply str final) ")\n")
+       true
        (str "generate-add-subclasses" clazz " causes "))))
 
 (defn generate-add-annotations
@@ -156,6 +157,7 @@
     (output
      output-file
      (str "(add-annotation " (r/form clazz) " " final ")\n")
+     true
      (str "generate-add-annotations" clazz " causes "))))
 
 (defn generate-add-disjoint
@@ -166,6 +168,7 @@
       (output
        output-file
        (str "(add-disjoint " (r/form clazz) " " (r/form axiom) ")\n")
+       true
        (str "generate-add-disjoint" clazz " causes ")))))
 
 (defn generate-add-equivalent
@@ -176,6 +179,7 @@
       (output
        output-file
        (str "(add-equivalent " (r/form clazz) " " (r/form axiom) ")\n")
+       true
        (str "generate-add-equivalent" clazz " causes ")))))
 
 (defn generate-other-axioms
@@ -196,6 +200,7 @@
   (output
    output-file
    (str (generate-sio-class0 e parent) "\n")
+   true
    (str "generate-sio-class0" e " causes "))
   (generate-other-axioms e output-file parent))
 
@@ -205,11 +210,13 @@
   (output
    output-file
    (str (generate-partial parent) "\n")
+   true
    (str "generate-partial " parent " causes "))
   (doseq [e ents]
     (output
      output-file
      (str (generate-sio-class e) "\n")
+     true
      (str "generate-sio-class" e " causes "))
     (generate-other-axioms e output-file parent)))
 
@@ -231,7 +238,7 @@
   (println (str top-dog ".clj") "Started")
 
   ;; Overwrites original file
-  (spit output-file "")
+  (output output-file "" false "generate causes ")
 
   ;; Mini entity definitions for quality classes
   (generate-mini-defs top-dog output-file)
@@ -258,25 +265,26 @@
   (println "ent.clj Started")
 
   (doseq [e (.getSignature m/mysio)]
-    (spit output-file
-          (format
-           (clojure.core/cond
-            (instance? org.semanticweb.owlapi.model.OWLClass e)
-            "(defclass %s)\n"
-            (instance? org.semanticweb.owlapi.model.OWLObjectProperty e)
-            "(defoproperty %s)\n"
-            (instance? org.semanticweb.owlapi.model.OWLDataProperty e)
-            "(defdproperty %s)\n"
-            (instance? org.semanticweb.owlapi.model.OWLAnnotationProperty e)
-            "(defannotationproperty %s)\n"
-            (instance? org.semanticweb.owlapi.model.OWLDatatype e)
-            ""
-            :default
-            (throw (Exception. (str "Help!!!" e (clojure.core/type e)))))
-           (if-not (clojure.core/nil? (tawny.lookup/resolve-entity e))
-             (shorten (tawny.lookup/resolve-entity e))
-             (println "Error:" e "is type" (type e))))
-          :append true))
+    (output output-file
+            (format
+             (clojure.core/cond
+              (instance? org.semanticweb.owlapi.model.OWLClass e)
+              "(defclass %s)\n"
+              (instance? org.semanticweb.owlapi.model.OWLObjectProperty e)
+              "(defoproperty %s)\n"
+              (instance? org.semanticweb.owlapi.model.OWLDataProperty e)
+              "(defdproperty %s)\n"
+              (instance? org.semanticweb.owlapi.model.OWLAnnotationProperty e)
+              "(defannotationproperty %s)\n"
+              (instance? org.semanticweb.owlapi.model.OWLDatatype e)
+              ""
+              :default
+              (throw (Exception. (str "Help!!!" e (clojure.core/type e)))))
+             (if-not (clojure.core/nil? (tawny.lookup/resolve-entity e))
+               (shorten (tawny.lookup/resolve-entity e))
+               (println "Error:" e "is type" (type e))))
+            true
+            "predump causes "))
 
   ;; END
   (println "ent.clj Complete"))
@@ -309,7 +317,10 @@
                     (owlclass m/mysio s)))
                 inter (clojure.set/intersection t1 t2)]
             (if-not (empty? inter)
-              (println "   " s (count t2) "\n   " inter ))))))
+              (println "   " s (count t2) "\n   " inter ))))
+        (let [inter (clojure.set/intersection t1 todo)]
+            (if-not (empty? inter)
+              (println "   other" (count todo) "\n   " inter )))))
 
     ;; START
     (println "other.clj Started")

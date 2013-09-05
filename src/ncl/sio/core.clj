@@ -20,9 +20,8 @@
   ;; (:require [ncl.sio mysio])
   ;; (:require [ncl.sio sio])
 
-  ;; (:require [ncl.sio mysio quality_generate])
-  ;; (:require [ncl.sio mysio roles_generate])
   (:require [ncl.sio mysio generate_functions generate_mysio])
+  ;; (:require [ncl.sio mysio generate_functions print_des])
   (:gen-class))
 
 ;; to run:
@@ -39,7 +38,7 @@
   ;;   (save-ontology "mysio.omn" :omn)
   ;;   (save-ontology "mysio.owl" :owl))
 
-  (with-ontology ncl.sio.generate_mysio/generate_mysio
-    (save-ontology "generate_mysio.omn" :omn)
-    (save-ontology "generate_mysio.owl" :owl))
+  ;; (with-ontology ncl.sio.generate_mysio/generate_mysio
+  ;;   (save-ontology "generate_mysio.omn" :omn)
+  ;;   (save-ontology "generate_mysio.owl" :owl))
 )
