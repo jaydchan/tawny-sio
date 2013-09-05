@@ -109,7 +109,6 @@
 (gf/create-atom "thorium atom""CHEBI:33385")
 (gf/create-atom "neptunium atom" "CHEBI:33387")
 (gf/create-atom "uranium atom" "CHEBI:27214")
-
 (gf/create-atom "ununhexium atom" nil)
 (gf/create-atom "ununseptium atom" nil)
 (gf/create-atom "ununquadium atom" nil)
