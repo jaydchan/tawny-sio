@@ -78,7 +78,7 @@
           (instance? org.semanticweb.owlapi.model.OWLDataProperty e)
           "(defdproperty %s)\n"
           (instance? org.semanticweb.owlapi.model.OWLAnnotationProperty e)
-          "(defannotationproperty %s)\n"
+          "(defaproperty %s)\n"
           (instance? org.semanticweb.owlapi.model.OWLDatatype e)
           ""
           :default
