@@ -13,7 +13,7 @@
   ([parent name description]
      (let [entity (tawny.read/stop-characters-transform name)]
        (tawny.read/intern-entity
-        (owlclass entity
+        (owl-class entity
                   :subclass parent
                   :annotation
                   (label (literal name :lang "en"))
@@ -23,25 +23,24 @@
   ([parent name]
      (let [entity (tawny.read/stop-characters-transform name)]
        (tawny.read/intern-entity
-        (owlclass entity
+        (owl-class entity
                   :subclass parent
                   :annotation
                   (label (literal name :lang "en"))))
-       (println "Error: Missing description - " entity)
-     )))
+       (println "Error: Missing description - " entity))))
 
 (defn create-atom
   "Creates an atom class with given name"
   [name chebi]
   (let [entity (tawny.read/stop-characters-transform name)]
     (tawny.read/intern-entity
-     (owlclass entity
+     (owl-class entity
                :subclass "atom"
                :annotation
                (label (literal name :lang "en"))))
     (if-not (nil? chebi)
       (add-annotation
-       (owlclass entity)
+       (owl-class entity)
        (clojure.core/list
         (annotation m/seeAlso (literal chebi :type :RDF_PLAIN_LITERAL)))))))
 
@@ -107,7 +106,7 @@
   "Returns the string of the class0 definition for a given parent and
   class"
   [clazz parent]
-  (let [ann (.getAnnotations (owlclass m/mysio clazz) m/mysio)]
+  (let [ann (.getAnnotations (owl-class m/mysio clazz) m/mysio)]
     (str "\n(gf/create-sio-class0 " (r/form parent)
          " \"" (get-name ann) "\"" (get-description-value ann) ")")))
 
@@ -136,7 +135,7 @@
   "Generates extra add-subclass atom for a given class"
   [clazz output-file parent]
   (let [axioms (remove
-                #(= (owlclass m/mysio parent) %)
+                #(= (owl-class m/mysio parent) %)
                 (direct-superclasses m/mysio clazz))
         final (for [axiom axioms] (str " " (r/form axiom)))]
       (output
@@ -223,7 +222,7 @@
 (defn generate-mini-defs
   "Handles the mini-definitions for each class"
   [parent output-file]
-  (let [ents (direct-subclasses m/mysio (owlclass m/mysio parent))
+  (let [ents (direct-subclasses m/mysio (owl-class m/mysio parent))
         no (count ents)]
     (cond
      (= no 1)
@@ -242,9 +241,9 @@
 
   ;; Mini entity definitions for quality classes
   (generate-mini-defs top-dog output-file)
-  (subclasses m/mysio (owlclass m/mysio top-dog))
+  (subclasses m/mysio (owl-class m/mysio top-dog))
   (let [todo (into #{} (for [clazz (subclasses m/mysio
-                                               (owlclass m/mysio top-dog))
+                                               (owl-class m/mysio top-dog))
                              :let [parent clazz]
                              :when (>
                                     (count (direct-subclasses m/mysio clazz))
@@ -264,6 +263,9 @@
   ;; START
   (println "ent.clj Started")
 
+  (output
+   output-file "" false "predump causes ")
+
   (doseq [e (.getSignature m/mysio)]
     (output output-file
             (format
@@ -275,7 +277,7 @@
               (instance? org.semanticweb.owlapi.model.OWLDataProperty e)
               "(defdproperty %s)\n"
               (instance? org.semanticweb.owlapi.model.OWLAnnotationProperty e)
-              "(defannotationproperty %s)\n"
+              "(defaproperty %s)\n"
               (instance? org.semanticweb.owlapi.model.OWLDatatype e)
               ""
               :default
@@ -290,12 +292,14 @@
   (println "ent.clj Complete"))
 
 (defn generate_rest
+  "Creates a file that contains the mini-definitions for remaining classes"
   [top-dogs output-file]
   (let [query (for [top-dog top-dogs]
-                (subclasses m/mysio (owlclass m/mysio top-dog)))
+
+                (subclasses m/mysio (owl-class m/mysio top-dog)))
         children (apply clojure.set/union query)
         parents (for [top-dog top-dogs]
-                  (owlclass m/mysio top-dog))
+                  (owl-class m/mysio top-dog))
         done (clojure.set/union children parents)
         total (into #{} (.getClassesInSignature m/mysio))
         todo (clojure.set/difference total done)]
@@ -309,12 +313,12 @@
                            (+ (.indexOf top-dogs t) 1))
             t1 (into #{} (subclasses
                 m/mysio
-                (owlclass m/mysio t)))]
+                (owl-class m/mysio t)))]
         (println t (count t1))
         (doseq [s subvec]
           (let [t2 (into #{} (subclasses
                     m/mysio
-                    (owlclass m/mysio s)))
+                    (owl-class m/mysio s)))
                 inter (clojure.set/intersection t1 t2)]
             (if-not (empty? inter)
               (println "   " s (count t2) "\n   " inter ))))
@@ -324,6 +328,8 @@
 
     ;; START
     (println "other.clj Started")
+    (output output-file "" false "generate_rest causes ")
+
     (doseq [clazz todo]
       (generate-mini-defs
        (shorten (tawny.lookup/resolve-entity clazz))
@@ -331,10 +337,47 @@
     ;; END
     (println "other.clj Complete")))
 
+(defn generate_object
+  "Creates a file containing the rendered form of the ontology's
+  object properties"
+  [output-file]
+  ;; START
+  (println "object.clj Started")
+
+  (output output-file "" false "generate_object causes ")
+
+  (doseq [o (.getObjectPropertiesInSignature m/mysio)]
+    (output
+     output-file
+     (str (r/as-form o) "\n")
+     true
+     "generate_object causes "))
+
+  ;; END
+  (println "object.clj Complete"))
+
+(defn generate_data
+  "Creates a files containing the rendered form of the ontology's data
+  properties"
+  [output-file]
+  ;; START
+  (println "data.clj Started")
+
+  (output output-file "" false "generate_data causes ")
+
+  (doseq [d (.getDataPropertiesInSignature m/mysio)]
+    (output
+     output-file
+     (str (r/as-form d) "\n")
+     true
+     "generate_data causes "))
+
+  ;; END
+  (println "data.clj Complete"))
 
 
    ;; ;; AXIOMS STILL TODO
-   ;; (let [todo (for [clazz (subclasses m/mysio (owlclass m/mysio top-dog))
+   ;; (let [todo (for [clazz (subclasses m/mysio (owl-class m/mysio top-dog))
    ;;                  :let [parent clazz]
    ;;                  :when (or
    ;;                         (> (count (direct-superclasses m/mysio clazz)) 1)

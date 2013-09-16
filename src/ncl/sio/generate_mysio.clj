@@ -29,35 +29,23 @@
    "identifier"
    "atom"])
 
-(gf/output
- "./src/ncl/sio/gen_ent.clj"
- ""
- false
- "Error with ent.clj: ")
-
+;; generate
 (gf/predump "./src/ncl/sio/gen_ent.clj")
-
-(clojure.core/doseq [t (clojure.core/pop top-dogs)]
-  (gf/output
-   (clojure.core/str "./src/ncl/sio/gen_" t ".clj")
-   ""
-   false
-   (clojure.core/str "Error with gen_" t ".clj: ")))
 
 (clojure.core/doseq [t (clojure.core/pop top-dogs)]
   (gf/generate t (clojure.core/str "./src/ncl/sio/gen_" t ".clj")))
 
+(gf/generate_rest top-dogs "./src/ncl/sio/gen_other.clj")
+(gf/generate_object "./src/ncl/sio/gen_object.clj")
+(gf/generate_data "./src/ncl/sio/gen_data.clj")
+
+;; load
 (clojure.core/load "gen_ent")
 
-(clojure.core/doseq [t top-dogs]
+(clojure.core/doseq [t (clojure.core/pop top-dogs)]
   (clojure.core/load (clojure.core/str "gen_" t)))
 
-(gf/output
- "./src/ncl/sio/gen_other.clj"
- ""
- false
- "Error with gen_other.clj: ")
-
-(gf/generate_rest top-dogs "./src/ncl/sio/gen_other.clj")
-
+(clojure.core/load "atom")
 (clojure.core/load "gen_other")
+(clojure.core/load "gen_object")
+(clojure.core/load "gen_data")
