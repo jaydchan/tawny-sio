@@ -12,7 +12,7 @@
 (defn owlclass
   [name & rest]
   (let [safe (tawny.read/stop-characters-transform name)]
-    (owl-class safe (first rest))))
+    (apply owl-class safe rest)))
 
 ;; BIOCHEMICAL PATHWAY
 (defclass hexokinase_reaction)
@@ -28,7 +28,7 @@
 
 (defn biochemical-pathway
   [name reactions]
-  (owl-class name
+  (owlclass name
              :equivalent
              (owl-and m/pathway
                       (owl-some m/has_proper_part
@@ -36,7 +36,7 @@
                       (for [r reactions]
                         (owl-some m/has_proper_part r)))))
 
-(biochemical-pathway "glycosis_pathway"
+(biochemical-pathway "glycosis pathway"
                      [hexokinase_reaction
                       phosphoglucose_isomerase_reaction
                       third_reaction])
@@ -65,7 +65,7 @@
 
 (defn biochemical-reaction
   [name target catalytic product]
-  (owl-class name
+  (owlclass name
             :equivalent
             (owl-and m/biochemical_reaction
                      (biochemical-reaction0 (first target) (second target))
@@ -84,7 +84,29 @@
 
 ;; ENZYME MECHANISM
 
-;; (defn enzyme-part-of...
+(defclass complex_formation)
+(defoproperty to_be_part_of)
+(defclass ATP-enzyme_complex)
+(defclass ATP-substrate-enzyme_complex)
+
+(defn enzyme-part-of
+  [name disposition relation]
+  (owlclass name
+            :equivalent
+            (owl-and complex_formation
+                     (for [d disposition]
+                       (owl-some m/realizes
+                                 (owl-and to_be_part_of
+                                          (owl-some m/is_disposition_of d)
+                                          (owl-some m/in_relation_to relation)))))))
+
+(enzyme-part-of "ATP-enzyme complex formation"
+                [m/enzyme ATP]
+                ATP-enzyme_complex)
+(enzyme-part-of "ATP-substrate-enzyme complex formation"
+                [ATP-enzyme_complex ATP]
+                ATP-substrate-enzyme_complex)
+
 ;; (defn enzyme-role..
 ;; (defn enzyme-dissociate..
 
