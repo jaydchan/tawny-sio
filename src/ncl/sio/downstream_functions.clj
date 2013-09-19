@@ -3,9 +3,8 @@
   (:require [ncl.sio.mysio :as m]
             [tawny.read]))
 
-
-(defontology downstream
-  :iri "http://ncl.ac.uk/sio/downstream"
+(defontology downstream_functions
+  :iri "http://ncl.ac.uk/sio/downstream_functions"
   :prefix "down:")
 
 ;; AUXILIARY FUNCTIONS
@@ -41,19 +40,19 @@
                       phosphoglucose_isomerase_reaction
                       third_reaction])
 
-(defclass target_role) ;; MISSING OBJ PROPERTY
+(defclass target_role) ;; MISSING
 
-(defn sometarget
+(defn some-target
   [class]
   (owl-some m/realizes (owl-and target_role
                                 (owl-some m/is_role_of class))))
 
-(defn somecatalytic
+(defn some-catalytic
   [class]
   (owl-some m/realizes (owl-and m/catalytic_role
                                 (owl-some m/is_role_of class))))
 
-(defn someproduct
+(defn some-product
   [class]
   (owl-some m/realizes (owl-and m/product_role
                                 (owl-some m/is_role_of class))))
@@ -76,18 +75,16 @@
 (defclass ATP)
 (defclass hexokinase)
 (defclass glucose-6-phosphate)
+(defclass ADP)
 
 (biochemical-reaction "hexokinase_reaction"
-                      [sometarget [glucose ATP]]
-                      [somecatalytic [hexokinase]]
-                      [someproduct [glucose-6-phosphate]])
+                      [some-target [glucose ATP]]
+                      [some-catalytic [hexokinase]]
+                      [some-product [glucose-6-phosphate ADP]])
 
 ;; ENZYME MECHANISM
-
-(defclass complex_formation)
-(defoproperty to_be_part_of)
-(defclass ATP-enzyme_complex)
-(defclass ATP-substrate-enzyme_complex)
+(defclass complex_formation) ;; MISSING
+(defclass to_be_part_of) ;; MISSING
 
 (defn enzyme-part-of
   [name disposition relation]
@@ -100,6 +97,9 @@
                                           (owl-some m/is_disposition_of d)
                                           (owl-some m/in_relation_to relation)))))))
 
+(defclass ATP-enzyme_complex)
+(defclass ATP-substrate-enzyme_complex)
+
 (enzyme-part-of "ATP-enzyme complex formation"
                 [m/enzyme ATP]
                 ATP-enzyme_complex)
@@ -107,35 +107,105 @@
                 [ATP-enzyme_complex ATP]
                 ATP-substrate-enzyme_complex)
 
-;; (defn enzyme-role..
-;; (defn enzyme-dissociate..
+(defn enzyme-role
+  [name substrate product]
+  (owlclass name
+            :equivalent
+            (owl-and m/biochemical_reaction
+                     (owl-some m/realizes
+                               (owl-and m/substrate_role
+                                        (owl-some m/is_role_of substrate)))
+                     (owl-some m/realizes
+                               (owl-and m/product_role
+                                        (owl-some m/is_role_of product))))))
 
-;; 'ATP-enzyme complex formation' equivalentTo:
-;; 'complex formation'
-;; and 'realizes' some ('to be part of' and 'is disposition of' some 'enzyme' and 'in relation to' some 'ATP-enzyme complex')
-;; and 'realizes' some ('to be part of' and 'is disposition of' some 'ATP' and 'in relation to' some 'ATP-enzyme complex')
+;; NOTE ATP-substrate_enzyme_complex -> ATP-substrate-enzyme_complex
+(defclass ADP-substrate-phosphorylated-enzyme_complex)
+(defclass substrate-phosphorylated-enzyme_complex)
+(defclass phosphorylated-substrate-enzyme_complex)
 
-;; 'ATP-substrate-enzyme complex formation' equivalentTo:
-;; 'complex formation'
-;; and 'realizes' some ('to be part of' and 'is disposition of' some 'ATP-enzyme complex' and 'in relation to' some 'ATP-substrate-enzyme complex' )
-;; and 'realizes' some ('to be part of' and 'is disposition of' some 'ATP' and 'in relation to' some 'ATP-substrate-enzyme complex')
+(enzyme-role "substrate-enzyme phosphorylation by ATP"
+             ATP-substrate-enzyme_complex
+             ADP-substrate-phosphorylated-enzyme_complex)
 
-;; 'substrate-enzyme phosphorylation by ATP' equivalentTo:
-;; 'biochemical reaction'
-;; and 'realizes' some ('substrate role' and 'is role of' some 'ATP-substrate enzyme complex')
-;; and 'realizes' some ('product role' and 'is role of' some 'ADP-substrate-phosphorylated-enzyme complex')
+(enzyme-role "substrate-phosphorylation by phosphorylated enzyme"
+             substrate-phosphorylated-enzyme_complex
+             phosphorylated-substrate-enzyme_complex)
 
-;; 'substrate-phosphorylation by phosphorylated enzyme' equivalentTo:
-;; 'biochemical reaction'
-;; and 'realizes' some ('substrate role' and 'is role of' some 'substrate-phosphorylated-enzyme complex')
-;; and 'realizes' some ('product role' and 'is role of' some 'phosphorylated-substrate-enzyme complex')
+(defclass complex_dissociation) ;; MISSING
+(defclass to_dissociate) ;; MISSING
+(defoproperty is_disposition_of) ;; MISSING
+(defoproperty in_relation_to) ;; MISSING
 
-;; 'ADP dissociation from phosphorylated-enzyme substrate complex' equivalentTo:
-;; 'complex dissociation'
-;; and 'realizes' some ('to dissociate' and 'is disposition of' some 'phosphorylated-enzyme-substrate complex' and 'in relation to' some 'ADP-substrate-phosphorylated-enzyme complex' )
-;; and 'realizes' some ('to dissociate' and 'is disposition of' some 'ADP' and 'in relation to' some 'ADP-substrate-phosphorylated-enzyme complex')
+(defn enzyme-dissociate
+  [name dissociate relation]
+  (owlclass name
+            :equivalent
+            (owl-and complex_dissociation
+                     (for [d dissociate]
+                       (owl-some m/realizes
+                                 (owl-and to_dissociate
+                                          (owl-some is_disposition_of d)
+                                          (owl-some in_relation_to relation)))))))
 
-;; 'dissociation of phosphorylated substrate from phosphorylated-substrate-enzyme complex' equivalentTo:
-;; 'complex dissociation'
-;; and 'realizes' some ('to dissociate' and 'is disposition of' some 'phosphorylated-substrate' and 'in relation to' some 'phosphorylated-substrate-enzyme complex' )
-;; and 'realizes' some ('to dissociate' and 'is disposition of' some 'enzyme' and 'in relation to' some 'phosphorylated-substrate-enzyme complex')
+(defclass phosphorylated-enzyme-substrate_complex)
+(defclass phosphorylated-substrate)
+
+(enzyme-dissociate "ADP dissociation from phosphorylated-enzyme substrate complex"
+                   [phosphorylated-enzyme-substrate_complex ADP]
+                   ADP-substrate-phosphorylated-enzyme_complex)
+
+(enzyme-dissociate "dissociation of phosphorylated substrate from phosphorylated-substrate-enzyme complex"
+                   [phosphorylated-substrate m/enzyme]
+                   phosphorylated-substrate-enzyme_complex)
+
+;; MEREOTOPOLOGY
+;; MOLECULE
+(defn molecule-atom-name
+  [molecule atom]
+  (let [name (last (clojure.string/split (.toString (.getIRI atom)) #"#" ))]
+    (str molecule "_" name)))
+
+(defn molecule-atom
+  [molecule current other]
+  (owlclass (molecule-atom-name molecule (first current))
+            :equivalent
+            (owl-and (first current)
+                     (exactly 1 m/is_component_part_of molecule)
+                     (for [o other]
+                       (exactly (second o) m/is_covalently_connected_to
+                                (molecule-atom-name molecule (first o)))))))
+
+(defoproperty part_of)
+
+;; TOFIX - RESULTS IN DOUBLE BRACKET
+(defn molecule0
+  [molecule atom]
+  (apply owl-or
+         (for [a atom]
+           (owl-some part_of
+                     (molecule-atom-name molecule (first a))))))
+
+(defn molecule
+  [name atom]
+  (owlclass name)
+  (for [a atom]
+    (owlclass (molecule-atom-name name a)))
+
+  (owlclass name
+            :equivalent
+            (owl-and m/molecule
+                     (for [a atom]
+                       (exactly (second a) m/has_component_part
+                                (molecule-atom-name name (first a))))
+                     (owl-only m/has_component_part
+                               (molecule0 name atom))))
+
+  (doseq [a atom]
+    (molecule-atom name a (clojure.set/difference (into #{} atom) #{a}))))
+
+(molecule "methane"
+          [[m/hydrogen_atom 3]
+           [m/carbon_atom 1]])
+
+;; PROTEIN ...
