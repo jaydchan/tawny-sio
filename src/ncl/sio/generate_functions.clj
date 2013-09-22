@@ -42,7 +42,47 @@
       (add-annotation
        (owl-class entity)
        (clojure.core/list
-        (annotation m/seeAlso (literal chebi :type :RDF_PLAIN_LITERAL)))))))
+        (annotation m/seeAlso
+                    (literal chebi :type :RDF_PLAIN_LITERAL)))))))
+
+
+;; BEGIN NEW STUFF
+(defn make-safe
+  [name]
+  (tawny.read/stop-characters-transform name))
+
+(def dc-description (iri "http://purl.org/dc/terms/description"))
+(defn desc [description]
+   (annotation dc-description
+       (literal description :lang "en")))
+
+(defn sio-class
+  [name parent description & frames]
+  (apply owl-class
+         (list* (make-safe name)
+                :subclass parent
+                :label name
+                :annotation (desc description)
+                (into [] frames))))
+
+(defn owl-atom-annotation-maybe [cls chebi]
+  (if-not (nil? chebi)
+   (add-annotation
+    cls
+    (clojure.core/list
+     (annotation m/seeAlso
+      (literal chebi :type :RDF_PLAIN_LITERAL))))))
+
+(defn owl-atom
+ [name chebi]
+ (owl-atom-annotation-maybe
+  (owl-class (make-safe name)
+             :subclass m/atom
+             :annotation
+             (label (literal name :lang "en")))
+  chebi))
+;; END NEW STUFF
+
 
 (defmacro defquality [the-name description]
   (let [namestr# (name the-name)]
