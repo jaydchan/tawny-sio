@@ -19,6 +19,7 @@
   (:use [clojure.test])
   (:require
    [ncl.sio.mysio :as m]
+   [ncl.sio.sio :as s]
    [tawny.owl :as o]
    [tawny.reasoner :as r]))
 
@@ -37,3 +38,37 @@
 (deftest Basic
   (is (r/consistent?))
   (is (r/coherent?)))
+
+(deftest ontologies
+  (is
+   (instance? org.semanticweb.owlapi.model.OWLOntology s/sio))
+  (is
+   (instance? org.semanticweb.owlapi.model.OWLOntology m/mysio)))
+
+(deftest signature
+  (is
+   (= (count (.getSignature s/sio))
+      ;; tawny adds an annotation property
+      (- (count (.getSignature m/mysio)) 1))))
+
+
+(deftest classes
+  (is
+   (= (count (.getClassesInSignature s/sio))
+      (count (.getClassesInSignature m/mysio)))))
+
+(deftest object
+   (is
+    (= (count (.getObjectPropertiesInSignature s/sio))
+       (count (.getObjectPropertiesInSignature m/mysio)))))
+
+(deftest annotation
+   (is
+    (= (count (.getAnnotationPropertiesInSignature s/sio))
+      ;; tawny adds an annotation property
+       (- (count (.getAnnotationPropertiesInSignature m/mysio)) 1))))
+
+(deftest data
+   (is
+    (= (count (.getDataPropertiesInSignature s/sio))
+       (count (.getDataPropertiesInSignature m/mysio)))))

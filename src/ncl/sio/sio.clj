@@ -16,8 +16,8 @@
 ;; along with this program.  If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.sio
-  (:refer-clojure :only [fn println some = last let spit
-                         doseq format str get instance?])
+  (:refer-clojure :only [fn println some = last let spit doseq format
+                         str get instance? and re-find])
   (:require [tawny.read] [tawny.render])
   (:import
    (org.semanticweb.owlapi.model IRI)))
@@ -78,7 +78,10 @@
           (instance? org.semanticweb.owlapi.model.OWLDataProperty e)
           "(defdproperty %s)\n"
           (instance? org.semanticweb.owlapi.model.OWLAnnotationProperty e)
-          "(defaproperty %s)\n"
+          (if (re-find #"http://semanticscience.org/resource/"
+                       (.toString (.getIRI e)))
+            "(defaproperty %s)\n"
+            "")
           (instance? org.semanticweb.owlapi.model.OWLDatatype e)
           ""
           :default
