@@ -20,10 +20,8 @@
 
 (defn biochemical-pathway0
   [reactions]
-  (apply owl-and
-         (first reactions)
-         (for [r (rest reactions)]
-           (owl-some m/precedes r))))
+  (owl-and (first reactions)
+           (owl-some m/precedes (rest reactions))))
 
 (defn biochemical-pathway
   [name reactions]
@@ -32,8 +30,7 @@
              (owl-and m/pathway
                       (owl-some m/has_proper_part
                                 (biochemical-pathway0 reactions))
-                      (for [r reactions]
-                        (owl-some m/has_proper_part r)))))
+                      (owl-some m/has_proper_part reactions))))
 
 (biochemical-pathway "glycosis pathway"
                      [hexokinase_reaction
