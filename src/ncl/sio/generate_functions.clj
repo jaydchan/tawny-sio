@@ -46,7 +46,7 @@
                     (literal chebi :type :RDF_PLAIN_LITERAL)))))))
 
 
-;; BEGIN NEW STUFF
+;; BEGIN PAPER STUFF
 (defn make-safe
   [name]
   (tawny.read/stop-characters-transform name))
@@ -67,7 +67,7 @@
 
 (defn see-also [value]
    (annotation m/seeAlso
-       (literal value :type :RDP_PLAIN_LITERAL)))
+       (literal value :type :RDF_PLAIN_LITERAL)))
 
 (defn owl-atom-annotation-maybe [cls chebi]
   (if-not (nil? chebi)
@@ -81,8 +81,57 @@
              :subclass m/atom
              :label name)
   chebi))
-;; END NEW STUFF
+;; END PAPER STUFF
 
+;; BEGIN PATTERNS
+;; (defn subset
+;;   [value]
+;;   (annotation subset (literal value :type :RDF_PLAIN_LITERAL))
+;;   ;; one exception (sadi)
+;;   [value]
+;;   (annotation subset (literal value :lang "en")))
+
+;; (defn has-synonym
+;;   [value]
+;;   (annotation hasSynonym (literal value :type :RDF_PLAIN_LITERAL))
+;;   [value]
+;;   (annotation hasSynonym (literal value :lang "en")))
+
+;; (defn example
+;;   [value]
+;;   (annotation example (literal value :lang "en")))
+
+;; (def rdf-seeAlso (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso"))
+;; (defn see-also
+;;   ;; CHEMINF
+;;   [value]
+;;   (annotation seeAlso (literal value :type :RDF_PLAIN_LITERAL))
+;;   [value]
+;;   (annotation rdf-seeAlso (literal value :type :XSD_ANY_URI)))
+
+;; (defn equivalent-to
+;;   [value]
+;;   (annotation equivalentTo (literal value :type :RDF_PLAIN_LITERAL))
+;;   [value]
+;;   (annotation equivalentTo (literal value :type :XSD_ANY_URI)))
+
+;; ;;only one of these
+;; (defn broader-than [value]
+;;   (annotation broaderThan (literal value :type :RDF_PLAIN_LITERAL)))
+
+;; ;; only one of these
+;; (def dc-alternative (iri "http://purl.org/dc/terms/alternativeName"))
+;; (defn alternative-name [value]
+;;   (annotation dc-alternative (literal value :lang "en")))
+
+;; (defn similar-to
+;;   ;; two of these
+;;   [value]
+;;   (annotation similarTo (literal value :type :XSD_ANY_URI))
+;;   ;; only one of these
+;;   [value]
+;;   (annotation similarTo (literal value :type :RDF_PLAIN_LITERAL)))
+;; END PATTERNS
 
 (defmacro defquality [the-name description]
   (let [namestr# (name the-name)]
