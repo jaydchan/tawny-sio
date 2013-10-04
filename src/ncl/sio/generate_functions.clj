@@ -63,23 +63,23 @@
                 :subclass parent
                 :label name
                 :annotation (desc description)
-                (into [] frames))))
+                frames)))
+
+(defn see-also [value]
+   (annotation m/seeAlso
+       (literal value :type :RDP_PLAIN_LITERAL)))
 
 (defn owl-atom-annotation-maybe [cls chebi]
   (if-not (nil? chebi)
    (add-annotation
-    cls
-    (clojure.core/list
-     (annotation m/seeAlso
-      (literal chebi :type :RDF_PLAIN_LITERAL))))))
+    cls (see-also chebi))))
 
 (defn owl-atom
  [name chebi]
  (owl-atom-annotation-maybe
   (owl-class (make-safe name)
              :subclass m/atom
-             :annotation
-             (label (literal name :lang "en")))
+             :label name)
   chebi))
 ;; END NEW STUFF
 
