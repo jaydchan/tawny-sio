@@ -1,4 +1,4 @@
-sio-clj
+tawny-sio
 =========
 :author: Jennifer Warrender
 
