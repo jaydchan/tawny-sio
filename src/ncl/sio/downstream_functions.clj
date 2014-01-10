@@ -132,7 +132,6 @@
 (defclass complex_dissociation) ;; MISSING
 (defclass to_dissociate) ;; MISSING
 (defoproperty is_disposition_of) ;; MISSING
-(defoproperty in_relation_to) ;; MISSING
 
 (defn enzyme-dissociate
   [name dissociate relation]
@@ -143,7 +142,7 @@
                        (owl-some m/realizes
                                  (owl-and to_dissociate
                                           (owl-some is_disposition_of d)
-                                          (owl-some in_relation_to relation)))))))
+                                          (owl-some m/in_relation_to relation)))))))
 
 (defclass phosphorylated-enzyme-substrate_complex)
 (defclass phosphorylated-substrate)
