@@ -47,8 +47,7 @@
 
 
 ;; BEGIN PAPER STUFF
-(defn make-safe
-  [name]
+(defn make-safe [name]
   (tawny.read/stop-characters-transform name))
 
 (def dc-description (iri "http://purl.org/dc/terms/description"))
@@ -56,8 +55,7 @@
    (annotation dc-description
        (literal description :lang "en")))
 
-(defn sio-class
-  [name parent description & frames]
+(defn sio-class [name parent description & frames]
   (apply owl-class
          (list* (make-safe name)
                 :subclass parent
@@ -65,17 +63,16 @@
                 :annotation (desc description)
                 frames)))
 
-(defn see-also [value]
-   (annotation m/seeAlso
-       (literal value :type :RDF_PLAIN_LITERAL)))
+;; (defn see-also [value]
+;;    (annotation m/seeAlso
+;;        (literal value :type :RDF_PLAIN_LITERAL)))
 
 (defn owl-atom-annotation-maybe [cls chebi]
   (if-not (nil? chebi)
    (add-annotation
     cls (see-also chebi))))
 
-(defn owl-atom
- [name chebi]
+(defn owl-atom [name chebi]
  (owl-atom-annotation-maybe
   (owl-class (make-safe name)
              :subclass m/atom
