@@ -1,7 +1,7 @@
 tawny-sio
 =========
 
-Recasting of the [Semanticscience Integrated Ontology (SIO)](http://code.google.com/p/semanticscience/wiki/SIO) using Tawny-OWL.
+Recasting of the [Semanticscience Integrated Ontology (SIO)](http://code.google.com/p/semanticscience/wiki/SIO) using [Tawny-OWL](https://github.com/phillord/tawny-owl).
 
 ## Author
 
