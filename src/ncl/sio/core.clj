@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013, Newcastle University
+;; Copyright (C) 2013-2014 Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 ;; along with this program.  If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.core
-  (:use [tawny.owl])
+  (:use [tawny.owl :exclude [save-ontology]])
   ;; (:require [ncl.sio sio mysio])
   ;; (:require [ncl.sio mysio])
   ;; (:require [ncl.sio sio])
@@ -29,6 +29,12 @@
 ;; to run:
 ;; 1. M-x 'compile' ('lein run')
 ;; 2. M-x 'lein run'
+
+(def output-file-path "./output/")
+(defn- save-ontology
+  "'Overlaods' save-ontology function."
+  [name type]
+  (tawny.owl/save-ontology (str output-file-path name) type))
 
 (defn -main [& args]
   ;; "Save ontologies in .omn and .owl format"
