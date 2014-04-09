@@ -6,3 +6,7 @@
 *~
 *gen_*.clj
 *.log
+*.xml
+sio_ent.txt
+sio_ii.clj
+target/
