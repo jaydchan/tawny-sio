@@ -7,4 +7,4 @@
   :iri "http://ncl.ac.uk/sio/mysio"
   :prefix "mysio:")
 
- (clojure.core/load "sio_ii")
+ (clojure.core/load-file "./src/ncl/sio/sio_ii.clj")

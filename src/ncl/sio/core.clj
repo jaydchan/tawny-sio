@@ -15,29 +15,30 @@
 ;; along with this program.  If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.core
-  (:use [tawny.owl :exclude [save-ontology]])
-  ;; (:require [ncl.sio sio mysio])
-  ;; (:require [ncl.sio mysio])
-  ;; (:require [ncl.sio sio])
+  (:use [tawny.owl :exclude [save-ontology]]
+        [clojure.java.shell :only [sh]])
 
-  ;; (:require [ncl.sio mysio generate_functions generate_mysio])
-  ;; (:require [ncl.sio mysio generate_functions print_des])
+  ;; (:require [ncl.sio sio mysio generate_functions generate_mysio
+  ;; print_des downstream_functions])
 
   (:require [ncl.sio mysio downstream_functions])
   (:gen-class))
 
-;; to run:
-;; 1. M-x 'compile' ('lein run')
-;; 2. M-x 'lein run'
-
-(def output-file-path "./output/")
+(def ^{:private true
+       :doc "TODO"} output-file-path "./output/")
 (defn- save-ontology
-  "'Overlaods' save-ontology function."
+  "'Overloads' save-ontology function."
   [name type]
+  ;; ensure output-file-path exists
+  (if (not (.exists (clojure.java.io/as-file output-file-path)))
+    (sh "mkdir" "-p" output-file-path))
+
+  ;; 'overloads' save-ontology function
   (tawny.owl/save-ontology (str output-file-path name) type))
 
-(defn -main [& args]
-  ;; "Save ontologies in .omn and .owl format"
+(defn -main
+  "Save ontologies in .omn and .owl format"
+  [& args]
   ;; (with-ontology ncl.sio.sio/sio
   ;;   (save-ontology "sio.omn" :omn)
   ;;   (save-ontology "sio.owl" :owl))
