@@ -1,8 +1,6 @@
 .lein-plugins
 .lein-deps-sum
 .lein-failures
-*.omn
-*.owl
 *~
 *gen_*.clj
 *.log
@@ -10,3 +8,4 @@
 sio_ent.txt
 sio_ii.clj
 target/
+output/
