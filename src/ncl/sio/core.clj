@@ -19,7 +19,7 @@
   (:require [ncl.sio
              sio
              rendered_sio
-             ;; mysio
+             mysio
              ;; downstream_functions
              ])
   (:gen-class))

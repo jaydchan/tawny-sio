@@ -17,11 +17,13 @@
 
 (ns ncl.sio.mysio
   (:refer-clojure :only [])
-  (:use [tawny.owl]))
+  (:use [tawny.owl])
+  ;; (:require [ncl.sio.generate_functions :as gf])
+  )
 
 (defontology mysio
   :iri "http://ncl.ac.uk/sio/mysio"
   :prefix "mysio:")
 
 ;; atoms
-(clojure.core/load-file "./src.ncl/sio/atom.clj")
+;; (clojure.core/load-file "./src/ncl/sio/atom.clj")
