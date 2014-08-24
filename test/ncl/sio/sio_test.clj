@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013, Newcastle University
+;; Copyright (C) 2013-2014, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -13,18 +13,24 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see http://www.gnu.org/licenses/.
+;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.sio_test
   (:use [clojure.test])
   (:require
-   [ncl.sio.sio :as s]
-   [tawny.owl :as o]
-   [tawny.reasoner :as r]))
+   [tawny.owl :only [ontology-to-namespace]]
+   [tawny.read :only [iri-starts-with-filter]]
+   [tawny.reasoner :as r]
+   [ncl.sio.sio :as s])
+  (:import (org.semanticweb.owlapi.model
+            OWLOntology
+            OWLSubClassOfAxiom
+            OWLEquivalentClassesAxiom
+            OWLSubObjectPropertyOfAxiom)))
 
 (defn ontology-reasoner-fixture [tests]
   (r/reasoner-factory :hermit)
-  (o/ontology-to-namespace s/sio)
+  (tawny.owl/ontology-to-namespace s/sio)
   (binding [r/*reasoner-progress-monitor*
             (atom
             r/reasoner-progress-monitor-silent)]
@@ -37,3 +43,76 @@
 (deftest Basic
   (is (r/consistent?))
   (is (r/coherent?)))
+
+(deftest ontology
+  (is
+   (instance? OWLOntology s/sio)))
+
+(deftest signature
+  (is
+   (= 1630
+      (count (.getSignature s/sio))))
+  (is
+   (= 1608
+      (count (filter
+              (partial
+               tawny.read/iri-starts-with-filter
+               "http://semanticscience.org/resource/")
+              (.getSignature s/sio))))))
+
+(deftest classes
+  (is
+   (= 1396
+      (count (.getClassesInSignature s/sio)))))
+
+(deftest oproperties
+  (is
+   (= 203
+      (count (.getObjectPropertiesInSignature s/sio)))))
+
+(deftest aproperties
+  (is
+   (= 20
+      (count (.getAnnotationPropertiesInSignature s/sio))))
+  (is
+   (= 8
+      (count (filter
+              (partial
+               tawny.read/iri-starts-with-filter
+               "http://semanticscience.org/resource/")
+              (.getAnnotationPropertiesInSignature s/sio))))))
+
+(deftest dproperties
+  (is
+   (= 1
+      (count (.getDataPropertiesInSignature s/sio)))))
+
+;; ;; Actually 7370???
+;; (deftest axioms
+;;   (is
+;;    (= 7272
+;;       (count (.getAxioms s/sio)))))
+
+(deftest subclassofaxioms
+  (is
+   (= 1747
+      (count
+       (filter
+        #(instance? OWLSubClassOfAxiom %)
+        (.getAxioms s/sio))))))
+
+(deftest equivalentaxioms
+  (is
+   (= 43
+      (count
+       (filter
+        #(instance? OWLEquivalentClassesAxiom %)
+        (.getAxioms s/sio))))))
+
+(deftest subpropertyofaxioms
+  (is
+   (= 209
+      (count
+       (filter
+        #(instance? OWLSubObjectPropertyOfAxiom %)
+        (.getAxioms s/sio))))))
