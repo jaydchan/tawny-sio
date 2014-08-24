@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013, Newcastle University
+;; Copyright (C) 2013-2014 Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -16,35 +16,34 @@
 ;; along with this program.  If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.sio
-  (:refer-clojure :only [fn println some = last let spit doseq format
-                         str get instance? and re-find])
-  (:require [tawny.read] [tawny.render])
-  (:import
-   (org.semanticweb.owlapi.model IRI)))
+  (:refer-clojure :only [fn println let spit doseq str instance?])
+  (:require [tawny.read] [tawny.render :only [as-form]]
+            [ncl.sio.generic :only [indent-entity]]))
 
 ;; Map used to made sure that symbols
-;; {true,false,symbol,label,annotation} start with '_' as these can
+;; {true,false,label,annotation} start with '_' as these can
 ;; not be defined as unique symbols in Clojure
-(def specific-replaces {"true" "_true", "false" "_false",
-                        "symbol" "_symbol", "label" "_label",
-                        "annotation" "_annotation", "count" "_count"})
+(def specific-replaces {"annotation" "_annotation", "label" "_label",
+                        "true" "_true", "false" "_false",
+                        "e.coli" "e_coli"})
 
 ;; Reads in the sio ontology from the owl file
 (tawny.read/defread sio
-  :location (tawny.owl/iri (clojure.java.io/resource "sio.owl"))
+  :location
+  (tawny.owl/iri (clojure.java.io/resource "sio.owl"))
   :iri "http://semanticscience.org/ontology/sio.owl"
   :prefix "sio:"
   :filter
   (fn [e]
     ;; (println "Filtering:" e)
     (tawny.read/iri-starts-with-filter
-     "http://semanticscience.org/resource/" e))
+      "http://semanticscience.org/resource/" e))
   :transform
   (fn [e]
     ;; (println "transforming:" e)
-    (if
-        (some #(do
-                 (= (.toString (.getIRI e)) %))
+    (if (clojure.core/some
+              #(do
+                 (clojure.core/= (.toString (.getIRI e)) %))
               ["http://semanticscience.org/resource/seeAlso"
                "http://semanticscience.org/resource/similarTo"
                "http://semanticscience.org/resource/narrowerThan"
@@ -55,53 +54,65 @@
                "http://semanticscience.org/resource/broaderThan"])
       (do
         ;; (println "Splitting" e)
-        (last (clojure.string/split (.toString (.getIRI e)) #"/" )))
+        (clojure.core/last
+         (clojure.string/split (.toString (.getIRI e)) #"/" )))
       (let [t
             (tawny.read/stop-characters-transform
              (tawny.read/noisy-nil-label-transform e))]
         ;; (println "transformed: " t)
-        (get specific-replaces t t)))))
+        (clojure.core/get specific-replaces t t))))
+  )
 
-;; Overwrites original file
-(spit "./src/ncl/sio/sio_ent.txt" "")
-(spit "./src/ncl/sio/sio_ii.clj" "")
+(let [entfile "./output/sio_ent.txt"
+      outfile "./output/sio_ii.clj"]
 
-;; Predump everything so that it's all defined before use
-(doseq [e (.getSignature sio)]
-  (spit "./src/ncl/sio/sio_ii.clj"
-        (format
-         (clojure.core/cond
-          (instance? org.semanticweb.owlapi.model.OWLClass e)
-          "(defclass %s)\n"
-          (instance? org.semanticweb.owlapi.model.OWLObjectProperty e)
-          "(defoproperty %s)\n"
-          (instance? org.semanticweb.owlapi.model.OWLDataProperty e)
-          "(defdproperty %s)\n"
-          (instance? org.semanticweb.owlapi.model.OWLAnnotationProperty e)
-          (if (re-find #"http://semanticscience.org/resource/"
-                       (.toString (.getIRI e)))
-            "(defaproperty %s)\n"
-            "")
-          (instance? org.semanticweb.owlapi.model.OWLDatatype e)
-          ""
-          :default
-          (throw (Exception. (str "Help!!!" e (clojure.core/type e)))))
-         (tawny.lookup/resolve-entity e))
-        :append true))
+  ;; Overwrites original file
+  (spit entfile "")
+  (spit outfile "")
 
+  ;; Predump everything so that it's all defined before use
+  ;; ONLY necessary as :transform frame of defread was used
+  (doseq [e (.getSignature sio)]
+    (spit outfile
+          (clojure.core/format
+           (clojure.core/cond
+            (instance? org.semanticweb.owlapi.model.OWLClass e)
+            "(defclass %s)\n"
+            (instance? org.semanticweb.owlapi.model.OWLObjectProperty e)
+            "(defoproperty %s)\n"
+            (instance? org.semanticweb.owlapi.model.OWLDataProperty e)
+            "(defdproperty %s)\n"
+            (instance? org.semanticweb.owlapi.model.OWLAnnotationProperty e)
+            (if (tawny.read/iri-starts-with-filter
+                  "http://semanticscience.org/resource/" e)
+              "(defaproperty %s)\n"
+              "")
+            (instance? org.semanticweb.owlapi.model.OWLDatatype e)
+            ""
+            :default
+            (throw
+             (Exception. (str "Unknown entity type:" e (clojure.core/type e)))))
+           (tawny.lookup/resolve-entity e))
+          :append true))
 
-;; Full entity definitions
-(let [ent (.getSignature sio)]
-  ;; (println ent)
-  (doseq [e ent]
-    (spit "./src/ncl/sio/sio_ent.txt"
-          (str (.toStringID e) "," (tawny.lookup/resolve-entity e) "\n")
-          :append true)
-    (try
-      (spit "./src/ncl/sio/sio_ii.clj"
-            (str (tawny.render/as-form e) "\n")
-            :append true)
-      (catch
-          Exception exp (println e " causes " exp)))))
+  ;; IRI map for SIO entities and output full entity definitions
+  (let [ent (.getSignature sio)]
+    (doseq [e ent]
+      (try
+        (if (tawny.read/iri-starts-with-filter
+              "http://semanticscience.org/resource/" e)
+          (spit entfile
+                (str (.toStringID e) "," (tawny.lookup/resolve-entity e) "\n")
+                :append true))
+        (spit outfile
+              (ncl.sio.generic/pretty-print
+               (str (clojure.core/pr-str
+                     (tawny.render/as-form
+                      e
+                      ;; :explicit true
+                      )) "\n"))
+              :append true)
+        (catch
+            Exception exp (println e " causes " exp))))))
 
 (println "sio.clj Complete")
