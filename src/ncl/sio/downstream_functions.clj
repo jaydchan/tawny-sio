@@ -1,72 +1,113 @@
+;; The contents of this file are subject to the LGPL License, Version 3.0.
+
+;; Copyright (C) 2013-2014, Newcastle University
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program. If not, see http://www.gnu.org/licenses/.
+
 (ns ncl.sio.downstream_functions
-  (:use tawny.owl)
-  (:require [ncl.sio.mysio :as m]
-            [tawny.read]))
+  (:use [tawny.owl]
+        [ncl.sio.generic :only [get-lines]])
+  (:require [ncl.sio.sio :as s :only [sio]]
+            [ncl.sio.generate_functions
+             :as gf :only [make_safe]]
+            [ncl.sio.generate_mysio
+             :as gm :only [get-name]]))
+
+(defonce sio-map (apply merge
+                        (map #(hash-map (second %) (first %))
+                             (map #(clojure.string/split % #",")
+                                  (get-lines "./output/sio_map.txt")))))
+
+(defn get-sio-entity
+  ""
+  [name]
+  (iri (get sio-map name)))
 
 (defontology downstream_functions
   :iri "http://ncl.ac.uk/sio/downstream_functions"
   :prefix "down:")
 
-;; AUXILIARY FUNCTIONS
-(defn owlclass
-  [name & rest]
-  (let [safe (tawny.read/stop-characters-transform name)]
-    (apply owl-class safe rest)))
+;; BIOCHEMICAL PATHWAY PATTERN -- WORKS
+;; See https://code.google.com/p/semanticscience/wiki/ODPBiochemistry
 
-;; BIOCHEMICAL PATHWAY
+(def precedes (get-sio-entity "precedes"))
+(def pathway (get-sio-entity "pathway"))
+(def has_proper_part (get-sio-entity "has_proper_part"))
+
+(defn- biochemical-pathway0
+  ""
+  [reactions]
+  (owl-and (first reactions)
+           (owl-some precedes (rest reactions))))
+
+(defn biochemical-pathway
+  ""
+  [name reactions]
+  (owl-class name
+             :equivalent
+             (owl-and pathway
+                      (owl-some has_proper_part
+                                (biochemical-pathway0 reactions))
+                      (owl-some has_proper_part reactions))))
+
+;; EXAMPLE
+
 (defclass hexokinase_reaction)
 (defclass phosphoglucose_isomerase_reaction)
 (defclass third_reaction)
-
-(defn biochemical-pathway0
-  [reactions]
-  (owl-and (first reactions)
-           (owl-some m/precedes (rest reactions))))
-
-(defn biochemical-pathway
-  [name reactions]
-  (owlclass name
-             :equivalent
-             (owl-and m/pathway
-                      (owl-some m/has_proper_part
-                                (biochemical-pathway0 reactions))
-                      (owl-some m/has_proper_part reactions))))
 
 (biochemical-pathway "glycosis pathway"
                      [hexokinase_reaction
                       phosphoglucose_isomerase_reaction
                       third_reaction])
 
-(defclass target_role) ;; MISSING
+;; BIOCHEMICAL REACTION PATTERN -- WORKS
+;; See https://code.google.com/p/semanticscience/wiki/ODPBiochemistry
 
-(defn some-target
-  [class]
-  (owl-some m/realizes (owl-and target_role
-                                (owl-some m/is_role_of class))))
+(def realizes (get-sio-entity "realizes"))
+(def is_role_of (get-sio-entity "is_role_of"))
+(def biochemical_reaction (get-sio-entity "biochemical_reaction"))
 
-(defn some-catalytic
-  [class]
-  (owl-some m/realizes (owl-and m/catalytic_role
-                                (owl-some m/is_role_of class))))
+(defn- some-role
+  ""
+  [role class]
+  (owl-some realizes
+            (owl-and role
+                     (owl-some is_role_of class))))
 
-(defn some-product
-  [class]
-  (owl-some m/realizes (owl-and m/product_role
-                                (owl-some m/is_role_of class))))
-
-(defn biochemical-reaction0
+(defn- biochemical-reaction0
+  ""
   [function values]
   (for [v values]
     (function v)))
 
-(defn biochemical-reaction
+(defn biochemical-reaction-pattern
+  ""
   [name target catalytic product]
-  (owlclass name
-            :equivalent
-            (owl-and m/biochemical_reaction
-                     (biochemical-reaction0 (first target) (second target))
-                     (biochemical-reaction0 (first catalytic) (second catalytic))
-                     (biochemical-reaction0 (first product) (second product)))))
+  (owl-class name
+             :equivalent
+             (owl-and biochemical_reaction
+                      (map
+                       (partial apply biochemical-reaction0)
+                       [target catalytic product]))))
+
+;; EXAMPLE
+
+;; target_role updated to reactant_role --> as identified in paper
+(def reactant_role (get-sio-entity "reactant_role"))
+(def catalytic_role (get-sio-entity "catalytic_role"))
+(def product_role (get-sio-entity "product_role"))
 
 (defclass glucose)
 (defclass ATP)
@@ -74,49 +115,115 @@
 (defclass glucose-6-phosphate)
 (defclass ADP)
 
-(biochemical-reaction "hexokinase_reaction"
-                      [some-target [glucose ATP]]
-                      [some-catalytic [hexokinase]]
-                      [some-product [glucose-6-phosphate ADP]])
+(biochemical-reaction-pattern
+ "hexokinase reaction"
+ [(partial some-role reactant_role) [glucose ATP]]
+ [(partial some-role catalytic_role) [hexokinase]]
+ [(partial some-role product_role) [glucose-6-phosphate ADP]])
 
-;; ENZYME MECHANISM
-(defclass complex_formation) ;; MISSING
-(defclass to_be_part_of) ;; MISSING
+;; (GENERIC) REACTION_PATTERN -- WORKS
+;; https://code.google.com/p/semanticscience/wiki/ODPChange
+
+;; Missing :super or :equivalent in documentation -> assumed :equivalent
+
+(defn reaction-pattern
+  ""
+  [name type target catalytic product]
+  (owl-class name
+             :equivalent
+             (owl-and type
+                      (map
+                       (partial apply biochemical-reaction0)
+                       [target catalytic product]))))
+
+;; EXAMPLE
+
+;; target_role should be updated to reactant_role --> as identified in paper
+(def reactant_role (get-sio-entity "reactant_role"))
+(def catalytic_role (get-sio-entity "catalytic_role"))
+(def product_role (get-sio-entity "product_role"))
+
+(def addition_reaction (get-sio-entity "addition_reaction"))
+(def protein (get-sio-entity "protein"))
+
+(defclass phospho-enzyme)
+(defclass phosphorylated_protein)
+(defclass ATP)
+(defclass ADP)
+
+(reaction-pattern
+ "enzyme-catalyzed phosphorylation using ATP"
+ addition_reaction
+ [(partial some-role reactant_role) [protein ATP]]
+ [(partial some-role catalytic_role) [phospho-enzyme]]
+ [(partial some-role product_role) [phosphorylated_protein ADP]])
+
+;; ENZYME MECHANISM PATTERNS
+
+;; A. ENZYME-PART-OF PATTERN -- WORKS
+;; See https://code.google.com/p/semanticscience/wiki/ODPBiochemistry
+
+;; MISSING -- CHECK!!!
+;; (def complex_formation (get-sio-entity "complex_formation"))
+;; (def to_be_part_of (get-sio-entity "to_be_part_of"))
+(defclass complex_formation)
+(defclass to_be_part_of)
+
+(def realizes (get-sio-entity "realizes"))
+(def is_disposition_of (get-sio-entity "is_disposition_of"))
+(def in_relation_to (get-sio-entity "in_relation_to"))
 
 (defn enzyme-part-of
   [name disposition relation]
-  (owlclass name
-            :equivalent
-            (owl-and complex_formation
-                     (for [d disposition]
-                       (owl-some m/realizes
-                                 (owl-and to_be_part_of
-                                          (owl-some m/is_disposition_of d)
-                                          (owl-some m/in_relation_to relation)))))))
+  (owl-class
+   name
+   :equivalent
+   (owl-and complex_formation
+            (map
+             #(owl-some realizes
+                        (owl-and to_be_part_of
+                                 (object-some is_disposition_of %)
+                                 (owl-some in_relation_to relation)))
+             disposition))))
 
+;; EXAMPLE
+
+(def enzyme (get-sio-entity "enzyme"))
+(defclass ATP)
 (defclass ATP-enzyme_complex)
 (defclass ATP-substrate-enzyme_complex)
 
+
 (enzyme-part-of "ATP-enzyme complex formation"
-                [m/enzyme ATP]
+                [enzyme ATP]
                 ATP-enzyme_complex)
 (enzyme-part-of "ATP-substrate-enzyme complex formation"
                 [ATP-enzyme_complex ATP]
                 ATP-substrate-enzyme_complex)
 
+;; B. ENZYME-ROLE PATTERN -- WORKS
+;; See https://code.google.com/p/semanticscience/wiki/ODPBiochemistry
+
+(def biochemical_reaction (get-sio-entity "biochemical_reaction"))
+(def realizes (get-sio-entity "realizes"))
+(def substrate_role (get-sio-entity "substrate_role"))
+(def product_role (get-sio-entity "product_role"))
+(def is_role_of (get-sio-entity "is_role_of"))
+
 (defn enzyme-role
   [name substrate product]
-  (owlclass name
-            :equivalent
-            (owl-and m/biochemical_reaction
-                     (owl-some m/realizes
-                               (owl-and m/substrate_role
-                                        (owl-some m/is_role_of substrate)))
-                     (owl-some m/realizes
-                               (owl-and m/product_role
-                                        (owl-some m/is_role_of product))))))
+  (owl-class name
+             :equivalent
+             (owl-and biochemical_reaction
+                      (map
+                       #(some-role %1 %2)
+                       [substrate_role product_role]
+                       [substrate product]))))
 
-;; NOTE ATP-substrate_enzyme_complex -> ATP-substrate-enzyme_complex
+;; EXAMPLE
+
+;; NOTE should be ATP-substrate_enzyme_complex ->
+;; ATP-substrate-enzyme_complex
 (defclass ADP-substrate-phosphorylated-enzyme_complex)
 (defclass substrate-phosphorylated-enzyme_complex)
 (defclass phosphorylated-substrate-enzyme_complex)
@@ -129,79 +236,259 @@
              substrate-phosphorylated-enzyme_complex
              phosphorylated-substrate-enzyme_complex)
 
+;; C. ENZYME-DISSOCIATION PATTERN -- WORKS
+;; See https://code.google.com/p/semanticscience/wiki/ODPBiochemistry
+
 (defclass complex_dissociation) ;; MISSING
 (defclass to_dissociate) ;; MISSING
-(defoproperty is_disposition_of) ;; MISSING
+
+(def is_disposition_of (get-sio-entity "is_disposition_of"))
+(def realizes (get-sio-entity "realizes"))
+(def in_relation_to (get-sio-entity "in_relation_to"))
 
 (defn enzyme-dissociate
   [name dissociate relation]
-  (owlclass name
-            :equivalent
-            (owl-and complex_dissociation
-                     (for [d dissociate]
-                       (owl-some m/realizes
-                                 (owl-and to_dissociate
-                                          (owl-some is_disposition_of d)
-                                          (owl-some m/in_relation_to relation)))))))
+  (owl-class
+   name
+   :equivalent
+   (owl-and complex_dissociation
+            (map
+             #(owl-some realizes
+                        (owl-and to_dissociate
+                                 (owl-some is_disposition_of %)
+                                 (owl-some in_relation_to relation)))
+             dissociate))))
+
+;; EXAMPLE
 
 (defclass phosphorylated-enzyme-substrate_complex)
 (defclass phosphorylated-substrate)
+(def realizes (get-sio-entity "realizes"))
 
-(enzyme-dissociate "ADP dissociation from phosphorylated-enzyme substrate complex"
-                   [phosphorylated-enzyme-substrate_complex ADP]
-                   ADP-substrate-phosphorylated-enzyme_complex)
+(enzyme-dissociate
+ "ADP dissociation from phosphorylated-enzyme substrate complex"
+ [phosphorylated-enzyme-substrate_complex ADP]
+ ADP-substrate-phosphorylated-enzyme_complex)
 
-(enzyme-dissociate "dissociation of phosphorylated substrate from phosphorylated-substrate-enzyme complex"
-                   [phosphorylated-substrate m/enzyme]
-                   phosphorylated-substrate-enzyme_complex)
+(enzyme-dissociate
+ "dissociation of phosphorylated substrate from phosphorylated-substrate-enzyme complex"
+ [phosphorylated-substrate enzyme]
+ phosphorylated-substrate-enzyme_complex)
 
 ;; MEREOTOPOLOGY
-;; MOLECULE
+
+;; A. MOLECULE -- WORKS
+;; https://code.google.com/p/semanticscience/wiki/ODPMereotopology
+
+(def molecule (get-sio-entity "molecule"))
+(def has_component_part (get-sio-entity "has_component_part"))
+(def is_component_part_of (get-sio-entity "is_component_part_of"))
+(def is_covalently_connected_to
+  (get-sio-entity "is_covalently_connected_to"))
+
+(defoproperty part_of) ;; MISSING
+
 (defn molecule-atom-name
+  ""
   [molecule atom]
-  (let [name (last (clojure.string/split (.toString (.getIRI atom)) #"#" ))]
-    (str molecule "_" name)))
+  (gf/make-safe
+   (str molecule " " (gm/get-name s/sio (owl-class s/sio atom)))))
 
 (defn molecule-atom
-  [molecule current other]
-  (owlclass (molecule-atom-name molecule (first current))
-            :equivalent
-            (owl-and (first current)
-                     (exactly 1 m/is_component_part_of molecule)
-                     (for [o other]
-                       (exactly (second o) m/is_covalently_connected_to
-                                (molecule-atom-name molecule (first o)))))))
+  ""
+  [molecule atom others]
+  (refine (owl-class (molecule-atom-name molecule atom))
+          :equivalent
+          (owl-and atom
+                   (exactly 1 is_component_part_of (owl-class molecule))
+                   (map
+                    #(exactly (second %)
+                              is_covalently_connected_to
+                              (molecule-atom-name
+                               molecule (first %)))
+                    others))))
 
-(defoproperty part_of)
+(defn molecule-pattern
+  ""
+  [name atoms]
+  (let [the-molecule (owl-class name :label name)
+        names (map #(molecule-atom-name name (first %)) atoms)
+        matoms (map #(owl-class % :label %) names)]
+    (refine
+     the-molecule
+     :equivalent
+     (owl-and
+      molecule
+      (map
+       #(exactly (second %1) has_component_part %2)
+       atoms matoms)
+      (owl-only has_component_part
+                (owl-or (map #(owl-some part_of %) matoms)))))
+    (doseq [a atoms]
+      (molecule-atom name (first a) (remove #(= % a) atoms)))))
 
-;; TOFIX - RESULTS IN DOUBLE BRACKET
-(defn molecule0
-  [molecule atom]
-  (apply owl-or
-         (for [a atom]
-           (owl-some part_of
-                     (molecule-atom-name molecule (first a))))))
+;; EXAMPLE
 
-(defn molecule
-  [name atom]
-  (owlclass name)
-  (for [a atom]
-    (owlclass (molecule-atom-name name a)))
+(def hydrogen_atom (get-sio-entity "hydrogen_atom"))
+(def carbon_atom (get-sio-entity "carbon_atom"))
 
-  (owlclass name
-            :equivalent
-            (owl-and m/molecule
-                     (for [a atom]
-                       (exactly (second a) m/has_component_part
-                                (molecule-atom-name name (first a))))
-                     (owl-only m/has_component_part
-                               (molecule0 name atom))))
+(molecule-pattern "methane"
+                  [[hydrogen_atom 4]
+                   [carbon_atom 1]])
 
-  (doseq [a atom]
-    (molecule-atom name a (clojure.set/difference (into #{} atom) #{a}))))
+;; B. PROTEIN -- WORKS
+;; https://code.google.com/p/semanticscience/wiki/ODPMereotopology
 
-(molecule "methane"
-          [[m/hydrogen_atom 3]
-           [m/carbon_atom 1]])
+;; NOTE should be human p53 isoform 1 methionine residue @ pos1 ->
+;; human p53 isoform 1 methionine residue @ p1
 
-;; PROTEIN ...
+;; TODO whats does the chebi comment mean???
+
+(def protein (get-sio-entity "protein"))
+(def has_component_part (get-sio-entity "has_component_part"))
+(def is_component_part_of (get-sio-entity "is_component_part_of"))
+(def has_attribute (get-sio-entity "has_attribute"))
+(def position (get-sio-entity "position"))
+(def has_value (get-sio-entity "has_value"))
+(def is_directly_before (get-sio-entity "is_directly_before"))
+
+(defn protein-residue-name
+  ""
+  [protein residue position]
+  (gf/make-safe
+   (clojure.string/join
+    " "
+    [protein
+     (gm/get-name downstream_functions
+                  (owl-class downstream_functions residue))
+     (str "@ p" position)])))
+
+(defn protein-residue
+  ""
+  [protein residue pos next]
+  (refine (owl-class (protein-residue-name protein residue pos))
+          :equivalent
+          (gm/get-name downstream_functions
+                       (owl-class downstream_functions residue))
+          (owl-and
+           (exactly 1 is_component_part_of (owl-class protein))
+           (exactly 1 has_attribute
+                    (owl-and position
+                             (has-value has_value (literal pos))))
+           (if-not (empty? next)
+             (exactly 1 is_directly_before
+                      (owl-class
+                       (protein-residue-name
+                        protein (first next) (+ 1 pos))))
+             ""))))
+
+(defn protein-pattern
+  ""
+  [name residues]
+  (let [the-protein (owl-class name)
+        names (map
+               #(protein-residue-name name % (+ (.indexOf residues %) 1))
+               residues)
+        presidues (map #(owl-class % :label %) names)]
+    (refine
+     the-protein
+     :equivalent
+     (owl-and
+      protein
+      (map #(exactly 1 has_component_part %) presidues)))
+    (doseq [r (range 0 (count residues))]
+      (protein-residue name
+                       (get residues r)
+                       (+ r 1)
+                       (subvec residues (+ r 1))))))
+
+;; EXAMPLE
+
+(defclass methionine :label "methionine residue")
+(defclass glutamate :label "glutamate residue")
+(defclass third_residue :label "third residue")
+
+(protein-pattern "human p53 isoform 1"
+                 [methionine
+                  glutamate
+                  third_residue])
+
+;; C. PROTEIN CONTAINMENT -- WORKS
+;; https://code.google.com/p/semanticscience/wiki/ODPMereotopology
+
+(def protein_complex (get-sio-entity "protein_complex"))
+(def has_proper_part (get-sio-entity "has_proper_part"))
+(def contains (get-sio-entity "contains"))
+;; NOTE should be is_contained_by -> is_contained_in
+(def is_contained_in (get-sio-entity "is_contained_in"))
+
+(defn protein-containment
+  ""
+  [complex with]
+  (owl-class
+   (gf/make-safe
+    (str (gm/get-name downstream_functions complex)
+         "-complex with "
+         (gm/get-name downstream_functions with)))
+   :super
+   (owl-and
+    protein_complex
+    (map
+     #(owl-some has_proper_part
+                (owl-and
+                 %1 (owl-some %2 %3)))
+     [complex with] [contains is_contained_in] [with complex]))))
+
+;; EXAMPLE
+
+(defclass proteosome :label "proteosome")
+(defclass peptide_chain :label "peptide chain")
+
+(protein-containment
+ proteosome
+ peptide_chain)
+
+;; PARAMETERS
+;; See https://code.google.com/p/semanticscience/wiki/ODPParameters
+
+(def parameter (get-sio-entity "parameter"))
+(def is_attribute_of (get-sio-entity "is_attribute_of"))
+(def collection (get-sio-entity "collection"))
+(def has_member (get-sio-entity "has_member"))
+(def has_value (get-sio-entity "has_value"))
+
+(defn parameter-pattern
+  ([tool]
+     (owl-class (str tool " parameter")
+                :equivalent
+                (owl-and
+                 parameter
+                 (owl-some is_attribute_of
+                           (owl-class (str tool " software"))))))
+  ([tool & parameters]
+     (owl-class (str tool " parameters")
+                :equivalent
+                (owl-and
+                 collection
+                 (map
+                  #(at-least 0 has_member
+                             (owl-and (first %)
+                                      (owl-some has_value (second %))))
+                  parameters)
+                 (owl-some is_attribute_of
+                           (owl-class (str tool " software")))))))
+
+;; EXAMPLE(S)
+
+(def database (get-sio-entity "database"))
+;; NOTE should be expect_value -> expected_value
+(def expected_value (get-sio-entity "expected_value"))
+;; NOTE subclass of to_filter ???
+(defclass low_complexity_filter :label "low complexity filter")
+
+(parameter-pattern "BLAST")
+
+(parameter-pattern "BLAST"
+                   [expected_value :XSD_FLOAT]
+                   [database :XSD_STRING]
+                   [low_complexity_filter :XSD_BOOLEAN])
