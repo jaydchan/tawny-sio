@@ -12,15 +12,16 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see http://www.gnu.org/licenses/.
+;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.core
   (:use [ncl.sio.generic :only [save-ontology]])
   (:require [ncl.sio
              sio
              rendered_sio
+             generate_mysio
              mysio
-             ;; downstream_functions
+             downstream_functions
              ])
   (:gen-class))
 
@@ -30,19 +31,22 @@
 
   ;; non-patternised rendering of sio (not using sio_ii)
   (save-ontology ncl.sio.sio/sio "sio.omn" :omn)
-  (save-ontology ncl.sio.sio/sio "sio.owl" :rdf)
+  (save-ontology ncl.sio.sio/sio "sio.owl" :owl)
 
   ;; non-patternised rendering of sio (using sio_ii)
   (save-ontology ncl.sio.rendered_sio/rendered_sio "sio.omn" :omn)
   (save-ontology ncl.sio.rendered_sio/rendered_sio "sio.owl" :rdf)
 
+  ;; generate mysio code
+  ;; (ncl.sio.generate_mysio/driver)
+
   ;; patternised recasting of (my)sio
-  ;; (save-ontology ncl.sio.mysio/mysio "mysio.omn" :omn)
-  ;; (save-ontology ncl.sio.mysio/mysio "mysio.owl" :owl)
+  (save-ontology ncl.sio.mysio/mysio "mysio.omn" :omn)
+  (save-ontology ncl.sio.mysio/mysio "mysio.owl" :owl)
 
   ;; patterns for downstream usage
-  ;; (save-ontology
-  ;;  ncl.sio.downstream_functions/downstream_functions "downstream.omn" :omn)
-  ;; (save-ontology
-  ;;  ncl.sio.downstream_functions/downstream_functions "downstream.owl" :owl)
+  (save-ontology
+   ncl.sio.downstream_functions/downstream_functions "downstream.omn" :omn)
+  (save-ontology
+   ncl.sio.downstream_functions/downstream_functions "downstream.owl" :owl)
 )
