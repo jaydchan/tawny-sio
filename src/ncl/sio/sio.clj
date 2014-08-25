@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013-2014 Newcastle University
+;; Copyright (C) 2013-2014, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -16,16 +16,11 @@
 ;; along with this program.  If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.sio
-  (:refer-clojure :only [fn println let spit doseq str instance?])
-  (:require [tawny.read] [tawny.render :only [as-form]]
-            [ncl.sio.generic :only [indent-entity]]))
-
-;; Map used to made sure that symbols
-;; {true,false,label,annotation} start with '_' as these can
-;; not be defined as unique symbols in Clojure
-(def specific-replaces {"annotation" "_annotation", "label" "_label",
-                        "true" "_true", "false" "_false",
-                        "e.coli" "e_coli"})
+  (:refer-clojure :only [fn println let spit str instance? doseq])
+  (:require [tawny.read]
+            [tawny.render :only [as-form]]
+            [ncl.sio.generic :only
+             [specific-replaces predump pretty-print]]))
 
 ;; Reads in the sio ontology from the owl file
 (tawny.read/defread sio
@@ -60,20 +55,22 @@
             (tawny.read/stop-characters-transform
              (tawny.read/noisy-nil-label-transform e))]
         ;; (println "transformed: " t)
-        (clojure.core/get specific-replaces t t))))
+        (clojure.core/get ncl.sio.generic/specific-replaces t t))))
   )
 
-(let [entfile "./output/sio_ent.txt"
+(let [mapfile "./output/sio_map.txt"
+      entfile "./output/sio_ent.clj"
       outfile "./output/sio_ii.clj"]
 
   ;; Overwrites original file
+  (spit mapfile "")
   (spit entfile "")
   (spit outfile "")
 
   ;; Predump everything so that it's all defined before use
   ;; ONLY necessary as :transform frame of defread was used
   (doseq [e (.getSignature sio)]
-    (spit outfile
+    (spit entfile
           (clojure.core/format
            (clojure.core/cond
             (instance? org.semanticweb.owlapi.model.OWLClass e)
@@ -101,8 +98,9 @@
       (try
         (if (tawny.read/iri-starts-with-filter
               "http://semanticscience.org/resource/" e)
-          (spit entfile
-                (str (.toStringID e) "," (tawny.lookup/resolve-entity e) "\n")
+          (spit mapfile
+                (str (.toStringID e) ","
+                     (tawny.lookup/resolve-entity e) "\n")
                 :append true))
         (spit outfile
               (ncl.sio.generic/pretty-print
