@@ -23,4 +23,5 @@
   :iri "http://ncl.ac.uk/sio/rendered_sio"
   :prefix "rsio:")
 
+(clojure.core/load-file "./output/sio_ent.clj")
 (clojure.core/load-file "./output/sio_ii.clj")
