@@ -1,0 +1,124 @@
+;; INVESTIGATION
+;; https://code.google.com/p/semanticscience/wiki/ODPInvestigation
+
+;; BROKEN HYPERLINKS
+;; attributes -> attribute
+
+;; STATISTICAL GRAPH
+;; https://code.google.com/p/semanticscience/wiki/ODPStatisticalGraph
+
+;; BROKEN HYPERLINKS
+;; sio:geometric-entities -> sio:geometric-entity
+;; sio:statistical-graph-lines -> sio:statistical-graph-line
+;; sio:represent -> sio:represents
+
+;; PROCESS-BASED PROVENANCE
+;; https://code.google.com/p/semanticscience/wiki/ODPProvenance
+
+;; BROKEN HYPERLINKS
+;; sio:creation -> sio:creating
+;; sio:destruction -> sio:destroying
+;; sio:modification -> sio:modifying
+
+;; DATABASES (LOCALISED PATTERNS)
+;; See https://code.google.com/p/semanticscience/wiki/ODPDatabase
+;; Needs a total overhaul. Ontology and Documentation do not match up.
+
+;; ;; informational entity ->
+;; (owl-class information_content_entity
+;;            :super
+;;            object
+;;            (only has_proper_part information_content_entity))
+
+;; (owl-class computational_entity
+;;            :super information_content_entity)
+
+;; (owl-class database
+;;            :super computational_entity)
+
+;; ;; table ->
+;; (owl-class database_table
+;;            :super
+;;            computational_entity
+;;            (owl-some is_proper_part_of database))
+
+;; ;; column ->
+;; (owl-class database_column
+;;            :super
+;;            column
+;;            (owl-some is_proper_part_of database_table))
+
+;; ;; row ->
+;; (owl-class database_row
+;;            :super
+;;            row
+;;            (owl-some is_proper_part_of database_table))
+
+;; ;; cell -> ???
+;; (owl-class cell__informational_
+;;            :super
+;;            computational_entity
+;;            (owl-some refers_to entity))
+
+;; ;;unique_column ???
+
+;; (owl-class unique_cell
+;;            :super
+;;            cell__informational_
+;;            (owl-some has_attribute unique_identifier))
+
+;; (owl-class unique_identifier
+;;            :super
+;;            identifier
+;;            (owl-some is_unique_identifier_for entity)
+;;            :equivalent
+;;            (owl-and identifier (owl-some is_unique_identifier_for entity)))
+
+;; (object-property has_unique_identifier
+;;                  :super has_identifier
+;;                  :range unique_identifier
+;;                  :inverse is_unique_identifier_for
+;;                  :characteristic
+;;                  :inversefunctional)
+
+;; (object-property is_unique_identifier_for
+;;                  :super is_identifier_for
+;;                  :domain unique_identifier
+;;                  :inverse has_unique_identifier
+;;                  :characteristic :functional)
+
+;; (owl-class referencing_cell
+;;            :super cell__informational_)
+
+;; (owl-class referent_cell
+;;            :super
+;;            cell__informational_
+;;            (owl-some is_referred_to_by cell__informational_))
+
+;; (owl-class database_key
+;;            :super
+;;            computational_entity
+;;            (owl-some has_component_part column)
+;;            (owl-some has_value :RDFS_LITERAL))
+
+;; (owl-class primary_database_key
+;;            :super
+;;            database_key
+;;            (owl-not
+;;             (has-value has_value
+;;                        (literal "null" :type :RDF_PLAIN_LITERAL)))
+;;            (owl-some is_unique_identifier_for row))
+
+;; (owl-class foreign_database_key
+;;            :super
+;;            database_key
+;;            (owl-some references database_key))
+
+;; MEASUREMENTS (LOCALISED PATTERNS)
+;; See bhttps://code.google.com/p/semanticscience/wiki/ODPMeasurements
+;; Needs a total overhaul. Ontology and Documentation do not match up.
+
+;; ASSOCIATIONS (LOCALISED PATTERNS)
+;; See https://code.google.com/p/semanticscience/wiki/ODPAssociation
+;; statistical association definition modifiled
+;; unknown association
