@@ -7,7 +7,7 @@
 
 input=$1
 
-for line in $(cat /home/jdwarrender/Repositories/tawny-sio/output/sio_ent.txt)
+for line in $(cat /home/jdwarrender/Repositories/tawny-sio/output/sio_map.txt)
 do
 	if [[ "$line" == *,[a-zA-Z_]* ]]
 	then
