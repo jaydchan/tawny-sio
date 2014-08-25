@@ -1,51 +1,116 @@
+;; The contents of this file are subject to the LGPL License, Version 3.0.
+
+;; Copyright (C) 2013-2014, Newcastle University
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; You should have received a copy of the GNU General Public License
+;; along with this program. If not, see http://www.gnu.org/licenses/.
+
 (ns ncl.sio.generate_mysio
-  (:refer-clojure :only [defn partial])
   (:use [tawny.owl])
-  (:require [ncl.sio.generate_functions :as gf]))
+  (:require [ncl.sio.sio :as s]
+            [ncl.sio.generic :as g
+             :only [specific-replaces pretty-print]]
+            [ncl.sio.mysio :as m
+             :only [sio-class]]))
 
-(defontology generate_mysio
-  :iri "http://ncl.ac.uk/sio/generate_mysio"
-  :prefix "generate:")
+(defn shorten
+  [string]
+  (clojure.string/replace string #"ncl.sio.sio/" ""))
 
-(def top-dogs
-  ["role"
-   "quality"
-   "behaviour"
-   "capability"
-   "interacting"
-   "procedure"
-   "spatial_region"
-   "submolecular_entity"
-   "covalently_connected_entity"
-   "chemical_substance"
-   "social_entity"
-   "mathematical_entity"
-   "geometric_entity"
-   "computational_entity"
-   "media"
-   "description"
-   "document"
-   "document_component"
-   "identifier"
-   "atom"])
+(defn get-label
+  "Returns the label annotation"
+  [annotations]
+  (first (for [ann annotations
+               :let [label ann]
+               :when (.isLabel ann)]
+           label)))
 
-;; generate
-(gf/predump "./src/ncl/sio/gen_ent.clj")
+;; (defn get-name
+;;   "Returns the name (value) of the label annotation"
+;;   [annotations]
+;;   (let [name (.getLiteral (.getValue (get-label annotations)))]
+;;     (get g/specific-replaces name name)))
 
-(clojure.core/doseq [t (clojure.core/pop top-dogs)]
-  (gf/generate t (clojure.core/str "./src/ncl/sio/gen_" t ".clj")))
+(defn get-name
+  "Returns the name (value) of the label annotation"
+  [o clazz]
+  (let [annotations
+        (map #(.getAnnotation %)
+             (.getAnnotationAssertionAxioms o (.getIRI clazz)))
+        name (.getLiteral (.getValue (get-label annotations)))]
+    (get g/specific-replaces name name)))
 
-(gf/generate_rest top-dogs "./src/ncl/sio/gen_other.clj")
-(gf/generate_object "./src/ncl/sio/gen_object.clj")
-(gf/generate_data "./src/ncl/sio/gen_data.clj")
+(defn description?
+  "Determines if an annotation is a terms.description annotation"
+  [annotation]
+  (= (iri "http://purl.org/dc/terms/description")
+     (.getIRI (.getProperty annotation))))
 
-;; load
-(clojure.core/load "gen_ent")
+(defn get-description
+  "Returns the description annotation"
+  [annotations]
+  (first (for [ann annotations
+        :let [description ann]
+               :when (description? ann)]
+           description)))
 
-(clojure.core/doseq [t (clojure.core/pop top-dogs)]
-  (clojure.core/load (clojure.core/str "gen_" t)))
+(defn get-description-value
+  "Returns the description annotation"
+  [annotations]
+  (let [description (get-description annotations)]
+    (if (nil? description)
+      ""
+      (let [value (.getLiteral (.getValue description))]
+        (if (nil? value)
+          ""
+          (str " \"" (clojure.string/replace value #"\"" "'") "\""))))))
 
-(clojure.core/load "atom")
-(clojure.core/load "gen_other")
-(clojure.core/load "gen_object")
-(clojure.core/load "gen_data")
+(defn render-sio-class
+  [to clazz]
+  (let [render (into [] (rest (rest (tawny.render/as-form clazz))))
+        rlabel (remove
+                #(re-find (re-pattern "\\(label \\(literal") (str %))
+                render)
+        rdesc (remove
+               #(re-find
+                 (re-pattern "\\(annotation \\(iri \"http://purl.org/dc/terms/description\"") (str %))
+               rlabel)
+        annotations (map #(.getAnnotation %)
+                         (.getAnnotationAssertionAxioms to (.getIRI clazz)))
+        rann (remove
+                #(if (= 2 (count annotations))
+                   (re-find
+                    (re-pattern ":annotation") (str %)))
+                rdesc)
+        label (get-name to clazz)
+        desc (clojure.string/trim (get-description-value annotations))]
+    (conj rann desc label "sio-class")))
+
+(defn driver
+  []
+  (let [outfile "./output/rest.clj"
+        all (into #{} (.getClassesInSignature s/sio))
+        atoms (into #{} (subclasses s/sio s/atom))
+        rest (clojure.set/difference all atoms)]
+    (spit outfile "")
+    (doseq [c rest]
+      (spit outfile
+            (g/pretty-print
+             (str
+              (pr-str (render-sio-class s/sio c))
+              "\n"))
+            :append true))))
+
+;; TODO
+;; 1. renders namespace (e.g. ncl.sio.sio/computational_quality)
+;; 2. description includes extra pair of speech marks
+;; 3. outputs sio-class as string (i.e. "owl-class")

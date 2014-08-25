@@ -20,10 +20,12 @@
   ncl.sio.generic
   (:use [clojure.java.shell :only [sh]]
         [clojure.java.io :only [as-file reader]])
-  (:require [tawny.owl :only save-ontology]))
+  (:require [tawny.owl :only save-ontology]
+            [tawny.read :only [iri-starts-with-filter]]
+            [tawny.lookup :only [resolve-entity]]))
 
 (defonce ^{:private true
-       :doc "TODO"}
+           :doc "TODO"}
   output-file-path "./output/")
 
 ;; ensure output-file-path exists
@@ -35,7 +37,16 @@
   [o name type]
   (tawny.owl/save-ontology o (str output-file-path name) type))
 
-(def regexs
+;; Map used to made sure that symbols
+;; {true,false,label,annotation} start with '_' as these can
+;; not be defined as unique symbols in Clojure
+(def specific-replaces {"annotation" "_annotation", "label" "_label",
+                        "true" "_true", "false" "_false",
+                        "e.coli" "e_coli"})
+
+(def ^{:private true
+       :doc "TODO"}
+  regexs
   {" :super" "\n\t:super",
    " :annotation" "\n\t:annotation",
    " :disjoint" "\n\t:disjoint",
@@ -48,6 +59,7 @@
    " \\(annotation " "\n\t(annotation "})
 
 (defn pretty-print
+  "Simplistic "
   [string]
   (reduce
    (fn [a b]
@@ -57,3 +69,9 @@
      (get regexs b)))
    string
    (keys regexs)))
+
+(defn get-lines
+  "Reads in FILE line by line. Returns a java.long.Cons"
+  [file]
+  (with-open [r (reader file)]
+    (doall (line-seq r))))
