@@ -13,17 +13,54 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see http://www.gnu.org/licenses/.
+;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.mysio
   (:refer-clojure :only [])
   (:use [tawny.owl])
-  ;; (:require [ncl.sio.generate_functions :as gf])
-  )
+  (:require [ncl.sio.generic :only [predump]]
+            [ncl.sio.generate_functions :as gf
+             :only
+             [owl-atom0 sio-class0]]))
 
 (defontology mysio
   :iri "http://ncl.ac.uk/sio/mysio"
   :prefix "mysio:")
 
-;; atoms
-;; (clojure.core/load-file "./src/ncl/sio/atom.clj")
+;; predump -- necessary
+(clojure.core/load-file "./output/sio_ent.clj")
+
+;; oproperty = 203
+(clojure.core/load-file "./src/ncl/sio/oproperties.clj")
+
+;; sio aproperty (and tawny-name) = 8 (+1)
+;; No additional information required
+
+;; other aproperty  = 12
+(annotation-property (iri "http://protege.stanford.edu/plugins/owl/protege#defaultLanguage"))
+(annotation-property (iri "http://purl.org/dc/terms/creator"))
+(annotation-property (iri "http://purl.org/dc/terms/description"))
+(annotation-property (iri "http://purl.org/dc/terms/alternativeName"))
+(annotation-property (iri "http://www.w3.org/2000/01/rdf-schema#label"))
+(annotation-property (iri "http://purl.org/dc/terms/license"))
+(annotation-property (iri "http://www.w3.org/2000/01/rdf-schema#comment"))
+(annotation-property (iri "http://www.w3.org/2002/07/owl#versionInfo"))
+(annotation-property (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso"))
+(annotation-property (iri "http://purl.org/dc/terms/rights"))
+(annotation-property (iri "http://purl.org/dc/terms/contributor"))
+(annotation-property (iri "http://purl.org/dc/terms/title"))
+
+;; dproperty = 1
+(datatype-property has_value
+                   :characteristic :functional)
+
+;; individuals = 0
+;; NONE
+
+;; classes (excluding atoms) = 1396 - 118
+(def sio-class (clojure.core/partial gf/sio-class0 mysio))
+(clojure.core/load-file "./output/rest.clj")
+
+;; atoms = 118
+(def owl-atom (clojure.core/partial gf/owl-atom0 mysio atom))
+(clojure.core/load-file "./src/ncl/sio/atom.clj")
