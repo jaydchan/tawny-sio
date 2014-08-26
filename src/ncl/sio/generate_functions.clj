@@ -16,8 +16,14 @@
 ;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.generate_functions
-  (:use tawny.owl)
-  (:require [tawny.read :only [stop-characters-transform]]))
+  (:use tawny.owl))
+
+;; Required: while defclass utilises this, owl-class does not
+(defn make-safe
+  "Ensures the entity NAME is 'safe'. Shortcut function to
+tawny.read/stop-characters-transform function."
+  [name]
+  (tawny.read/stop-characters-transform name))
 
 ;; ANNOTATION PATERNS
 (defonce ^{:private true
@@ -91,26 +97,18 @@ annotations."
 ;;   (annotation similarTo (literal value :type :RDF_PLAIN_LITERAL)))
 
 ;; CLASS PATTERNS
-(defn make-safe
-  "Ensures the entity NAME is 'safe'. Shortcut function to
-tawny.read/stop-characters-transform function."
-  [name]
-  (tawny.read/stop-characters-transform name))
-
 (defn sio-class0
   "Generic pattern for most sio classes.
-1) Ensures the name is 'safe'
-2) Ensures each class has description annotation
-3) Automatically generates the label annotation"
+1) Ensures each class has description annotation
+2) Automatically generates the label annotation"
   [o name description & frames]
   (apply owl-class
-         (list* o
-                (make-safe name)
+         (list* o (make-safe name)
                 :label name
                 :annotation (desc o description)
                 frames)))
 
-(defn owl-atom-annotation-maybe
+(defn sio-atom-annotation-maybe
   "Pattern -- If a chebi value is provided then an annotation axiom is
 added to the atom class."
   [o cls chebi]
@@ -118,15 +116,14 @@ added to the atom class."
     (add-annotation
      o cls (see-also chebi))))
 
-(defn owl-atom0
+(defn sio-atom0
   "Localised pattern for sio atoms.
-1) Ensures the name is 'safe'
-2) Ensures each class has SubClassOf atom restriction
-3) Automatically generates the label annotation"
+1) Ensures each class has SubClassOf atom restriction
+2) Automatically generates the label annotation
+3) (if provided) Automatically generates the see-also annotation"
   [o atom name chebi]
-  (owl-atom-annotation-maybe
-   o (owl-class o
-                (make-safe name)
+  (sio-atom-annotation-maybe
+   o (owl-class o (make-safe name)
                 :subclass atom
                 :label name)
    chebi))

@@ -20,7 +20,7 @@
         [ncl.sio.generic :only [get-lines]])
   (:require [ncl.sio.sio :as s :only [sio]]
             [ncl.sio.generate_functions
-             :as gf :only [make_safe]]
+             :as gf :only [make-safe]]
             [ncl.sio.generate_mysio
              :as gm :only [get-name]]))
 

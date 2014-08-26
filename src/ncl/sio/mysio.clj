@@ -21,7 +21,7 @@
   (:require [ncl.sio.generic :only [predump]]
             [ncl.sio.generate_functions :as gf
              :only
-             [owl-atom0 sio-class0]]))
+             [sio-atom0 sio-class0]]))
 
 (defontology mysio
   :iri "http://ncl.ac.uk/sio/mysio"
@@ -62,5 +62,5 @@
 (clojure.core/load-file "./output/rest.clj")
 
 ;; atoms = 118
-(def owl-atom (clojure.core/partial gf/owl-atom0 mysio atom))
+(def sio-atom (clojure.core/partial gf/sio-atom0 mysio atom))
 (clojure.core/load-file "./src/ncl/sio/atom.clj")
