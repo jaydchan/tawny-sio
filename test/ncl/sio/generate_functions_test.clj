@@ -54,12 +54,12 @@
     (is
      (instance? OWLClass clazz))))
 
-(deftest owl-atom-annotation-maybe
-  (let [without (gf/owl-atom-annotation-maybe
+(deftest sio-atom-annotation-maybe
+  (let [without (gf/sio-atom-annotation-maybe
                  to
                  (o/owl-class to "without chebi")
                  nil)
-        with (gf/owl-atom-annotation-maybe
+        with (gf/sio-atom-annotation-maybe
               to
               (o/owl-class to "with chebi")
               "CHEBI:00000")]
@@ -70,8 +70,8 @@
      (= 1
         (count with)))))
 
-(deftest owl-atom0
+(deftest sio-atom0
   (let [atom (gf/sio-class0 to "atom" "the atom class")]
-    (gf/owl-atom0 to atom "test atom" nil)
+    (gf/sio-atom0 to atom "test atom" nil)
     (is
      (instance? OWLClass (o/owl-class to "test_atom")))))
