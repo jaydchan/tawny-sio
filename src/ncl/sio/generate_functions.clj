@@ -99,8 +99,9 @@ annotations."
 ;; CLASS PATTERNS
 (defn sio-class0
   "Generic pattern for most sio classes.
-1) Ensures each class has description annotation
-2) Automatically generates the label annotation"
+1) Ensures name is 'safe'
+2) Ensures each class has description annotation
+3) Automatically generates the label annotation"
   [o name description & frames]
   (apply owl-class
          (list* o (make-safe name)
@@ -118,9 +119,10 @@ added to the atom class."
 
 (defn sio-atom0
   "Localised pattern for sio atoms.
-1) Ensures each class has SubClassOf atom restriction
-2) Automatically generates the label annotation
-3) (if provided) Automatically generates the see-also annotation"
+1) Ensures name is 'safe'
+2) Ensures each class has SubClassOf atom restriction
+3) Automatically generates the label annotation
+4) (if provided) Automatically generates the see-also annotation"
   [o atom name chebi]
   (sio-atom-annotation-maybe
    o (owl-class o (make-safe name)
