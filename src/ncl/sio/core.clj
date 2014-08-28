@@ -34,11 +34,11 @@
   (save-ontology ncl.sio.sio/sio "sio.owl" :owl)
 
   ;; non-patternised rendering of sio (using sio_ii)
-  (save-ontology ncl.sio.rendered_sio/rendered_sio "sio.omn" :omn)
-  (save-ontology ncl.sio.rendered_sio/rendered_sio "sio.owl" :rdf)
+  (save-ontology ncl.sio.rendered_sio/rendered_sio "rsio.omn" :omn)
+  (save-ontology ncl.sio.rendered_sio/rendered_sio "rsio.owl" :owl)
 
   ;; generate mysio code
-  ;; (ncl.sio.generate_mysio/driver)
+  (ncl.sio.generate_mysio/driver)
 
   ;; patternised recasting of (my)sio
   (save-ontology ncl.sio.mysio/mysio "mysio.omn" :omn)
