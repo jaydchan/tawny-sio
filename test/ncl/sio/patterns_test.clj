@@ -15,10 +15,10 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see http://www.gnu.org/licenses/.
 
-(ns ncl.sio.generate_functions_test
+(ns ncl.sio.patterns_test
   (:use [clojure.test])
   (:require [tawny.owl :as o]
-            [ncl.sio.generate_functions :as gf])
+            [ncl.sio.patterns :as p])
   (:import (org.semanticweb.owlapi.model
             OWLAnnotation OWLClass)))
 
@@ -41,25 +41,25 @@
 
 (deftest make-safe
   (is
-   (gf/make-safe "this is a test")
+   (p/make-safe "this is a test")
    "this_is_a_test"))
 
 (deftest desc
-  (let [ann (gf/desc to "Test description")]
+  (let [ann (p/desc to "Test description")]
     (is
      (instance? OWLAnnotation ann))))
 
 (deftest sio-class0
-  (let [clazz (gf/sio-class0 to "test" "test class")]
+  (let [clazz (p/sio-class0 to "test" "test class")]
     (is
      (instance? OWLClass clazz))))
 
 (deftest sio-atom-annotation-maybe
-  (let [without (gf/sio-atom-annotation-maybe
+  (let [without (p/sio-atom-annotation-maybe
                  to
                  (o/owl-class to "without chebi")
                  nil)
-        with (gf/sio-atom-annotation-maybe
+        with (p/sio-atom-annotation-maybe
               to
               (o/owl-class to "with chebi")
               "CHEBI:00000")]
@@ -71,7 +71,7 @@
         (count with)))))
 
 (deftest sio-atom0
-  (let [atom (gf/sio-class0 to "atom" "the atom class")]
-    (gf/sio-atom0 to atom "test atom" nil)
+  (let [atom (p/sio-class0 to "atom" "the atom class")]
+    (p/sio-atom0 to atom "test atom" nil)
     (is
      (instance? OWLClass (o/owl-class to "test_atom")))))

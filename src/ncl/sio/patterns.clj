@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see http://www.gnu.org/licenses/.
 
-(ns ncl.sio.generate_functions
+(ns ncl.sio.patterns
   (:use tawny.owl))
 
 ;; Required: while defclass utilises this, owl-class does not
