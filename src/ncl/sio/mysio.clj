@@ -18,17 +18,15 @@
 (ns ncl.sio.mysio
   (:refer-clojure :only [])
   (:use [tawny.owl])
-  (:require [ncl.sio.generic :only [predump]]
-            [ncl.sio.generate_functions :as gf
-             :only
-             [sio-atom0 sio-class0]]))
+  (:require [ncl.sio.patterns :as p
+             :only [sio-atom0 sio-class0]]))
 
 (defontology mysio
   :iri "http://ncl.ac.uk/sio/mysio"
   :prefix "mysio:")
 
 ;; predump -- necessary
-(clojure.core/load-file "./output/sio_ent.clj")
+(clojure.core/load-file "./src/ncl/sio/mysio_ent.clj")
 
 ;; oproperty = 203
 (clojure.core/load-file "./src/ncl/sio/oproperties.clj")
@@ -58,9 +56,9 @@
 ;; NONE
 
 ;; classes (excluding atoms) = 1396 - 118
-(def sio-class (clojure.core/partial gf/sio-class0 mysio))
-(clojure.core/load-file "./output/rest.clj")
+(def sio-class (clojure.core/partial p/sio-class0 mysio))
+(clojure.core/load-file "./src/ncl/sio/rest.clj")
 
 ;; atoms = 118
-(def sio-atom (clojure.core/partial gf/sio-atom0 mysio atom))
+(def sio-atom (clojure.core/partial p/sio-atom0 mysio atom))
 (clojure.core/load-file "./src/ncl/sio/atom.clj")
