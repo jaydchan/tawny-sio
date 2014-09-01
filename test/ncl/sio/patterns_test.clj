@@ -16,21 +16,12 @@
 ;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.patterns_test
+  (:refer-clojure :exclude [atom])
   (:use [clojure.test])
   (:require [tawny.owl :as o]
             [ncl.sio.patterns :as p])
   (:import (org.semanticweb.owlapi.model
             OWLAnnotation OWLClass)))
-
-;; (defn ontology-reasoner-fixture [tests]
-;;   (r/reasoner-factory :hermit)
-;;   (tawny.owl/ontology-to-namespace s/sio)
-;;   (binding [r/*reasoner-progress-monitor*
-;;             (atom
-;;             r/reasoner-progress-monitor-silent)]
-;;     (tests)))
-
-;; (use-fixtures :once ontology-reasoner-fixture)
 
 ;; to run: M-x 'lein' 'test'
 
@@ -50,18 +41,20 @@
      (instance? OWLAnnotation ann))))
 
 (deftest sio-class0
-  (let [clazz (p/sio-class0 to "test" "test class")]
+  (let [test (p/sio-class0 to "label" "description")]
     (is
-     (instance? OWLClass clazz))))
+     (instance? OWLClass (var-get test)))))
 
 (deftest sio-atom-annotation-maybe
   (let [without (p/sio-atom-annotation-maybe
                  to
-                 (o/owl-class to "without chebi")
+                 o/see-also-property
+                 (o/owl-class to "without_chebi")
                  nil)
         with (p/sio-atom-annotation-maybe
               to
-              (o/owl-class to "with chebi")
+              o/see-also-property
+              (o/owl-class to "with_chebi")
               "CHEBI:00000")]
     (is
      (= 0
@@ -71,7 +64,8 @@
         (count with)))))
 
 (deftest sio-atom0
-  (let [atom (p/sio-class0 to "atom" "the atom class")]
-    (p/sio-atom0 to atom "test atom" nil)
+  (let [atom (p/sio-class0 to "atom" "the atom class")
+        tatom (p/sio-atom0 to o/see-also-property (var-get atom)
+                           "test atom" nil)]
     (is
      (instance? OWLClass (o/owl-class to "test_atom")))))
