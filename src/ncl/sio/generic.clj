@@ -42,7 +42,7 @@
 ;; not be defined as unique symbols in Clojure
 (def specific-replaces {"annotation" "_annotation", "label" "_label",
                         "true" "_true", "false" "_false",
-                        "e.coli" "e_coli"})
+                        "e.coli" "e_coli", "implies (->)" "implies"})
 
 (def ^{:private true
        :doc "TODO"}
@@ -56,7 +56,8 @@
    " :domain" "\n\t:domain",
    " :characteristic" "\n\t:characteristic",
    " \\(label " "\n\t(label ",
-   " \\(annotation " "\n\t(annotation "})
+   " \\(annotation " "\n\t(annotation ",
+   " \\(owl-comment " "\n\t(owl-comment "})
 
 (defn pretty-print
   "Simplistic "
