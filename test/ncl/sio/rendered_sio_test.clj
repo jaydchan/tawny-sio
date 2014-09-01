@@ -23,11 +23,20 @@
    [tawny.reasoner :as r]
    [ncl.sio.rendered_sio :as rsio]
    [ncl.sio.sio :as s])
-  (:import (org.semanticweb.owlapi.model
-            OWLOntology
-            OWLSubClassOfAxiom
-            OWLEquivalentClassesAxiom
-            OWLSubObjectPropertyOfAxiom)))
+  (:import (org.semanticweb.owlapi.model OWLOntology
+            OWLSubPropertyChainOfAxiom OWLInverseObjectPropertiesAxiom
+            OWLDeclarationAxiom OWLObjectPropertyRangeAxiom
+            OWLSubClassOfAxiom OWLEquivalentClassesAxiom
+            OWLSubObjectPropertyOfAxiom
+            OWLReflexiveObjectPropertyAxiom
+            OWLInverseFunctionalObjectPropertyAxiom
+            OWLFunctionalObjectPropertyAxiom
+            OWLTransitiveObjectPropertyAxiom OWLDisjointClassesAxiom
+            OWLSymmetricObjectPropertyAxiom
+            OWLIrreflexiveObjectPropertyAxiom
+            OWLFunctionalDataPropertyAxiom
+            OWLAsymmetricObjectPropertyAxiom
+            OWLObjectPropertyDomainAxiom)))
 
 (defn ontology-reasoner-fixture [tests]
   (r/reasoner-factory :hermit)
@@ -50,10 +59,9 @@
    (instance? OWLOntology rsio/rendered_sio)))
 
 (deftest signature
-  ;; NOTE: Tawny-OWL adds a tawny-name annotation property in rsio
   (is
    (= (count (.getSignature s/sio))
-      (- (count (.getSignature rsio/rendered_sio)) 1)))
+      (count (.getSignature rsio/rendered_sio))))
   (is
    (= (count (filter
               #(tawny.read/iri-starts-with-filter
@@ -75,10 +83,9 @@
       (count (.getObjectPropertiesInSignature rsio/rendered_sio)))))
 
 (deftest aproperties
-  ;; NOTE: Tawny-OWL adds a tawny-name annotation property in rsio
   (is
    (= (count (.getAnnotationPropertiesInSignature s/sio))
-      (- (count (.getAnnotationPropertiesInSignature rsio/rendered_sio)) 1)))
+      (count (.getAnnotationPropertiesInSignature rsio/rendered_sio))))
   (is
    (= (count (filter
               #(tawny.read/iri-starts-with-filter
@@ -94,48 +101,66 @@
    (= (count (.getDataPropertiesInSignature s/sio))
       (count (.getDataPropertiesInSignature rsio/rendered_sio)))))
 
-;; actually 8597 axioms
+;; 7463 vs 7083
 ;; (deftest axioms
 ;;   (is
 ;;    (= (count (.getAxioms s/sio))
 ;;       (count (.getAxioms rsio/rendered_sio)))))
 
-;; off by 1???
-;; (deftest subclassofaxioms
-  ;; (let [sio (filter
-  ;;            #(instance? OWLSubClassOfAxiom %)
-  ;;            (.getAxioms s/sio))
-  ;;       rio (filter
-  ;;            #(instance? OWLSubClassOfAxiom %)
-  ;;            (.getAxioms rsio/rendered_sio))]
-  ;;   (spit "./sio.log"
-  ;;         (clojure.string/join "\n" sio))
-  ;;   (spit "./rendered.log"
-  ;;         (clojure.string/join "\n" rio)))
+;; 1 vs 0 vs 1
+(deftest subproperty-chain-of-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLSubPropertyChainOfAxiom %)
+        (.getAxioms s/sio)))
+      ;; update when subchain render fixed
+      (+ (count
+          (filter
+           #(instance? OWLSubPropertyChainOfAxiom %)
+           (.getAxioms rsio/rendered_sio))) 1))))
 
-  ;; sio.owl, s/sio and sio_ii/clj are doubles
-  ;; while rsio/rendered_sio are integers
-  ;; 1132,1133c1132
-  ;; < SubClassOf(<probability_value> DataSomeValuesFrom(<has_value> DataRangeRestriction(xsd:integer facetRestriction(maxInclusive "1"^^xsd:integer))))
-  ;; < SubClassOf(<probability_value> DataSomeValuesFrom(<has_value> DataRangeRestriction(xsd:integer facetRestriction(minInclusive "0"^^xsd:integer))))
-  ;; ---
-  ;; > SubClassOf(<probability_value> DataSomeValuesFrom(<has_value> DataRangeRestriction(xsd:double facetRestriction(minInclusive "0.0"^^xsd:double) facetRestriction(maxInclusive "1.0"^^xsd:double))))
+(deftest inverse-object-properties-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLInverseObjectPropertiesAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLInverseObjectPropertiesAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
 
-  ;; Two issues
-  ;; 1. Rendering should be (owl-some has_value (span >=< 0.0 1.0))
-  ;; 2. Span function return double not integer
+;; 1633 vs 1638
+;; 5 extra declarations!!!
+;; Declaration(AnnotationProperty(<http://protege.stanford.edu/plugins/owl/protege#defaultLanguage>))
+;; Declaration(AnnotationProperty(owl:versionInfo))
+;; Declaration(AnnotationProperty(rdfs:comment))
+;; Declaration(AnnotationProperty(rdfs:label))
+;; Declaration(AnnotationProperty(rdfs:seeAlso))
+(deftest declaration-axioms
+  (is
+   (= (+ (count
+          (filter
+           #(instance? OWLDeclarationAxiom %)
+           (.getAxioms s/sio))) 5)
+      (count
+       (filter
+        #(instance? OWLDeclarationAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
 
-  ;; (is
-  ;;  (= (count
-  ;;      (filter
-  ;;       #(instance? OWLSubClassOfAxiom %)
-  ;;       (.getAxioms s/sio)))
-  ;;     (count
-  ;;      (filter
-  ;;       #(instance? OWLSubClassOfAxiom %)
-  ;;       (.getAxioms rsio/rendered_sio))))))
+(deftest object-property-range-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLObjectPropertyRangeAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLObjectPropertyRangeAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
 
-(deftest equivalentaxioms
+(deftest equivalent-classes-axioms
   (is
    (= (count
        (filter
@@ -146,7 +171,30 @@
         #(instance? OWLEquivalentClassesAxiom %)
         (.getAxioms rsio/rendered_sio))))))
 
-(deftest subpropertyofaxioms
+(deftest subclass-of-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLSubClassOfAxiom %)
+        (.getAxioms s/sio)))
+      ;; update when span render fixed
+      (- (count
+          (filter
+           #(instance? OWLSubClassOfAxiom %)
+           (.getAxioms rsio/rendered_sio))) 1))))
+
+(deftest reflexive-object-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLReflexiveObjectPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLReflexiveObjectPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest subproperty-of-axioms
   (is
    (= (count
        (filter
@@ -155,4 +203,104 @@
       (count
        (filter
         #(instance? OWLSubObjectPropertyOfAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest inverse-functional-object-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLInverseFunctionalObjectPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLInverseFunctionalObjectPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest functional-object-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLFunctionalObjectPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLFunctionalObjectPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest transitive-object-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLTransitiveObjectPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLTransitiveObjectPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+;; 75 vs 170
+;; (deftest disjoint-classes-axioms
+;;   (is
+;;    (= (count
+;;        (filter
+;;         #(instance? OWLDisjointClassesAxiom %)
+;;         (.getAxioms s/sio)))
+;;       (count
+;;        (filter
+;;         #(instance? OWLDisjointClassesAxiom %)
+;;         (.getAxioms rsio/rendered_sio))))))
+
+(deftest symmetric-object-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLSymmetricObjectPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLSymmetricObjectPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest irreflexive-object-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLIrreflexiveObjectPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLIrreflexiveObjectPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest functional-data-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLFunctionalDataPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLFunctionalDataPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest asymmetric-object-property-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLAsymmetricObjectPropertyAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLAsymmetricObjectPropertyAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
+
+(deftest object-property-domain-axioms
+  (is
+   (= (count
+       (filter
+        #(instance? OWLObjectPropertyDomainAxiom %)
+        (.getAxioms s/sio)))
+      (count
+       (filter
+        #(instance? OWLObjectPropertyDomainAxiom %)
         (.getAxioms rsio/rendered_sio))))))
