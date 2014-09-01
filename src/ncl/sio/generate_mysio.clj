@@ -18,9 +18,7 @@
   (:use [tawny.owl])
   (:require [ncl.sio.sio :as s]
             [ncl.sio.generic :as g
-             :only [specific-replaces pretty-print]]
-            [ncl.sio.mysio :as m
-             :only [sio-class]]))
+             :only [specific-replaces pretty-print]]))
 
 (defn shorten
   [string]
@@ -33,12 +31,6 @@
                :let [label ann]
                :when (.isLabel ann)]
            label)))
-
-;; (defn get-name
-;;   "Returns the name (value) of the label annotation"
-;;   [annotations]
-;;   (let [name (.getLiteral (.getValue (get-label annotations)))]
-;;     (get g/specific-replaces name name)))
 
 (defn get-name
   "Returns the name (value) of the label annotation"
