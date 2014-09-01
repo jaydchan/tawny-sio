@@ -26,7 +26,8 @@
             OWLOntology
             OWLSubClassOfAxiom
             OWLEquivalentClassesAxiom
-            OWLSubObjectPropertyOfAxiom)))
+            OWLSubObjectPropertyOfAxiom
+            OWLAnnotationAssertionAxiom)))
 
 (defn ontology-reasoner-fixture [tests]
   (r/reasoner-factory :hermit)
@@ -50,10 +51,7 @@
 
 (deftest signature
   (is
-   (= 1630
-      (count (.getSignature s/sio))))
-  (is
-   (= 1608
+   (= 1626
       (count (filter
               (partial
                tawny.read/iri-starts-with-filter
@@ -62,7 +60,7 @@
 
 (deftest classes
   (is
-   (= 1396
+   (= 1414
       (count (.getClassesInSignature s/sio)))))
 
 (deftest oproperties
@@ -87,29 +85,23 @@
    (= 1
       (count (.getDataPropertiesInSignature s/sio)))))
 
-;; ;; Actually 7370???
-;; (deftest axioms
-;;   (is
-;;    (= 7272
-;;       (count (.getAxioms s/sio)))))
-
-(deftest subclassofaxioms
+(deftest subclass-of-axioms
   (is
-   (= 1747
+   (= 1774
       (count
        (filter
         #(instance? OWLSubClassOfAxiom %)
         (.getAxioms s/sio))))))
 
-(deftest equivalentaxioms
+(deftest equivalent-classes-axioms
   (is
-   (= 43
+   (= 44
       (count
        (filter
         #(instance? OWLEquivalentClassesAxiom %)
         (.getAxioms s/sio))))))
 
-(deftest subpropertyofaxioms
+(deftest subproperty-of-axioms
   (is
    (= 209
       (count
