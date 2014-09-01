@@ -51,12 +51,10 @@
         ;; (println "Splitting" e)
         (clojure.core/last
          (clojure.string/split (.toString (.getIRI e)) #"/" )))
-      (let [t
-            (tawny.read/stop-characters-transform
-             (tawny.read/noisy-nil-label-transform e))]
+      (let [t (tawny.read/noisy-nil-label-transform e)]
         ;; (println "transformed: " t)
-        (clojure.core/get ncl.sio.generic/specific-replaces t t))))
-  )
+        (tawny.read/stop-characters-transform
+         (clojure.core/get ncl.sio.generic/specific-replaces t t))))))
 
 (let [mapfile "./output/sio_map.txt"
       entfile "./output/sio_ent.clj"
