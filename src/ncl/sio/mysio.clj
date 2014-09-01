@@ -23,16 +23,28 @@
 
 (defontology mysio
   :iri "http://ncl.ac.uk/sio/mysio"
-  :prefix "mysio:")
+  :prefix "mysio:"
+  :noname true)
 
 ;; predump -- necessary
 (clojure.core/load-file "./src/ncl/sio/mysio_ent.clj")
+
+;; dproperty = 1
+(defdproperty has_value
+  :characteristic :functional)
 
 ;; oproperty = 203
 (clojure.core/load-file "./src/ncl/sio/oproperties.clj")
 
 ;; sio aproperty (and tawny-name) = 8 (+1)
-;; No additional information required
+(defaproperty narrowerThan)
+(defaproperty equivalentTo)
+(defaproperty subset)
+(defaproperty similarTo)
+(defaproperty example)
+(defaproperty broaderThan)
+(defaproperty seeAlso)
+(defaproperty hasSynonym)
 
 ;; other aproperty  = 12
 (annotation-property (iri "http://protege.stanford.edu/plugins/owl/protege#defaultLanguage"))
@@ -48,17 +60,17 @@
 (annotation-property (iri "http://purl.org/dc/terms/contributor"))
 (annotation-property (iri "http://purl.org/dc/terms/title"))
 
-;; dproperty = 1
-(datatype-property has_value
-                   :characteristic :functional)
-
 ;; individuals = 0
 ;; NONE
 
 ;; classes (excluding atoms) = 1396 - 118
 (def sio-class (clojure.core/partial p/sio-class0 mysio))
-(clojure.core/load-file "./src/ncl/sio/rest.clj")
+(def subset-rdf (clojure.core/partial p/subset-rdf0 mysio subset))
+(def core (subset-rdf "core"))
+(def synonym-rdf (clojure.core/partial p/synonym-rdf0 mysio hasSynonym))
+(def synonym-en (clojure.core/partial p/synonym-en0 mysio hasSynonym))
+(clojure.core/load-file "./src/ncl/sio/mysio_ii.clj")
 
 ;; atoms = 118
-(def sio-atom (clojure.core/partial p/sio-atom0 mysio atom))
+(def sio-atom (clojure.core/partial p/sio-atom0 mysio seeAlso atom))
 (clojure.core/load-file "./src/ncl/sio/atom.clj")
