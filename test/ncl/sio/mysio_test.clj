@@ -37,7 +37,8 @@
             OWLIrreflexiveObjectPropertyAxiom
             OWLFunctionalDataPropertyAxiom
             OWLAsymmetricObjectPropertyAxiom
-            OWLObjectPropertyDomainAxiom)))
+            OWLObjectPropertyDomainAxiom
+            OWLAnnotationAxiom)))
 
 (defn ontology-reasoner-fixture [tests]
   (r/reasoner-factory :hermit)
@@ -146,19 +147,18 @@
 
 ;; missing 2
 (deftest inverse-object-properties-axioms
-  (spit "r.txt"
-        (clojure.string/join
-         "\n"
-         (filter
-          #(instance? OWLInverseObjectPropertiesAxiom %)
-          (.getAxioms rsio/rendered_sio))))
-  (spit "m.txt"
-        (clojure.string/join
-         "\n"
-         (filter
-          #(instance? OWLInverseObjectPropertiesAxiom %)
-          (.getAxioms m/mysio))))
-
+  ;; (spit "r.txt"
+  ;;       (clojure.string/join
+  ;;        "\n"
+  ;;        (filter
+  ;;         #(instance? OWLInverseObjectPropertiesAxiom %)
+  ;;         (.getAxioms rsio/rendered_sio))))
+  ;; (spit "m.txt"
+  ;;       (clojure.string/join
+  ;;        "\n"
+  ;;        (filter
+  ;;         #(instance? OWLInverseObjectPropertiesAxiom %)
+  ;;         (.getAxioms m/mysio))))
   (is
    (= (count
        (filter
@@ -409,3 +409,21 @@
        (filter
         #(instance? OWLObjectPropertyDomainAxiom %)
         (.getAxioms m/mysio))))))
+
+;; 3500 vs 3019 vs 3019
+(deftest annotation-axioms
+  (let [ranns
+        (filter
+         #(instance? OWLAnnotationAxiom %)
+         (.getAxioms rsio/rendered_sio))
+        manns
+        (filter
+         #(instance? OWLAnnotationAxiom %)
+         (.getAxioms m/mysio))]
+    (is
+     (= ;; (count
+        ;;  (filter
+        ;;   #(instance? OWLAnnotationAxiom %)
+        ;;   (.getAxioms s/sio)))
+        (count ranns)
+        (count manns)))))
