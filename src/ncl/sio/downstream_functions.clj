@@ -91,7 +91,7 @@
   ""
   [function values]
   (for [v values]
-    (function v)))
+    (some-role function v)))
 
 (defn biochemical-reaction-pattern
   ""
@@ -119,9 +119,9 @@
 
 (biochemical-reaction-pattern
  "hexokinase reaction"
- [(partial some-role reactant_role) [glucose ATP]]
- [(partial some-role catalytic_role) [hexokinase]]
- [(partial some-role product_role) [glucose-6-phosphate ADP]])
+ [reactant_role [glucose ATP]]
+ [catalytic_role [hexokinase]]
+ [product_role [glucose-6-phosphate ADP]])
 
 ;; (GENERIC) REACTION_PATTERN -- WORKS
 ;; https://code.google.com/p/semanticscience/wiki/ODPChange
@@ -156,9 +156,9 @@
 (reaction-pattern
  "enzyme-catalyzed phosphorylation using ATP"
  addition_reaction
- [(partial some-role reactant_role) [protein ATP]]
- [(partial some-role catalytic_role) [phospho-enzyme]]
- [(partial some-role product_role) [phosphorylated_protein ADP]])
+ [reactant_role [protein ATP]]
+ [catalytic_role [phospho-enzyme]]
+ [product_role [phosphorylated_protein ADP]])
 
 ;; ENZYME MECHANISM PATTERNS
 
