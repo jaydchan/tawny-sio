@@ -69,6 +69,12 @@
 (def core (subset-rdf "core"))
 (def synonym-rdf (clojure.core/partial p/synonym-rdf0 mysio hasSynonym))
 (def synonym-en (clojure.core/partial p/synonym-en0 mysio hasSynonym))
+(def eg (clojure.core/partial p/example0 mysio example))
+(def equivalent-rdf (clojure.core/partial p/equivalent-rdf0 mysio equivalentTo))
+(def equivalent-uri (clojure.core/partial p/equivalent-uri0 mysio equivalentTo))
+(def similar-uri (clojure.core/partial p/similar-uri0 mysio similarTo))
+(def see-also-uri (clojure.core/partial p/see-also-uri0 mysio))
+(def see-also-rdf (clojure.core/partial p/see-also0 mysio seeAlso))
 (clojure.core/load-file "./src/ncl/sio/mysio_ii.clj")
 
 ;; atoms = 118

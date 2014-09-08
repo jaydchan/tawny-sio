@@ -54,10 +54,6 @@ annotations."
 annotations."
   [o subset value]
   (annotation o subset (literal value :type :RDF_PLAIN_LITERAL)))
-;; ;; one exception (sadi)
-;; (defn subset-en
-;;   [value]
-;;   (annotation subset (literal value :lang "en")))
 
 ;; "Annotation pattern to ensure the consistency of hasSynonym
 ;; annotations."
@@ -68,42 +64,31 @@ annotations."
   [o synonym value]
   (annotation o synonym (literal value :lang "en")))
 
-;; (defn example
-;;   "Annotation pattern to ensure the consistency of example
+(defn example0
+  "Annotation pattern to ensure the consistency of example
+annotations."
+  [o example value]
+  (annotation o example (literal value :lang "en")))
+
+;; "Annotation pattern to ensure the consistency of equivalentTo
 ;; annotations."
-;;   [value]
-;;   (annotation example (literal value :lang "en")))
+(defn equivalent-rdf0
+  [o equivalent value]
+  (annotation equivalent (literal value :type :RDF_PLAIN_LITERAL)))
+(defn equivalent-uri0
+  [o equivalent value]
+  (annotation equivalent (literal value :type :XSD_ANY_URI)))
 
-;; (defn equivalent-to-rdf
-;;   [value]
-;;   (annotation equivalentTo (literal value :type :RDF_PLAIN_LITERAL)))
-;; (defn equivalent-to-uri
-;;   [value]
-;;   (annotation equivalentTo (literal value :type :XSD_ANY_URI)))
+(defn similar-uri0
+  [o similar value]
+  (annotation similar (literal value :type :XSD_ANY_URI)))
 
-;; only one of these
-;; (defn broader-than
-;;   [value]
-;;   (annotation broaderThan (literal value :type :RDF_PLAIN_LITERAL)))
-
-;; only one of these
-;; (defonce ^{:private true
-;;            :doc "dc:alternativeName IRI"}
-;;   dc-alternative (iri "http://purl.org/dc/terms/alternativeName"))
-;; (defn alternative-name
-;;   "Annotation pattern to ensure the consistency of alternativeName
-;; annotations."
-;;   [value]
-;;   (annotation dc-alternative (literal value :lang "en")))
-
-;; ;; two of these
-;; (defn similar-to-uri
-;;   [value]
-;;   (annotation similarTo (literal value :type :XSD_ANY_URI)))
-;; ;; only one of these
-;; (defn similar-to-rdf
-;;   [value]
-;;   (annotation similarTo (literal value :type :RDF_PLAIN_LITERAL)))
+;; see-also-rdf (using rdf:seeAlso) 1
+;; broaderThan 1
+;; alternative-name-en 1
+;; alternative-name-rdf 1
+;; similar-rdf 1
+;; subset-en 2 same value
 
 ;; CLASS PATTERNS
 (defn sio-class0
@@ -126,14 +111,11 @@ annotations."
 ;;     "Macro thats uses the sio-class0 pattern."
 ;;   sio-class0)
 
-;; (def rdf-seeAlso (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso"))
-;; (defn see-also-rdf
-;;   [value]
-;;   (annotation rdf-seeAlso (literal value :type :XSD_ANY_URI)))
-;; (defn see-also-rdf
-;;   ;; CHEMINF
-;;   [value]
-;;   (annotation seeAlso (literal value :type :RDF_PLAIN_LITERAL))
+(defn see-also-uri0
+  [o value]
+  (annotation
+   o (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso")
+   (literal value :type :XSD_ANY_URI)))
 
 (defn see-also0
   "Annotation pattern to ensure the consistency of see-also

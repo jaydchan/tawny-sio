@@ -102,16 +102,16 @@
  (sio-class "abnormal" "A quality that has a value that is outside normal or average.")
  (sio-class "normal" "A quality that has a value that is normal or average."
             :annotation
-            (annotation equivalentTo (literal "PATO:0000461" :type :RDF_PLAIN_LITERAL))))
+            (equivalent-rdf "PATO:0000461")))
 
 (as-disjoint-subclasses
  abnormal
  (sio-class "decreased" "A quality that has a value that is decreased compared to normal or average."
             :annotation
-            (annotation equivalentTo (literal "PATO:0002301" :type :RDF_PLAIN_LITERAL)))
+            (equivalent-rdf "PATO:0002301"))
  (sio-class "increased" "A quality that has a value that is increased compared to normal or average."
             :annotation
-            (annotation equivalentTo (literal "PATO:0002300" :type :RDF_PLAIN_LITERAL))))
+            (equivalent-rdf "PATO:0002300")))
 
 (as-subclasses
  object_quality
@@ -139,10 +139,10 @@
  (sio-class "female" "female is a biological sex of an individual with female sexual organs.")
  (sio-class "hermaphrodite" "hermaphrodite is a biological sex of an individual with both male and female sexual organs."
             :annotation
-            (annotation equivalentTo (literal "PATO:0001827" :type :RDF_PLAIN_LITERAL)))
+            (equivalent-rdf "PATO:0001827"))
  (sio-class "male" "male is a biological sex of an individual with male sexual organs."
             :annotation
-            (annotation equivalentTo (literal "PATO:0000384" :type :RDF_PLAIN_LITERAL))))
+            (equivalent-rdf "PATO:0000384")))
 
 (sio-class "ploidy" "Ploidy is the cellular quality relating to the amount of DNA contained in a cell."
            :super cellular_quality)
@@ -267,7 +267,7 @@
  capability
  (sio-class "disposition" "A disposition is the tendency of a capability to be exhibited under certain conditions or in response to a certain stimulus (trigger)"
             :annotation
-            (annotation example (literal "solubility (to dissolve when put in fluid); fragility (disposition to break when dropped)" :lang "en"))
+            (eg "solubility (to dissolve when put in fluid); fragility (disposition to break when dropped)")
             core)
  (sio-class "function" "A function is a capability that satisfies some agentive objective, or (evolutionary) optimization."
             :annotation
@@ -428,14 +428,14 @@
 (sio-class "to cool" "To cool is the capability to decrease the internal kinetic energy of a material."
 	:super to_reduce_energy
 	:annotation
-	(annotation (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso") (literal "http://purl.obolibrary.org/obo/OBI_0000387" :type :XSD_ANY_URI)))
+	(see-also-uri "http://purl.obolibrary.org/obo/OBI_0000387"))
 (sio-class "to emit" "To emit is the capability to release some physical entity (light, pollution, etc)."
 	:super to_reduce_energy)
 
 (sio-class "to freeze" "To freeze is the capability to decrease the internal kinetic energy of a material such that it changes state from a gas or liquid to a solid."
 	:super to_cool
 	:annotation
-	(annotation (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso") (literal "http://purl.obolibrary.org/obo/OBI_0000375" :type :XSD_ANY_URI)))
+	(see-also-uri "http://purl.obolibrary.org/obo/OBI_0000375"))
 
 (as-subclasses
  to_supply_energy
@@ -507,7 +507,7 @@
  (sio-class "to observe" "to observe is the capability to watch attentively.")
  (sio-class "to record" "To record is the capability to detect and transcribe information in a specified format on some physical medium."
             :annotation
-            (annotation (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso") (literal "http://purl.obolibrary.org/obo/OBI_0000368" :type :XSD_ANY_URI))))
+            (see-also-uri "http://purl.obolibrary.org/obo/OBI_0000368")))
 
 (sio-class "to characterize" "to characterize is the capability to classify the attributes or features of an entity against a reference classification."
 	:super to_describe)
@@ -654,7 +654,8 @@
             core)
  (sio-class "spatial region" "a spatial region is an object contained in some region of space."
             :annotation
-            (annotation example (literal "the airspace above Ottawa airport; the band around the northern hemisphere between 50 degrees N and 60 degrees N; the spatial region occupied by a bottle" :lang "en")))
+            (synonym-rdf "region")
+            (eg "the airspace above Ottawa airport; the band around the northern hemisphere between 50 degrees N and 60 degrees N; the spatial region occupied by a bottle"))
  (sio-class "anatomical entity" "an anatomical entity is an object that is a structural part (material or immaterial) of a biological entity."))
 
 (as-subclasses
@@ -723,7 +724,7 @@
 (sio-class "chemical data" "A chemical datum is a scientific data item which conforms to some specification, either for how it is calculated or for how it is measured, and is commonly used in the domain of chemistry to name and differentiate different numeric properties (both calculated and measured) which are about chemical entities."
 	:super scientific_data
 	:annotation
-	(annotation seeAlso (literal "CHEMINF:000123" :type :RDF_PLAIN_LITERAL)))
+	(see-also-rdf "CHEMINF:000123"))
 
 (as-subclasses
  biological_data
@@ -746,7 +747,7 @@
 (sio-class "molecular structure descriptor" "molecular structure descriptor is data that describes some aspect of the molecular structure (composition) and is about some chemical entity."
 	:super chemical_data (owl-some is_about molecule)
 	:annotation
-	(annotation seeAlso (literal "CHEMINF:000085" :type :RDF_PLAIN_LITERAL)))
+	(see-also-rdf "CHEMINF:000085"))
 
 (sio-class "biomolecular structure descriptor" "a biomolecular structure descriptor is structure description for organic compounds."
 	:super molecular_structure_descriptor)
@@ -821,17 +822,17 @@
  web_service
 (sio-class "REST web service" "a REST web service is a web service that provides functionality according to the Representational State Transfer (REST) specification."
 	:annotation
-	(annotation (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso") (literal "http://en.wikipedia.org/wiki/REST" :type :XSD_ANY_URI)))
+	(see-also-uri "http://en.wikipedia.org/wiki/REST"))
 (sio-class "semantic web service" "a semantic web service is a web service that provides a formal, machine understanble description of its functionality.")
 (sio-class "SOAP web service" "a SOAP web service is a web service that implements Simple Object Access Protocol (SOAP)."
 	:super web_service
 	:annotation
-	(annotation (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso") (literal "http://en.wikipedia.org/wiki/SOAP" :type :XSD_ANY_URI))))
+	(see-also-uri "http://en.wikipedia.org/wiki/SOAP")))
 
 (sio-class "SADI semantic web service" "a SADI semantic web service is a semantic web service that follows the SADI specification"
            :super semantic_web_service
 	:annotation
-	(annotation (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso") (literal "http://en.wikipedia.org/wiki/SADI" :type :XSD_ANY_URI))
+	(see-also-uri "http://en.wikipedia.org/wiki/SADI")
         (annotation subset (literal "sadi" :lang "en")))
 
 (as-subclasses
@@ -876,7 +877,7 @@
 (sio-class "axis" "An axis is a line segment that is part of a statistical graph in which the \nposition along the line corresponds to a numeric or categorical value."
 	:super directed_line_segment (owl-some is_component_part_of statistical_graph)
 	:annotation
-	(annotation example (literal "The left vertical and bottom horizontal lines with tickmarks in \nGraph 1 http://tinyurl.com/opwnvm" :lang "en"))
+	(eg "The left vertical and bottom horizontal lines with tickmarks in \nGraph 1 http://tinyurl.com/opwnvm")
 	(owl-comment (literal "The value of a plotted geometric objects (e.g. point) can be obtained from the perpendicular projection of the position of the object onto the axis. Axis may also be associated with a textual description of what the values on the axis represents." :type :RDF_PLAIN_LITERAL)))
 
 (as-disjoint-subclasses
@@ -890,21 +891,21 @@
  axis
 (sio-class "category axis" "A category axis is an axis in which the position along the line is \npartioned into categories."
 	:annotation
-	(annotation example (literal "The horizontal axis corresponding to months of the year in graph 4 \nof http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "The horizontal axis corresponding to months of the year in graph 4 \nof http://tinyurl.com/opwnvm"))
 (sio-class "value axis" "A value axis is an axis in which the position along the line is \npartioned into numeric values."
 	:annotation
 	(owl-comment (literal "A value axis holds the properties of having a minimum and a \nmaximum value, and is usually associated with tickmarks that indicate \nintervals along the axis." :type :RDF_PLAIN_LITERAL))
-	(annotation example (literal "The value axis that ranges from 3.0 to 7.4 and corresponds to \nbillions of dollars in Graph 1 of http://tinyurl.com/opwnvm" :lang "en"))))
+	(eg "The value axis that ranges from 3.0 to 7.4 and corresponds to \nbillions of dollars in Graph 1 of http://tinyurl.com/opwnvm")))
 
 (as-disjoint-subclasses
  category_axis
  :cover
 (sio-class "primary category axis" "A primary category axis is a category axis that either defines the sole value range or holds the larger set of categorical values specified by the secondary category axis."
 	:annotation
-	(annotation example (literal "The category axis that corresponds to years in Graph 1 of \nhttp://tinyurl.com/opwnvm" :lang "en")))
+	(eg "The category axis that corresponds to years in Graph 1 of \nhttp://tinyurl.com/opwnvm"))
 (sio-class "secondary category axis" "A secondary category axis is a category axis that defines a finer \ngranular part (or subset) of the value range of the primary category axis."
 	:annotation
-	(annotation example (literal "The category axis that corresponds to months in Graph 1 of \nhttp://tinyurl.com/opwnvm" :lang "en"))))
+	(eg "The category axis that corresponds to months in Graph 1 of \nhttp://tinyurl.com/opwnvm")))
 
 ;; NOTE cartesian and scaled not included
 (as-disjoint-subclasses
@@ -913,7 +914,7 @@
 (sio-class "bottom value axis" "A bottom value axis is a value axis that is spatially positioned to the bottom of the plot area.")
 (sio-class "left value axis" "A left value axis is a value axis that is spatially positioned to the left of the plot area."
 	:annotation
-	(annotation example (literal "The value axis that ranges from 3.0 to 7.4 and corresponds to billions of dollars in Graph 1 of http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "The value axis that ranges from 3.0 to 7.4 and corresponds to billions of dollars in Graph 1 of http://tinyurl.com/opwnvm"))
 (sio-class "right value axis" "A right value axis is a value axis that is spatially positioned to the right of the plot area.")
 (sio-class "top value axis" "A top value axis is a value axis that is spatially positioned to the top of the plot area."))
 (sio-class "Cartesian coordinate axis" "A Cartesian coordinate axis is an axis whose behavior follows that of a Cartesian coordinate system."
@@ -925,7 +926,7 @@
  Cartesian_coordinate_axis
  (sio-class "x-axis" "An x-axis is a Cartesian coordinate axis that is aligned with the horizon."
 	:annotation
-	(annotation example (literal "The horizontal axis in http://tinyurl.com/opwnvm" :lang "en"))
+	(eg "The horizontal axis in http://tinyurl.com/opwnvm")
 	(synonym-rdf "horizontal axis")
 	(owl-comment (literal "In most figures, this axis represents categories, such as months, \nmarket segments, or other non-numeric data." :type :RDF_PLAIN_LITERAL)))
 (sio-class "y-axis" "A y-axis is a Cartesian coordinate axis that is spatially oriented \nperpendicular to the x-axis."
@@ -1198,7 +1199,7 @@
 	:super chemical_structure
 	:annotation
 	(synonym-rdf "electronic configuration")
-	(annotation example (literal "the electron configuration of the neon atom is 1s2 2s2 2p6." :lang "en")))
+	(eg "the electron configuration of the neon atom is 1s2 2s2 2p6."))
 
 (sio-class "crystal structure" "a crystal structure is the arrangement of atoms or molecules in a crystalline liquid or solid."
 	:super molecular_structure)
@@ -1328,7 +1329,7 @@
 (sio-class "software version label" "a software version label is a version label for a piece of software."
 	:super version_label (owl-some is_identifier_for software_entity)
 	:annotation
-	(annotation example (literal "major.minor[.build[.revision]]" :lang "en")))
+	(eg "major.minor[.build[.revision]]"))
 
 (as-subclasses
  software_version_label
@@ -1360,12 +1361,12 @@
 (sio-class "graph title" "A graph title is a title that describes a graph."
 	:equivalent (owl-and title (owl-some is_direct_part_of statistical_graph))
 	:annotation
-	(annotation example (literal "Total value of permits increased slightly in December\" in Graph 1 of http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Total value of permits increased slightly in December\" in Graph 1 of http://tinyurl.com/opwnvm"))
 
 (sio-class "primary graph title" "A primary graph title is a primary title that describes a statistical \ngraph."
 	:super primary_title (owl-some is_direct_part_of statistical_graph)
 	:annotation
-	(annotation example (literal "Total value of permits increased slightly in December\" in Graph 1 of http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Total value of permits increased slightly in December\" in Graph 1 of http://tinyurl.com/opwnvm"))
 (sio-class "secondary graph title" "A secondary graph title is a secondary title that describes a statistical graph."
 	:super primary_title (owl-some is_direct_part_of statistical_graph))
 
@@ -1499,7 +1500,7 @@
 (sio-class "chemical-pathway association" "a chemical-pathway association is an association between a chemical and a pathway."
 	:super (owl-some refers_to pathway) (owl-some refers_to chemical_entity)
 	:annotation
-	(annotation hasSynonym (literal "drug-pathway association" :lang "en"))))
+	(synonym-en "drug-pathway association")))
 
 (sio-class "exact cross-reference" "an exact cross-reference is a database cross-reference in which one entity is equivalent to the other based on all the entitie's attributes (minus the source)"
 	:super database_cross-reference)
@@ -1519,7 +1520,7 @@
 	(synonym-rdf "gene variant-disease association"))
 (sio-class "gene-disease association linked with post-translational modification" "a gene-disease association in which the disease phenotype is associated with post-translational modifications in the protein product."
 	:annotation
-	(annotation example (literal "methylation or phosphorylation of protein product" :lang "en"))))
+	(eg "methylation or phosphorylation of protein product")))
 
 (sio-class "gene-disease association linked with causal mutation" "a gene-variant disease association in which a mutation in the gene/protein results in the development or maintenance of the disease."
 	:super gene-disease_association_linked_with_genetic_variation)
@@ -1547,12 +1548,13 @@
  list
 (sio-class "data series" "A data series is a data set composed of related values displayed in a statistical graph."
 	:annotation
-	(annotation example (literal "Example: The two series that correspond to \"Seasonally adjusted\" and \"Trend\" are composed of the seasonally adjusted value of permits in each month and values from a trend derived from some mathematical tranformation across those values, respectively, in  Graph 1 of http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Example: The two series that correspond to \"Seasonally adjusted\" and \"Trend\" are composed of the seasonally adjusted value of permits in each month and values from a trend derived from some mathematical tranformation across those values, respectively, in  Graph 1 of http://tinyurl.com/opwnvm"))
 (sio-class "intersection" "an intersection is a list of only the values of an attribute for the entities in the defined set where all entities have that value.")
 (sio-class "sequence" "a sequence is an ordered list of entities. Like a set, it contains members (also called elements, or terms)."
 	:super (owl-some has_member (owl-and entity (owl-some has_attribute ordinal_position) (owl-some refers_to entity)))
 	:annotation
-	(annotation example (literal "For example, (M, A, R, Y) is a sequence of letters that differs from (A, R, M, Y), as the ordering matters, and (1, 1, 2, 3, 5, 8), which contains the number 1 at two different positions, is a valid sequence. " :lang "en")))
+	(annotation (iri "http://purl.org/dc/terms/alternativeName") (literal "ordered list" :type :RDF_PLAIN_LITERAL))
+	(eg "For example, (M, A, R, Y) is a sequence of letters that differs from (A, R, M, Y), as the ordering matters, and (1, 1, 2, 3, 5, 8), which contains the number 1 at two different positions, is a valid sequence. "))
 (sio-class "union" "a union is a list of all of the values of an attribute for the entities in the defined set."))
 (as-disjoint union intersection)
 
@@ -1686,7 +1688,7 @@
 	:super (owl-some has_value :XSD_DATE_TIME)
 	:annotation
 	(owl-comment (literal "time intervals are specified as date/datetime ranges." :type :RDF_PLAIN_LITERAL))
-	(annotation example (literal "the duration of my life; the duration of a surgical procedure, the moment of death" :lang "en"))))
+	(eg "the duration of my life; the duration of a surgical procedure, the moment of death")))
 
 (sio-class "effective dose" "effective dose is the amount of a substance required to produce an effect on a predefined percentage of a population."
 	:super dose)
@@ -1725,7 +1727,7 @@
 (sio-class "time instant" "a time instant is a temporal region which occurs instantaneously e.g. having no duration."
 	:super time_measurement
 	:annotation
-	(annotation example (literal "at this moment; the moment at which a finger is detached in an industrial accident; the moment at which a child is born; the moment of death" :lang "en")))
+	(eg "at this moment; the moment at which a finger is detached in an industrial accident; the moment at which a child is born; the moment of death"))
 (sio-class "time interval" "a time internval is a contiguous temporal region having some duration."
 	:super time_measurement)
 
@@ -1784,7 +1786,7 @@
 	(synonym-en "p-value"))
 (sio-class "standard score" "A standard score is the (signed) number of standard deviations an observation or datum is above the mean. "
 	:annotation
-	(annotation hasSynonym (literal "z-value, z-score, normal score, standardadized variable." :lang "en"))))
+	(synonym-en "z-value, z-score, normal score, standardadized variable.")))
 
 (as-subclasses
  ratio
@@ -1811,7 +1813,7 @@
 	:super (exactly 0 has_member entity))
 (sio-class "set interval" "an interval is a set of real numbers with the property that any number that lies between thwo numbers in the set is also included in the set. "
 	:annotation
-	(annotation example (literal "The set of all numbers x satisfying 0<=x<=1 is an interval which contains 0 and 1, as well as numbers between them." :lang "en"))))
+	(eg "The set of all numbers x satisfying 0<=x<=1 is an interval which contains 0 and 1, as well as numbers between them.")))
 
 (as-subclasses
  set_interval
@@ -1823,12 +1825,12 @@
 (sio-class "closed interval" "A closed interval is an interval that includes its endpoints, and is denoted with square brackets."
 	:super right_closed_interval left_closed_interval
 	:annotation
-	(annotation example (literal "[0,1] is a closed interval that is greater than or equal to 0 and less than or equal to 1." :lang "en")))
+	(eg "[0,1] is a closed interval that is greater than or equal to 0 and less than or equal to 1."))
 
 (sio-class "open interval" "an open interval is an interval that does not include its endpoints."
 	:super left_open_interval right_open_interval
 	:annotation
-	(annotation example (literal "(0,1) is an open interval that is greater than 0 and less than 1." :lang "en")))
+	(eg "(0,1) is an open interval that is greater than 0 and less than 1."))
 
 (as-subclasses
  collection
@@ -1838,7 +1840,7 @@
 (sio-class "collection of documents" "a collection of documents is a non-zero set of documents."
 	:super (at-least 2 has_component_part document)
 	:annotation
-	(annotation equivalentTo (literal "http://purl.org/ontology/bibo/Collection" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-rdf "http://purl.org/ontology/bibo/Collection")) ;;uri?
 (sio-class "collection of points" "a collection of points is a geometric entity that contains a non-zero set of geometric points. "
 	:super geometric_entity (only has_member point)))
 
@@ -1847,7 +1849,7 @@
 (sio-class "book series" "A book series is a collection of books that have been sequentially published.")
 (sio-class "periodical" "A periodical is a publication that appears on a regular schedule."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.org/ontology/bibo/Periodical" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-rdf "http://purl.org/ontology/bibo/Periodical")) ;;uri?
 (sio-class "website" "A website is a collection of documents published on the World Wide Web."
 	:super (owl-some has_direct_part web_page)))
 
@@ -1855,13 +1857,13 @@
  periodical
 (sio-class "journal" "A journal is a a peer-reviewed periodical in which scholarship relating to a particular academic discipline is published."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.org/ontology/bibo/Journal" :type :XSD_ANY_URI)))
+	(equivalent-uri "http://purl.org/ontology/bibo/Journal"))
 (sio-class "magazine" "A magazine is a periodical that typically contains essays, stories, poems, etc., by many writers, and often photographs and drawings, frequently specializing in a particular subject or area, as hobbies, news, or sports."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.org/ontology/bibo/Magazine" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-rdf "http://purl.org/ontology/bibo/Magazine")) ;;uri?
 (sio-class "newspaper" "a newspaper is a periodical publication containing news regarding current events, informative articles, diverse features, editorials, and advertising."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.org/ontology/bibo/Newspaper" :type :RDF_PLAIN_LITERAL))))
+	(equivalent-rdf "http://purl.org/ontology/bibo/Newspaper"))) ;;uri?
 
 (as-subclasses
  variable
@@ -1943,14 +1945,14 @@
  statistical_graph
 (sio-class "bar graph" "A bar graph is a statistical graph with rectangular bars of lengths proportional to that value that they represent."
 	:annotation
-	(annotation example (literal "Graphs 3,4,5 in http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Graphs 3,4,5 in http://tinyurl.com/opwnvm"))
 (sio-class "line graph" "A line graph is a statistical graph in which lines contains the evaluation of functions or individual points connected by line segments."
 	:annotation
 	(synonym-en "line chart")
-	(annotation example (literal "Graph 1 in http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Graph 1 in http://tinyurl.com/opwnvm"))
 (sio-class "line-bar graph" "A line-bar graph statistical graph that contains both lines and bars."
 	:annotation
-	(annotation example (literal "Graph 8 in http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Graph 8 in http://tinyurl.com/opwnvm"))
 (sio-class "scatterplot" "A scatterplot is a statistical graph which uses Cartesian coordinates to display values for two variables for a set of data. The data is displayed as a collection of points, each having the value of one variable determining the position on the horizontal axis and the value of the other variable determining the position on the vertical axis."
 	:annotation
 	(synonym-en "scatter diagram")
@@ -1962,13 +1964,13 @@
  bar_graph
 (sio-class "horizontal bar graph" "A horizontal bar graph is a bar graph in which the rectangular bars \nare horizontally oriented in space."
 	:annotation
-	(annotation example (literal "Graph 3 in http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Graph 3 in http://tinyurl.com/opwnvm"))
 (sio-class "stacked bar graph" "A stacked bar graph is a bar graph in which each rectangular bar is \npartioned by the categorical value of each series of data."
 	:annotation
-	(annotation example (literal "Graphs 6,7 in http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "Graphs 6,7 in http://tinyurl.com/opwnvm"))
 (sio-class "vertical bar graph" "A vertical bar graph is a bar graph in which the rectangular bars are \nvertically oriented in space."
 	:annotation
-	(annotation example (literal "Graph 4,5 in http://tinyurl.com/opwnvm" :lang "en"))))
+	(eg "Graph 4,5 in http://tinyurl.com/opwnvm")))
 
 (sio-class "boxplot" "A boxplot (box-and-whisker diagram) is a convenient way of graphically depicting groups of numerical data through their five-number summaries: the smallest observation (sample minimum), lower quartile (Q1), median (Q2), upper quartile (Q3), and largest observation (sample maximum)."
 	:super line-bar_graph)
@@ -1987,7 +1989,7 @@
 (sio-class "photograph" "A photograph is an image created by light falling on a light-sensitive surface."
 	:super image
 	:annotation
-	(annotation hasSynonym (literal "photo" :lang "en")))
+	(synonym-en "photo"))
 
 (sio-class "geographic image" "A geographic image is a photograph of some geographical area."
 	:super photograph)
@@ -1996,10 +1998,10 @@
  figure_part
 (sio-class "legend" "A legend is a part of a figure that associates textual descriptions with symbols pertaining to plotted entities."
 	:annotation
-	(annotation example (literal "The colored line segments and the adjacent textual descriptions in \nGraph 1 of http://tinyurl.com/opwnvm" :lang "en")))
+	(eg "The colored line segments and the adjacent textual descriptions in \nGraph 1 of http://tinyurl.com/opwnvm"))
 (sio-class "plot" "A plot is a part of a figure that corresponds to the spatial region between the set of axes."
 	:annotation
-	(annotation example (literal "The square portion of the chart bounded by lines that overlap with \nthe two axes in Graph 1 of http://tinyurl.com/opwnvm" :lang "en"))))
+	(eg "The square portion of the chart bounded by lines that overlap with \nthe two axes in Graph 1 of http://tinyurl.com/opwnvm")))
 
 (sio-class "model" "A model is a representation of some thing."
 	:super representation (owl-some represents entity))
@@ -2064,8 +2066,8 @@
 (sio-class "chemical entity" "A chemical entity is a material entity that pertains to chemistry."
 	:annotation
 	(subset-rdf "chemical+")
-	(annotation example (literal "atom, ion, molecule, chemical substance," :lang "en"))
-	(annotation equivalentTo (literal "CHEBI:23367" :type :RDF_PLAIN_LITERAL)))
+	(eg "atom, ion, molecule, chemical substance,")
+	(equivalent-rdf "CHEBI:23367"))
 (sio-class "heterogeneous substance" "a heterogeneous substance is a chemical substance that is composed of more than one different kind of component."
 	:super chemical_substance
 	:disjoint homogeneous_substance)
@@ -2078,7 +2080,7 @@
 (sio-class "chemical substance" "A chemical substance is a chemical complex of weakly interacting molecular entities, and may include bulk solvent."
 	:equivalent (owl-or heterogeneous_substance homogeneous_substance)
 	:annotation
-	(annotation seeAlso (literal "CHEMINF:440533" :type :RDF_PLAIN_LITERAL)))
+	(see-also-rdf "CHEMINF:440533"))
 (sio-class "covalently connected entity" "A covalently connected molecular entity is the mereological sum of a collection of covalently bonded atoms."
 	:super (owl-some has_part (owl-and atom (owl-some is_covalently_connected_to atom))) (owl-some has_component_part covalent_bond)
 	:disjoint submolecular_entity chemical_complex)
@@ -2207,14 +2209,14 @@ biological_entity
  data_collection_device
 (sio-class "mass spectrometer" "a mass spectrometer is a device that identifies ions based on their mass to charge ratio using an electromagnetic field."
 	:annotation
-	(annotation similarTo (literal "http://purl.obolibrary.org/obo/OBI_0000049" :type :XSD_ANY_URI)))
+	(similar-uri "http://purl.obolibrary.org/obo/OBI_0000049"))
 (sio-class "microarray device" "a microarray device is a device that identifies the binding of a target substance to a physically immobile substrate placed in an array or lattice."
 	:annotation
 	(synonym-en "microarray platform")
-	(annotation similarTo (literal "http://purl.obolibrary.org/obo/OBI_0000052" :type :XSD_ANY_URI)))
+	(similar-uri "http://purl.obolibrary.org/obo/OBI_0000052"))
 (sio-class "nmr device" "a nuclear magnetic resonance (NMR) device is a device that applies a magnetic field to perturb nuclei with an odd number of protons and/or of neutrons in order to hav them absort and re-emit electromagnetic radiation. "
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/OBI_0000566" :type :XSD_ANY_URI))
+	(equivalent-uri "http://purl.obolibrary.org/obo/OBI_0000566")
 	(synonym-en "nuclear magnetic resonance device")))
 
 (sio-class "hard disk drive" "A hard disk drive (HDD) is a non-volatile, random access device for digital data. It features rotating rigid platters on a motor-driven spindle within a protective enclosure. Data is magnetically read and written on the platter by read/write heads that float on a film of air above the platters."
@@ -2271,7 +2273,7 @@ biological_entity
 (sio-class "molecule" "A molecule is the mereological maximal sum of a collection of covalently bonded atoms."
 	:super covalently_connected_entity (owl-some has_part atom)
 	:annotation
-	(annotation seeAlso (literal "CHEBI:23367" :type :RDF_PLAIN_LITERAL)))
+	(see-also-rdf "CHEBI:23367"))
 
 (as-subclasses
  molecule
@@ -2297,10 +2299,12 @@ biological_entity
 
 ;; NOTE: missing description
 (defclass product
-  :equivalent (owl-and molecule (owl-some is_output_of chemical_reaction) (owl-some is_derived_from substrate)))
+  :equivalent (owl-and molecule (owl-some is_output_of chemical_reaction) (owl-some is_derived_from substrate))
+  :annotation (label "product"))
 ;; NOTE: missing description
 (defclass target
-  :equivalent (owl-and molecule (owl-some is_target_in process)))
+  :equivalent (owl-and molecule (owl-some is_target_in process))
+  :annotation (label "target"))
 
 (sio-class "substrate" "a substrate is a molecule that is consumed in the course of a biochemical reaction."
 	:super target
@@ -2351,7 +2355,7 @@ biological_entity
 (sio-class "protein" "a protein is an organic polymer that is composed of one or more linear polymers of amino acids."
 	:super (owl-some has_component_part polypeptide)
 	:annotation
-	(annotation equivalentTo (literal "CHEBI:36080" :type :RDF_PLAIN_LITERAL))))
+	(equivalent-rdf "CHEBI:36080")))
 (as-disjoint polypeptide oligosaccharide nucleic_acid)
 
 (as-subclasses
@@ -2374,11 +2378,11 @@ biological_entity
 (sio-class "negative nucleic acid strand" "the negative nucleic acid strand is the strand that is that is complimentary to the forward strand and appears from 3' to 5'."
 	:super nucleic_acid_strand
 	:annotation
-	(annotation hasSynonym (literal "reverse strand" :lang "en")))
+	(synonym-en "reverse strand"))
 (sio-class "positive nucleic acid strand" "the positive nucleic acid strand refers to the strand that is to be read 5' to 3'."
 	:super nucleic_acid_strand
 	:annotation
-	(annotation hasSynonym (literal "forward strand" :lang "en")))
+	(synonym-en "forward strand"))
 
 (sio-class "RNA transcript" "an RNA transcript is an RNA molecule that is produced from transcription of a nucleic acid template."
 	:super ribonucleic_acid (owl-some is_transcribed_from (owl-or deoxyribonucleic_acid (owl-some is_part_of deoxyribonucleic_acid))))
@@ -2453,7 +2457,7 @@ biological_entity
 (sio-class "covalent bond" "a covalent bond is a strong submolecular interaction between atoms."
 	:super strong_submolecular_component (exactly 2 has_component_part atom)
 	:annotation
-	(annotation seeAlso (literal "CHEMINF:000063" :type :RDF_PLAIN_LITERAL)))
+	(see-also-rdf "CHEMINF:000063"))
 
 (as-subclasses
  covalent_bond
@@ -2500,8 +2504,8 @@ biological_entity
 (sio-class "cis regulatory element" "A cisregulatory element is a DNA sequence located on the same DNA strand or chromosome as the gene whose expression it affects. ")
 (sio-class "gene" "A gene is part of a nucleic acid that contains all the necessary elements to encode a functional transcript."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0000704" :type :XSD_ANY_URI))
-	(annotation equivalentTo (literal "biopax:Gene" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0000704")
+	(equivalent-rdf "biopax:Gene"))
 (sio-class "gene component" "a gene component is a component of a gene"
 	:super (owl-some is_proper_part_of gene))
 (sio-class "genetic polymorphism" "genetic polymorphism is the description of a difference in genetic composition at some location.")
@@ -2513,7 +2517,7 @@ biological_entity
 	(annotation similarTo (literal "SO:0000178" :type :RDF_PLAIN_LITERAL)))
 (sio-class "pseudogene" "a pseudo gene is a region of a nucleic acid that either cannot be transcribed, or its rna transcript cannot be translated."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0000336" :type :XSD_ANY_URI)))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0000336"))
 (sio-class "trans-regulatory element" "A trans-regulatory element is a DNA sequence associated with the regulation of a gene located outside the genomic region supporting the corresponding structural DNA region of the trans-regulatory element (i.e., a different DNA strand or different chromosome)."))
 
 (as-subclasses
@@ -2539,12 +2543,12 @@ biological_entity
 (sio-class "non-protein coding RNA (ncRNA) gene" "a non-protein coding RNA (ncRNA) gene is a gene that encodes for a RNA transcript that is not further translated into a protein product."
 	:annotation
 	(synonym-en "ncRNA gene")
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0001263" :type :XSD_ANY_URI)))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0001263"))
 (sio-class "predicted gene" "a predicted gene is a gene that was identified through computational method but has not been experimentally validated."
 	:super (owl-some has_attribute predicted))
 (sio-class "protein coding gene" "a gene that contains an open reading frame which codes for a protein."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0001217" :type :XSD_ANY_URI)))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0001217"))
 (sio-class "rna gene" "a gene that is located on RNA"
 	:super (owl-some is_proper_part_of ribonucleic_acid))
 (sio-class "validated gene" "an experimentally validated gene is a gene whose existence has been demonstrated through experimental methods."
@@ -2555,26 +2559,26 @@ biological_entity
  non-protein_coding_RNA__ncRNA__gene
 (sio-class "ribosomal RNA gene" "a ribosomal RNA gene is a gene that codes for a ribosomal RNA molecule."
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0001637" :type :XSD_ANY_URI))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0001637")
 	(synonym-rdf "rRNA gene"))
 (sio-class "small cytoplasmic RNA (scRNA) gene" "a small cytoplasmic RNA (scRNA) gene is a gene that encodes a small (7S; 129 nucleotides) RNA molecule found in the cytosol and rough endoplasmic reticulum that are normally associated with proteins that are involved in specific selection and transport of other proteins."
 	:super (owl-some encodes small_cytoplasmic_RNA__scRNA_)
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0001266" :type :XSD_ANY_URI)))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0001266"))
 (sio-class "small nuclear RNA (snRNA) gene" "a small nuclear RNA (snRNA) gene is a gene that encodes a small niuclear RNA molecule."
 	:super (owl-some encodes small_nuclear_RNA__snRNA_)
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0001268" :type :XSD_ANY_URI)))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0001268"))
 (sio-class "small nucleolar RNA (snoRNA) gene" "A small nucleolar RNA (snoRNA) gene is a gene that encodes a small RNA that are associated with the eukaryotic nucleus as components of small nucleolar ribonucleoproteins."
 	:super (owl-some encodes small_nucleolar_RNA__snoRNA_)
 	:annotation
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0001267" :type :XSD_ANY_URI)))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0001267"))
 (sio-class "transfer RNA (tRNA) gene" "A transfer RNA (tRNA) gene is a gene that codes for a tRNA used in the translation of a messenger RNA (mRNA) to produce a protein product."
 	:super (owl-some encodes transfer_RNA__tRNA_)
 	:annotation
 	(synonym-en "tRNA gene")
 	(synonym-en "solube RNA (sRNA) gene")
-	(annotation equivalentTo (literal "http://purl.obolibrary.org/obo/SO_0001272" :type :XSD_ANY_URI))))
+	(equivalent-uri "http://purl.obolibrary.org/obo/SO_0001272")))
 
 (as-subclasses
  gene_component
@@ -2633,10 +2637,10 @@ biological_entity
  spatial_region
 (sio-class "geographic region" "a geographic region is a spatial region whose boundaries are typically defined against some material frame of reference (like the earth)."
 	:annotation
-	(annotation example (literal "the spatial region occupied by the province of ontario; the spatial region occupied by a lake." :lang "en")))
+	(eg "the spatial region occupied by the province of ontario; the spatial region occupied by a lake."))
 (sio-class "site" "A site is a spatial region bounded (in part or in whole) by material entities and may be occupied by material entities."
 	:annotation
-	(annotation example (literal "a nostril; the interior of the heart valve; the interior of a bottle;" :lang "en")))
+	(eg "a nostril; the interior of the heart valve; the interior of a bottle;"))
 (sio-class "spatial boundary" "a spatial boundary is the closure minus the interior of a subset of a topological space."))
 
 (sio-class "environment" "an environment is a geographic region that hosts certain processes or objects."
@@ -2644,12 +2648,12 @@ biological_entity
 (sio-class "geolegal region" "A geolegal region is a geographic region which has causal powers confered by a legal entity."
 	:super geographic_region
 	:annotation
-	(annotation example (literal "the 50 kph zones in Ottawa; the geographic region occupied by France." :lang "en")))
+	(eg "the 50 kph zones in Ottawa; the geographic region occupied by France."))
 
 (sio-class "geopolitical region" "a geopolitical region is a geographic region recognized by social or legal convention."
 	:super geolegal_region
 	:annotation
-	(annotation example (literal "the geographic region bounded by Canada; the spatial region occupied by the US embassy in Ottawa" :lang "en")))
+	(eg "the geographic region bounded by Canada; the spatial region occupied by the US embassy in Ottawa"))
 
 (as-subclasses
  geopolitical_region
@@ -2678,7 +2682,7 @@ biological_entity
 (sio-class "material boundary" "A material boundary is the boundary of a material entity which exists as a lower dimensional entity at exactly the location where its parts no longer extend into space. Every material entity has a boundary, and a boundary is the boundary of exactly 1 material entity."
 	:super spatial_boundary (owl-some is_boundary_of material_entity)
 	:annotation
-	(annotation example (literal "the external surface of the window; the surface of the p52 protein" :lang "en")))
+	(eg "the external surface of the window; the surface of the p52 protein"))
 
 (as-subclasses
  process
@@ -2837,42 +2841,42 @@ biological_entity
 (sio-class "chemical interaction" "A chemical interaction is a biochemical process in which chemical entities interact through some set of attractive forces."
 	:super (owl-some has_participant chemical_entity)
 	:annotation
-	(annotation equivalentTo (literal "biopax:Interaction" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-rdf "biopax:Interaction"))
 (sio-class "communicating" "communicating is the process of conveying information through the exchange of thoughts, messages, or information, as by speech, visuals, signals, writing, or behaviour."
 	:annotation
-	(annotation hasSynonym (literal "communication" :type :RDF_PLAIN_LITERAL)))
+	(synonym-rdf "communication")) ;;en?
 (sio-class "comparing" "comparing is the process of examining a set of objects and determining their equality or inequality based on one or more features."
 	:super (owl-and (owl-some realizes to_be_compared) (owl-some realizes to_compare))
 	:annotation
-	(annotation hasSynonym (literal "comparison" :type :RDF_PLAIN_LITERAL)))
+	(synonym-rdf "comparison")) ;;en?
 (sio-class "creating" "creating is the process in which an entity comes into existence."
 	:super (owl-some has_product object)
 	:annotation
-	(annotation hasSynonym (literal "development" :type :RDF_PLAIN_LITERAL))
-	(annotation hasSynonym (literal "synthesis" :type :RDF_PLAIN_LITERAL))
-	(annotation hasSynonym (literal "production" :type :RDF_PLAIN_LITERAL))
-	(annotation hasSynonym (literal "formulation" :type :RDF_PLAIN_LITERAL))
-	(annotation hasSynonym (literal "creation" :type :RDF_PLAIN_LITERAL)))
+	(synonym-rdf "development") ;;en?
+	(synonym-rdf "synthesis") ;;en?
+	(synonym-rdf "production") ;;en?
+	(synonym-rdf "formulation") ;;en?
+	(synonym-rdf "creation")) ;;en?
 (sio-class "destroying" "destroying is a process in which something is broken down and/or ceases to exist."
 	:super (owl-some has_substrate object)
 	:annotation
-	(annotation hasSynonym (literal "destruction" :lang "en")))
+	(synonym-en "destruction"))
 (sio-class "measuring" "measuring is the process of determining the size, amount, or degree of (something) by using an instrument or device marked in standard units"
 	:super (owl-some has_output measurement_value) (owl-some has_input (owl-or quality process object))
 	:annotation
-	(annotation hasSynonym (literal "measurement" :lang "en")))
+	(synonym-en "measurement"))
 (sio-class "modifying" "modifying is the process by which an entity gains or loses parts, qualities, roles, dispositions, functions, etc, but maintains their identity through these changes."
 	:super (owl-some has_output object) (owl-some has_target object)
 	:annotation
-	(annotation hasSynonym (literal "modification" :lang "en")))
+	(synonym-en "modification"))
 (sio-class "observing" "observing is a process of passive interaction in which one entity makes note of attributes of one or more entities."
 	:super (owl-some has_output entity) (owl-some has_input entity)
 	:annotation
-	(annotation hasSynonym (literal "observation" :lang "en")))
+	(synonym-en "observation"))
 (sio-class "regulating" "regulating is a process that modulates the attributes of an object or process."
 	:equivalent (owl-or process_maintenance process_up-regulation process_down-regulation)
 	:annotation
-	(annotation hasSynonym (literal "regulation" :lang "en")))
+	(synonym-en "regulation"))
 (sio-class "sampling" "sampling is the act of obtaining a sample, whether through selection, collection or preparation."
 	:super (owl-and (owl-some has_output sample) (owl-some has_input object)))
 (sio-class "transporting" "transporting is a  process in which one object physically moves another object from one location to another."
@@ -2901,8 +2905,8 @@ biological_entity
 (sio-class "biochemical reaction" "A biochemical reaction is a biochemical process that involves the conversion of at least one chemical participant (target) into another (product) by an enzyme (agent)."
 	:super catalyzed_reaction (owl-and catalyzed_reaction (owl-some has_agent enzyme) (owl-some has_target substrate) (owl-some has_product product))
 	:annotation
-	(annotation equivalentTo (literal "biopax:BiochemicalReaction" :type :RDF_PLAIN_LITERAL))
-	(annotation equivalentTo (literal "biopax:Conversion" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-rdf "biopax:BiochemicalReaction")
+	(equivalent-rdf "biopax:Conversion"))
 
 (as-subclasses
  inorganic_reaction
@@ -3014,12 +3018,12 @@ biological_entity
 (sio-class "process down-regulation" "process down-regulation is a process that decreases the frequency, rate or extent of one or more processes in relation to a reference state."
 	:disjoint process_up-regulation
 	:annotation
-	(annotation hasSynonym (literal "negative regulation" :lang "en")))
+	(synonym-en "negative regulation"))
 (sio-class "process maintenance" "the process of maintaining some the frequency, rate or extent of another process.")
 (sio-class "process up-regulation" "process up-regulation is a process that increases the frequency, rate or extent of one or more processes in relation to a reference state."
 	:disjoint process_down-regulation
 	:annotation
-	(annotation hasSynonym (literal "positive regulation" :lang "en")))
+	(synonym-en "positive regulation"))
 (sio-class "regulation of biochemical process" "regulation of biochemical process is a process that changes the frequency, rate or extent of a target biochemical process.")
 (sio-class "regulation of object quantity" "regulation of a participant quantity is the regulation of a process in which the quantity of its partcipants is changed."
 	:super (owl-some regulates quantity))
@@ -3027,7 +3031,7 @@ biological_entity
 (sio-class "regulation of process frequency" "regulation of a process duration is a process that modulates the frequency of another process relative to some reference process.")
 (sio-class "regulation of process spatial extent" "regulation of a process spatial extent is a process that modulates the spatial extent of another process relative to some reference process."
 	:annotation
-	(annotation example (literal "heating the solution causes greater diffusion of a chemical." :lang "en"))))
+	(eg "heating the solution causes greater diffusion of a chemical.")))
 
 (sio-class "regulation of transcription" "A process that modulates the frequency, rate or extent of transcription"
 	:super regulation_of_biochemical_process)
@@ -3098,7 +3102,7 @@ biological_entity
 (sio-class "chemical transport" "Chemical transport is the directed movement of a chemical entity by some agent (e.g. transporter)."
 	:super transporting (owl-some has_participant chemical_entity)
 	:annotation
-	(annotation equivalentTo (literal "biopax:Transport" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-rdf "biopax:Transport"))
 
 (sio-class "membrane transport" "membrane transport is the movement of molecules across a membrane."
 	:super chemical_transport)
@@ -3107,7 +3111,7 @@ biological_entity
  membrane_transport
 (sio-class "active transport" "Active transport is the movement of a substance across a membrane against its concentration gradient (from low to high concentration) and requires chemical energy."
 	:annotation
-	(annotation equivalentTo (literal "biopax:TransportWithBiochemicalReaction" :type :RDF_PLAIN_LITERAL)))
+	(equivalent-rdf "biopax:TransportWithBiochemicalReaction"))
 (sio-class "passive transport" "Passive transport is the movement of a substance across a membrane and does not require chemical energy."))
 
 (as-disjoint-subclasses
@@ -3146,7 +3150,7 @@ biological_entity
 (sio-class "investigation" "investigation is the process of carrying out a plan or procedure so as to discover facts or information about the object of study."
 	:super (owl-some has_product object) (owl-some realizes objective)
 	:annotation
-	(annotation hasSynonym (literal "study" :type :RDF_PLAIN_LITERAL)))
+	(synonym-rdf "study"))
 (sio-class "medical procedure" "a medical procedure is a procedure to identify, examine, alleviate or eliminate an undesirable biological disease or disorder."))
 
 (as-subclasses
@@ -3175,7 +3179,7 @@ biological_entity
 (sio-class "experiment" "An experiment is an investigation that has the goal of verifying, falsifying, or establishing the validity of a hypothesis. "
 	:super investigation
 	:annotation
-	(annotation hasSynonym (literal "study" :type :RDF_PLAIN_LITERAL)))
+	(synonym-rdf "study"))
 (sio-class "study" "a study is a process that realizes the steps of a study design."
 	:super investigation (owl-some realizes objective) (owl-some is_manifestation_of study_design))
 
