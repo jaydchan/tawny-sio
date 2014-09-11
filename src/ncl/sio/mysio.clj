@@ -18,8 +18,7 @@
 (ns ncl.sio.mysio
   (:refer-clojure :only [])
   (:use [tawny.owl])
-  (:require [ncl.sio.patterns :as p
-             :only [sio-atom0 sio-class0]]))
+  (:require [ncl.sio.patterns :as p]))
 
 (defontology mysio
   :iri "http://ncl.ac.uk/sio/mysio"
@@ -28,13 +27,6 @@
 
 ;; predump -- necessary
 (clojure.core/load-file "./src/ncl/sio/mysio_ent.clj")
-
-;; dproperty = 1
-(defdproperty has_value
-  :characteristic :functional)
-
-;; oproperty = 203
-(clojure.core/load-file "./src/ncl/sio/oproperties.clj")
 
 ;; sio aproperty (and tawny-name) = 8 (+1)
 (defaproperty narrowerThan)
@@ -60,11 +52,13 @@
 (annotation-property (iri "http://purl.org/dc/terms/contributor"))
 (annotation-property (iri "http://purl.org/dc/terms/title"))
 
-;; individuals = 0
-;; NONE
-
-;; classes (excluding atoms) = 1396 - 118
+;; patterns
 (def sio-class (clojure.core/partial p/sio-class0 mysio))
+(def sio-atom (clojure.core/partial p/sio-atom0 mysio seeAlso atom))
+
+(def sio-oproperty (clojure.core/partial p/sio-oproperty0 mysio))
+
+(def sadi (p/sadi0 mysio subset))
 (def subset-rdf (clojure.core/partial p/subset-rdf0 mysio subset))
 (def core (subset-rdf "core"))
 (def synonym-rdf (clojure.core/partial p/synonym-rdf0 mysio hasSynonym))
@@ -75,8 +69,26 @@
 (def similar-uri (clojure.core/partial p/similar-uri0 mysio similarTo))
 (def see-also-uri (clojure.core/partial p/see-also-uri0 mysio))
 (def see-also-rdf (clojure.core/partial p/see-also0 mysio seeAlso))
+
+;; dproperty = 1
+(defdproperty has_value
+  :label "has value"
+  :characteristic :functional
+  :annotation
+  core
+  (annotation subset (literal "sadi" :lang "en"))
+  (p/desc mysio "A relation between a informational entity and its actual value (numeric, date, text, etc).")
+  (annotation subset (literal "relations" :type :RDF_PLAIN_LITERAL))
+  (annotation subset (literal "nlp" :type :RDF_PLAIN_LITERAL)))
+
+;; oproperty = 203
+(clojure.core/load-file "./src/ncl/sio/oproperties.clj")
+
+;; individuals = 0
+;; NONE
+
+;; classes (excluding atoms) = 1396 - 118
 (clojure.core/load-file "./src/ncl/sio/mysio_ii.clj")
 
 ;; atoms = 118
-(def sio-atom (clojure.core/partial p/sio-atom0 mysio seeAlso atom))
 (clojure.core/load-file "./src/ncl/sio/atom.clj")

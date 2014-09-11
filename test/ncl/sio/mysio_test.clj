@@ -18,9 +18,10 @@
 (ns ncl.sio.mysio_test
   (:use [clojure.test])
   (:require
-   [tawny.owl :only [ontology-to-namespace]]
+   [tawny.owl :only [ontology-to-namespace iri]]
    [tawny.read :only [iri-starts-with-filter]]
    [tawny.reasoner :as r]
+   [ncl.sio.generic :only [get-lines]]
    [ncl.sio.mysio :as m]
    [ncl.sio.sio :as s]
    [ncl.sio.rendered_sio :as rsio])
@@ -60,13 +61,11 @@
   (is
    (instance? OWLOntology m/mysio)))
 
-;; 1626 vs 1608
 (deftest signature
   (is
    (= (count (.getSignature s/sio))
       (count (.getSignature rsio/rendered_sio))
-      ;; (count (.getSignature m/mysio))
-      ))
+      (count (.getSignature m/mysio))))
   (is
    (= (count (filter
               #(tawny.read/iri-starts-with-filter
@@ -76,18 +75,16 @@
               #(tawny.read/iri-starts-with-filter
                  "http://ncl.ac.uk/sio/rendered_sio" %)
               (.getSignature rsio/rendered_sio)))
-      ;; (count (filter
-      ;;         #(tawny.read/iri-starts-with-filter
-      ;;            "http://ncl.ac.uk/sio/mysio" %)
-      ;;         (.getSignature m/mysio)))
-      )))
+      (count (filter
+              #(tawny.read/iri-starts-with-filter
+                 "http://ncl.ac.uk/sio/mysio" %)
+              (.getSignature m/mysio))))))
 
 (deftest classes
   (is
    (= (count (.getClassesInSignature s/sio))
       (count (.getClassesInSignature rsio/rendered_sio))
-      (count (.getClassesInSignature m/mysio))
-      )))
+      (count (.getClassesInSignature m/mysio)))))
 
 (deftest oproperties
   (is
@@ -121,12 +118,19 @@
       (count (.getDataPropertiesInSignature rsio/rendered_sio))
       (count (.getDataPropertiesInSignature m/mysio)))))
 
-;; 7463 vs 7082 vs 6896
-;; (deftest axioms
-;;   (is
-;;    (= (count (.getAxioms s/sio))
-;;       (count (.getAxioms rsio/rendered_sio))
-;;       (count (.getAxioms m/mysio)))))
+;; 7467 vs 7564 vs 7467
+(deftest axioms
+  (is
+   (=
+    ;; +5 see declaration-axioms test
+    ;; -1 see disjoint-classes-axioms test
+    (+ (count (.getAxioms s/sio)) 4)
+    ;; +1 see subproperty-chain-of-axioms test
+    ;; -1 see subclass-of-axioms
+    ;; commented -- see disjoint-classes-axioms test
+    ;; (+ (count (.getAxioms rsio/rendered_sio)) 0)
+    ;; +2 see disjoint-classes-axioms test
+    (+ (count (.getAxioms m/mysio)) 2))))
 
 ;; 1 vs 0 vs 1
 (deftest subproperty-chain-of-axioms
@@ -145,20 +149,7 @@
         #(instance? OWLSubPropertyChainOfAxiom %)
         (.getAxioms m/mysio))))))
 
-;; missing 2
 (deftest inverse-object-properties-axioms
-  ;; (spit "r.txt"
-  ;;       (clojure.string/join
-  ;;        "\n"
-  ;;        (filter
-  ;;         #(instance? OWLInverseObjectPropertiesAxiom %)
-  ;;         (.getAxioms rsio/rendered_sio))))
-  ;; (spit "m.txt"
-  ;;       (clojure.string/join
-  ;;        "\n"
-  ;;        (filter
-  ;;         #(instance? OWLInverseObjectPropertiesAxiom %)
-  ;;         (.getAxioms m/mysio))))
   (is
    (= (count
        (filter
@@ -171,11 +162,9 @@
       (count
        (filter
         #(instance? OWLInverseObjectPropertiesAxiom %)
-        (.getAxioms m/mysio)))
-      )))
+        (.getAxioms m/mysio))))))
 
-;; 1638 vs 1638 vs 1620
-;; 5 extra declarations!!!
+;; mysio has extra declarations:
 ;; Declaration(AnnotationProperty(<http://protege.stanford.edu/plugins/owl/protege#defaultLanguage>))
 ;; Declaration(AnnotationProperty(owl:versionInfo))
 ;; Declaration(AnnotationProperty(rdfs:comment))
@@ -191,11 +180,10 @@
        (filter
         #(instance? OWLDeclarationAxiom %)
         (.getAxioms rsio/rendered_sio)))
-      ;; (count
-      ;;  (filter
-      ;;   #(instance? OWLDeclarationAxiom %)
-      ;;   (.getAxioms m/mysio)))
-)))
+      (count
+       (filter
+        #(instance? OWLDeclarationAxiom %)
+        (.getAxioms m/mysio))))))
 
 (deftest object-property-range-axioms
   (is
@@ -241,8 +229,7 @@
       (count
        (filter
         #(instance? OWLSubClassOfAxiom %)
-        (.getAxioms m/mysio)))
-      )))
+        (.getAxioms m/mysio))))))
 
 (deftest reflexive-object-property-axioms
   (is
@@ -319,21 +306,30 @@
         #(instance? OWLTransitiveObjectPropertyAxiom %)
         (.getAxioms m/mysio))))))
 
-;; 75 vs 170 vs ???
-;; (deftest disjoint-classes-axioms
-;;   (is
-;;    (= (count
-;;        (filter
-;;         #(instance? OWLDisjointClassesAxiom %)
-;;         (.getAxioms s/sio)))
-;;       (count
-;;        (filter
-;;         #(instance? OWLDisjointClassesAxiom %)
-;;         (.getAxioms rsio/rendered_sio)))
-;;       (count
-;;        (filter
-;;         #(instance? OWLDisjointClassesAxiom %)
-;;         (.getAxioms m/mysio))))))
+;; sio
+;; ("female" "hermaphrodite") ("female" "male") ("hermaphrodite" "male")
+;; mysio
+;; ("female" "hermaphrodite" "male")
+;; Semantically similar => mysio +2
+
+;; sio => -1
+;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+;; B ("x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+;; mysio
+;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+;; Dont think B is necessary => sio -1
+
+;; 74 (75-1) vs 170 vs 74 (72+2)
+(deftest disjoint-classes-axioms
+  (let [[sdisj rdisj mdisj]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLDisjointClassesAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (- (count sdisj) 1)
+        ;; (count rdisj)
+        (+ (count mdisj) 2)))))
 
 (deftest symmetric-object-property-axioms
   (is
@@ -410,20 +406,63 @@
         #(instance? OWLObjectPropertyDomainAxiom %)
         (.getAxioms m/mysio))))))
 
-;; 3500 vs 3019 vs 3019
 (deftest annotation-axioms
-  (let [ranns
-        (filter
-         #(instance? OWLAnnotationAxiom %)
-         (.getAxioms rsio/rendered_sio))
-        manns
-        (filter
-         #(instance? OWLAnnotationAxiom %)
-         (.getAxioms m/mysio))]
+  (let [[sanns ranns manns]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLAnnotationAxiom %)
+           (.getAxioms o)))]
     (is
-     (= ;; (count
-        ;;  (filter
-        ;;   #(instance? OWLAnnotationAxiom %)
-        ;;   (.getAxioms s/sio)))
+     (= (count sanns)
         (count ranns)
         (count manns)))))
+
+(defn equal-annotation?
+  [a1 a2]
+  (let [literal1 (.getValue a1)
+        literal2 (.getValue a2)]
+    (if (and (.hasLang literal1) (.hasLang literal2))
+      (let [[l1 l2]
+            (map
+             #(clojure.string/replace % #"." "" )
+             [(.getLiteral literal1) (.getLiteral literal2)])]
+        (.equalsIgnoreCase l1 l2))
+      (=  literal1 literal2))))
+
+(defn get-mysio-aproperty
+  [o aproperty]
+  (if (tawny.read/iri-starts-with-filter
+        "http://ncl.ac.uk/sio/rendered_sio" aproperty)
+    (tawny.owl/annotation-property
+     o (last (clojure.string/split (str aproperty) #"[\#>]")))
+    aproperty))
+
+(defn check-annotation-values
+  []
+  (let [[ranns manns]
+        (for [o [rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLAnnotationAxiom %)
+           (.getAxioms o)))
+        [rgroups mgroups]
+        (for [a [ranns manns]]
+          (group-by #(.getSubject %) a))
+        rkeys (keys rgroups)]
+
+    (doseq [rk rkeys]
+      (let [rset (get rgroups rk)
+            mk (tawny.owl/iri
+                (clojure.string/replace rk #"rendered_sio" "mysio"))
+            mset (get mgroups mk)]
+        (doseq [ra rset]
+          (let [rproperty (.getProperty ra)
+                mproperty (get-mysio-aproperty m/mysio rproperty)
+                mproperties (filter #(= mproperty
+                                        (.getProperty %))
+                                    mset)]
+            (if-not (some (partial equal-annotation? ra) mproperties)
+              (println (str "ERROR:\n" ra "\n"
+                            (clojure.string/join
+                             "\n" mproperties))))))))))
+
+;; (check-annotation-values)

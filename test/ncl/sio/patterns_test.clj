@@ -21,14 +21,15 @@
   (:require [tawny.owl :as o]
             [ncl.sio.patterns :as p])
   (:import (org.semanticweb.owlapi.model
-            OWLAnnotation OWLClass)))
+            OWLAnnotation OWLObjectProperty OWLClass)))
 
 ;; to run: M-x 'lein' 'test'
 
 (defonce to
   (o/ontology :name "to"
               :iri "http://test"
-              :prefix "test:"))
+              :prefix "test:"
+              :noname true))
 
 (deftest make-safe
   (is
@@ -39,6 +40,11 @@
   (let [ann (p/desc to "Test description")]
     (is
      (instance? OWLAnnotation ann))))
+
+(deftest sio-oproperty0
+  (let [test (p/sio-oproperty0 to "label" "description")]
+    (is
+     (instance? OWLObjectProperty (var-get test)))))
 
 (deftest sio-class0
   (let [test (p/sio-class0 to "label" "description")]
@@ -58,14 +64,16 @@
               "CHEBI:00000")]
     (is
      (= 0
-        (count without)))
+        (count
+         (.getAnnotationAssertionAxioms to (.getIRI without)))))
     (is
      (= 1
-        (count with)))))
+        (count
+         (.getAnnotationAssertionAxioms to (.getIRI with)))))))
 
 (deftest sio-atom0
   (let [atom (p/sio-class0 to "atom" "the atom class")
         tatom (p/sio-atom0 to o/see-also-property (var-get atom)
-                           "test atom" nil)]
+                 "test atom" nil)]
     (is
-     (instance? OWLClass (o/owl-class to "test_atom")))))
+     (instance? OWLClass (var-get tatom)))))

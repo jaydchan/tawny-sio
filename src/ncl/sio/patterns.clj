@@ -49,6 +49,12 @@ annotations."
   [o description]
   (annotation o dc-description (literal description :lang "en")))
 
+(defn sadi0
+  "Annotation pattern to ensure the consistency of subset
+annotations."
+  [o subset]
+  (annotation o subset (literal "sadi" :lang "en")))
+
 (defn subset-rdf0
   "Annotation pattern to ensure the consistency of subset
 annotations."
@@ -89,6 +95,23 @@ annotations."
 ;; alternative-name-rdf 1
 ;; similar-rdf 1
 ;; subset-en 2 same value
+
+;; OPROPERTY PATTERN
+(defn sio-oproperty0
+  "Generic pattern for most sio oproperties.
+0) Interns entity
+1) Ensures name is 'safe'
+2) Ensures each property has description annotation
+3) Automatically generates the label annotation"
+  [o name description & frames]
+  (let [n (make-safe name)]
+    (intern-owl-string
+     n
+     (apply object-property
+          (list* o n
+                 :label name
+                 :annotation (desc o description)
+                 frames)))))
 
 ;; CLASS PATTERNS
 (defn sio-class0
@@ -132,7 +155,8 @@ added to the atom class."
   (if-not (nil? chebi)
     (add-annotation
      o cls
-     (see-also0 o see-also chebi))))
+     (see-also0 o see-also chebi)))
+  cls)
 
 (defn sio-atom0
   "Localised pattern for sio atoms.
@@ -141,12 +165,15 @@ added to the atom class."
 3) Automatically generates the label annotation
 4) (if provided) Automatically generates the see-also annotation"
   [o see-also atom name chebi]
-  (sio-atom-annotation-maybe
-   o see-also
-   (owl-class o (make-safe name)
-              :subclass atom
-              :label name)
-   chebi))
+  (let [n (make-safe name)]
+    (intern-owl-string
+     n
+     (sio-atom-annotation-maybe
+      o see-also
+      (owl-class o (make-safe name)
+                 :subclass atom
+                 :label name)
+      chebi))))
 
 ;; (defentity
 ;;   defsioatom
