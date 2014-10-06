@@ -55,6 +55,7 @@
    " :range" "\n\t:range",
    " :domain" "\n\t:domain",
    " :characteristic" "\n\t:characteristic",
+   " :subchain" "\n\t:subchain",
    " \\(label " "\n\t(label ",
    " \\(annotation " "\n\t(annotation ",
    " \\(owl-comment " "\n\t(owl-comment "})
