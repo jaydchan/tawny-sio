@@ -101,24 +101,22 @@
    (= (count (.getDataPropertiesInSignature s/sio))
       (count (.getDataPropertiesInSignature rsio/rendered_sio)))))
 
-;; 7463 vs 7083
+;; 7463 vs 7563
 ;; (deftest axioms
 ;;   (is
 ;;    (= (count (.getAxioms s/sio))
 ;;       (count (.getAxioms rsio/rendered_sio)))))
 
-;; 1 vs 0 vs 1
 (deftest subproperty-chain-of-axioms
   (is
    (= (count
        (filter
         #(instance? OWLSubPropertyChainOfAxiom %)
         (.getAxioms s/sio)))
-      ;; update when subchain render fixed
-      (+ (count
-          (filter
-           #(instance? OWLSubPropertyChainOfAxiom %)
-           (.getAxioms rsio/rendered_sio))) 1))))
+      (count
+       (filter
+        #(instance? OWLSubPropertyChainOfAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
 
 (deftest inverse-object-properties-axioms
   (is
@@ -177,11 +175,10 @@
        (filter
         #(instance? OWLSubClassOfAxiom %)
         (.getAxioms s/sio)))
-      ;; update when span render fixed
-      (- (count
-          (filter
-           #(instance? OWLSubClassOfAxiom %)
-           (.getAxioms rsio/rendered_sio))) 1))))
+      (count
+       (filter
+        #(instance? OWLSubClassOfAxiom %)
+        (.getAxioms rsio/rendered_sio))))))
 
 (deftest reflexive-object-property-axioms
   (is
