@@ -96,8 +96,7 @@
   (is
    (= (count (.getAnnotationPropertiesInSignature s/sio))
       (count (.getAnnotationPropertiesInSignature rsio/rendered_sio))
-      (count (.getAnnotationPropertiesInSignature m/mysio))
-      ))
+      (count (.getAnnotationPropertiesInSignature m/mysio))))
   (is
    (= (count (filter
               #(tawny.read/iri-starts-with-filter
@@ -118,305 +117,235 @@
       (count (.getDataPropertiesInSignature rsio/rendered_sio))
       (count (.getDataPropertiesInSignature m/mysio)))))
 
-;; 7467 vs 7564 vs 7467
+;; 7463 vs 7563 vs 7465
 (deftest axioms
   (is
    (=
     ;; +5 see declaration-axioms test
     ;; -1 see disjoint-classes-axioms test
     (+ (count (.getAxioms s/sio)) 4)
-    ;; +1 see subproperty-chain-of-axioms test
-    ;; -1 see subclass-of-axioms
     ;; commented -- see disjoint-classes-axioms test
-    ;; (+ (count (.getAxioms rsio/rendered_sio)) 0)
+    ;; (count (.getAxioms rsio/rendered_sio))
     ;; +2 see disjoint-classes-axioms test
     (+ (count (.getAxioms m/mysio)) 2))))
 
-;; 1 vs 0 vs 1
 (deftest subproperty-chain-of-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLSubPropertyChainOfAxiom %)
-        (.getAxioms s/sio)))
-      ;; update when subchain render fixed
-      (+ (count
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
           (filter
            #(instance? OWLSubPropertyChainOfAxiom %)
-           (.getAxioms rsio/rendered_sio))) 1)
-      (count
-       (filter
-        #(instance? OWLSubPropertyChainOfAxiom %)
-        (.getAxioms m/mysio))))))
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest inverse-object-properties-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLInverseObjectPropertiesAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLInverseObjectPropertiesAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLInverseObjectPropertiesAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLInverseObjectPropertiesAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
-;; mysio has extra declarations:
+;; rendered_sio and mysio has 5 extra declarations:
 ;; Declaration(AnnotationProperty(<http://protege.stanford.edu/plugins/owl/protege#defaultLanguage>))
 ;; Declaration(AnnotationProperty(owl:versionInfo))
 ;; Declaration(AnnotationProperty(rdfs:comment))
 ;; Declaration(AnnotationProperty(rdfs:label))
 ;; Declaration(AnnotationProperty(rdfs:seeAlso))
 (deftest declaration-axioms
-  (is
-   (= (+ (count
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
           (filter
            #(instance? OWLDeclarationAxiom %)
-           (.getAxioms s/sio))) 5)
-      (count
-       (filter
-        #(instance? OWLDeclarationAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLDeclarationAxiom %)
-        (.getAxioms m/mysio))))))
+           (.getAxioms o)))]
+    (is
+     (= (+ (count s) 5)
+        (count r)
+        (count m)))))
 
 (deftest object-property-range-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLObjectPropertyRangeAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLObjectPropertyRangeAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLObjectPropertyRangeAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLObjectPropertyRangeAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest equivalent-classes-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLEquivalentClassesAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLEquivalentClassesAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLEquivalentClassesAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLEquivalentClassesAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest subclass-of-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLSubClassOfAxiom %)
-        (.getAxioms s/sio)))
-      ;; update when span render fixed
-      (- (count
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
           (filter
            #(instance? OWLSubClassOfAxiom %)
-           (.getAxioms rsio/rendered_sio))) 1)
-      (count
-       (filter
-        #(instance? OWLSubClassOfAxiom %)
-        (.getAxioms m/mysio))))))
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest reflexive-object-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLReflexiveObjectPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLReflexiveObjectPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLReflexiveObjectPropertyAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLReflexiveObjectPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest subproperty-of-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLSubObjectPropertyOfAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLSubObjectPropertyOfAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLSubObjectPropertyOfAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLSubObjectPropertyOfAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest inverse-functional-object-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLInverseFunctionalObjectPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLInverseFunctionalObjectPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLInverseFunctionalObjectPropertyAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLInverseFunctionalObjectPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest functional-object-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLFunctionalObjectPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLFunctionalObjectPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLFunctionalObjectPropertyAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLFunctionalObjectPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest transitive-object-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLTransitiveObjectPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLTransitiveObjectPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLTransitiveObjectPropertyAxiom %)
-        (.getAxioms m/mysio))))))
-
-;; sio
-;; ("female" "hermaphrodite") ("female" "male") ("hermaphrodite" "male")
-;; mysio
-;; ("female" "hermaphrodite" "male")
-;; Semantically similar => mysio +2
-
-;; sio => -1
-;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
-;; B ("x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
-;; mysio
-;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
-;; Dont think B is necessary => sio -1
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLTransitiveObjectPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 ;; 74 (75-1) vs 170 vs 74 (72+2)
 (deftest disjoint-classes-axioms
-  (let [[sdisj rdisj mdisj]
+  ;; sio
+  ;; ("female" "hermaphrodite") ("female" "male") ("hermaphrodite" "male")
+  ;; mysio
+  ;; ("female" "hermaphrodite" "male")
+  ;; Semantically similar => mysio +2
+
+  ;; sio
+  ;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+  ;; B ("x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+  ;; mysio
+  ;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+  ;; Dont think B is necessary => sio -1
+
+  (let [[s r m]
         (for [o [s/sio rsio/rendered_sio m/mysio]]
           (filter
            #(instance? OWLDisjointClassesAxiom %)
            (.getAxioms o)))]
     (is
-     (= (- (count sdisj) 1)
-        ;; (count rdisj)
-        (+ (count mdisj) 2)))))
+     (= (- (count s) 1)
+        ;; (count r)
+        (+ (count m) 2)))))
 
 (deftest symmetric-object-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLSymmetricObjectPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLSymmetricObjectPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLSymmetricObjectPropertyAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLSymmetricObjectPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest irreflexive-object-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLIrreflexiveObjectPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLIrreflexiveObjectPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLIrreflexiveObjectPropertyAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLIrreflexiveObjectPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest functional-data-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLFunctionalDataPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLFunctionalDataPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLFunctionalDataPropertyAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLFunctionalDataPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest asymmetric-object-property-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLAsymmetricObjectPropertyAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLAsymmetricObjectPropertyAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLAsymmetricObjectPropertyAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLAsymmetricObjectPropertyAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest object-property-domain-axioms
-  (is
-   (= (count
-       (filter
-        #(instance? OWLObjectPropertyDomainAxiom %)
-        (.getAxioms s/sio)))
-      (count
-       (filter
-        #(instance? OWLObjectPropertyDomainAxiom %)
-        (.getAxioms rsio/rendered_sio)))
-      (count
-       (filter
-        #(instance? OWLObjectPropertyDomainAxiom %)
-        (.getAxioms m/mysio))))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLObjectPropertyDomainAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (deftest annotation-axioms
-  (let [[sanns ranns manns]
+  (let [[s r m]
         (for [o [s/sio rsio/rendered_sio m/mysio]]
           (filter
            #(instance? OWLAnnotationAxiom %)
            (.getAxioms o)))]
     (is
-     (= (count sanns)
-        ;; update when render property annotation pulled
-        ;; (count ranns)
-        (count manns)))))
+     (= (count s)
+        (count r)
+        (count m)))))
 
 (defn equal-annotation?
   [a1 a2]
