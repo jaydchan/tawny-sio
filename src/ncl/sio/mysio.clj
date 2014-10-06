@@ -17,7 +17,9 @@
 
 (ns ncl.sio.mysio
   (:refer-clojure :only [])
-  (:use [tawny.owl])
+  (:use [tawny.owl]
+        [ncl.sio.patterns
+         :only [defsclass defsatom defsoproperty]])
   (:require [ncl.sio.patterns :as p]))
 
 (defontology mysio
@@ -53,22 +55,18 @@
 (annotation-property (iri "http://purl.org/dc/terms/title"))
 
 ;; patterns
-(def sio-class (clojure.core/partial p/sio-class0 mysio))
-(def sio-atom (clojure.core/partial p/sio-atom0 mysio seeAlso atom))
-
-(def sio-oproperty (clojure.core/partial p/sio-oproperty0 mysio))
-
-(def sadi (p/sadi0 mysio subset))
-(def subset-rdf (clojure.core/partial p/subset-rdf0 mysio subset))
+(def desc (clojure.core/partial p/desc mysio))
+(def sadi (p/sadi mysio subset))
+(def subset-rdf (clojure.core/partial p/subset-rdf mysio subset))
 (def core (subset-rdf "core"))
-(def synonym-rdf (clojure.core/partial p/synonym-rdf0 mysio hasSynonym))
-(def synonym-en (clojure.core/partial p/synonym-en0 mysio hasSynonym))
-(def eg (clojure.core/partial p/example0 mysio example))
-(def equivalent-rdf (clojure.core/partial p/equivalent-rdf0 mysio equivalentTo))
-(def equivalent-uri (clojure.core/partial p/equivalent-uri0 mysio equivalentTo))
-(def similar-uri (clojure.core/partial p/similar-uri0 mysio similarTo))
-(def see-also-uri (clojure.core/partial p/see-also-uri0 mysio))
-(def see-also-rdf (clojure.core/partial p/see-also0 mysio seeAlso))
+(def synonym-rdf (clojure.core/partial p/synonym-rdf mysio hasSynonym))
+(def synonym-en (clojure.core/partial p/synonym-en mysio hasSynonym))
+(def eg (clojure.core/partial p/example mysio example))
+(def equivalent-rdf (clojure.core/partial p/equivalent-rdf mysio equivalentTo))
+(def equivalent-uri (clojure.core/partial p/equivalent-uri mysio equivalentTo))
+(def similar-uri (clojure.core/partial p/similar-uri mysio similarTo))
+(def see-also-uri (clojure.core/partial p/see-also-uri mysio))
+(def see-also-rdf (clojure.core/partial p/see-also mysio seeAlso))
 
 ;; dproperty = 1
 (defdproperty has_value
