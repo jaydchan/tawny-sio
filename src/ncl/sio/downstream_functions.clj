@@ -68,7 +68,7 @@
 (defclass phosphoglucose_isomerase_reaction)
 (defclass third_reaction)
 
-(biochemical-pathway "glycosis pathway"
+(biochemical-pathway "glycolsis pathway"
                      [hexokinase_reaction
                       phosphoglucose_isomerase_reaction
                       third_reaction])
