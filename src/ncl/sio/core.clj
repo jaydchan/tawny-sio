@@ -19,9 +19,9 @@
   (:require [ncl.sio
              sio
              rendered_sio
-             generate_mysio
+             ;; generate_mysio
              mysio
-             downstream_functions
+             ;; downstream_functions
              ])
   (:gen-class))
 
@@ -37,16 +37,16 @@
   (save-ontology ncl.sio.rendered_sio/rendered_sio "rsio.omn" :omn)
   (save-ontology ncl.sio.rendered_sio/rendered_sio "rsio.owl" :owl)
 
-  ;; generate mysio code
-  (ncl.sio.generate_mysio/driver)
+  ;; TOFIX generate mysio code
+  ;; (ncl.sio.generate_mysio/driver)
 
   ;; patternised recasting of (my)sio
   (save-ontology ncl.sio.mysio/mysio "mysio.omn" :omn)
   (save-ontology ncl.sio.mysio/mysio "mysio.owl" :owl)
 
   ;; patterns for downstream usage
-  (save-ontology
-   ncl.sio.downstream_functions/downstream_functions "downstream.omn" :omn)
-  (save-ontology
-   ncl.sio.downstream_functions/downstream_functions "downstream.owl" :owl)
+  ;; (save-ontology
+  ;;  ncl.sio.downstream_functions/downstream_functions "downstream.omn" :omn)
+  ;; (save-ontology
+  ;;  ncl.sio.downstream_functions/downstream_functions "downstream.owl" :owl)
 )
