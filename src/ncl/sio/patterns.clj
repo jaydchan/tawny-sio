@@ -16,7 +16,7 @@
 ;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.patterns
-  (:use [tawny.owl :exclude [defentity see-also]])
+  (:use [tawny.owl :exclude [see-also]])
   (:require [ncl.sio.generic
              :as g :only [specific-replaces]]))
 
@@ -105,17 +105,6 @@ annotations."
 (defonce ^{:private true
            :doc "sio:atom IRI"}
   sio-atom-class (iri "http://ncl.ac.uk/sio/mysio#atom"))
-
-;; NOTE redefined as entity-generator is private
-(defmacro ^{:private true
-            :author "Phillip Lord"} defentity
-  "Defines a new entity macro."
-  [name docstring entity-function]
-  `(defmacro
-     ~name
-     ~docstring
-     [entity# & frames#]
-     (#'tawny.owl/entity-generator entity# frames# ~entity-function)))
 
 (defn make-label
   "Takes Symbol and tries to generate label value."
