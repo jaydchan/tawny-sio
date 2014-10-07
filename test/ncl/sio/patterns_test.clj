@@ -41,26 +41,22 @@
     (is
      (instance? OWLAnnotation ann))))
 
-(deftest sio-oproperty0
-  (let [test (p/sio-oproperty0 to "label" "description")]
-    (is
-     (instance? OWLObjectProperty (var-get test)))))
+(deftest sio-class
+  (is
+   (instance? OWLClass
+              (p/sio-class "name" "description"))))
 
-(deftest sio-class0
-  (let [test (p/sio-class0 to "label" "description")]
-    (is
-     (instance? OWLClass (var-get test)))))
+(deftest defsclass
+  (p/defsclass name "description")
+  (is
+   (instance? OWLClass name)))
 
 (deftest sio-atom-annotation-maybe
   (let [without (p/sio-atom-annotation-maybe
-                 to
-                 o/see-also-property
-                 (o/owl-class to "without_chebi")
+                 to (o/owl-class to "without_chebi")
                  nil)
         with (p/sio-atom-annotation-maybe
-              to
-              o/see-also-property
-              (o/owl-class to "with_chebi")
+              to (o/owl-class to "with_chebi")
               "CHEBI:00000")]
     (is
      (= 0
@@ -71,9 +67,21 @@
         (count
          (.getAnnotationAssertionAxioms to (.getIRI with)))))))
 
-(deftest sio-atom0
-  (let [atom (p/sio-class0 to "atom" "the atom class")
-        tatom (p/sio-atom0 to o/see-also-property (var-get atom)
-                 "test atom" nil)]
-    (is
-     (instance? OWLClass (var-get tatom)))))
+(deftest sio-atom
+  (is
+   (instance? OWLClass (p/sio-atom "test_atom" nil))))
+
+(deftest defsatom
+  (p/defsatom name "description")
+  (is
+   (instance? OWLClass name)))
+
+(deftest sio-oproperty
+  (is
+   (instance? OWLObjectProperty
+              (p/sio-oproperty "name" "description"))))
+
+(deftest defsoproperty
+  (p/defsoproperty name "description")
+  (is
+   (instance? OWLObjectProperty name)))
