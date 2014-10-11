@@ -129,19 +129,15 @@
         #(instance? OWLInverseObjectPropertiesAxiom %)
         (.getAxioms rsio/rendered_sio))))))
 
-;; 1633 vs 1638
-;; 5 extra declarations!!!
+;; 1633 vs 1634
+;; 1 extra declarations!!!
 ;; Declaration(AnnotationProperty(<http://protege.stanford.edu/plugins/owl/protege#defaultLanguage>))
-;; Declaration(AnnotationProperty(owl:versionInfo))
-;; Declaration(AnnotationProperty(rdfs:comment))
-;; Declaration(AnnotationProperty(rdfs:label))
-;; Declaration(AnnotationProperty(rdfs:seeAlso))
 (deftest declaration-axioms
   (is
-   (= (+ (count
-          (filter
-           #(instance? OWLDeclarationAxiom %)
-           (.getAxioms s/sio))) 5)
+   (= (count
+       (filter
+        #(instance? OWLDeclarationAxiom %)
+        (.getAxioms s/sio)))
       (count
        (filter
         #(instance? OWLDeclarationAxiom %)
