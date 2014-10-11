@@ -25,7 +25,31 @@
 (defontology mysio
   :iri "http://ncl.ac.uk/sio/mysio"
   :prefix "mysio:"
-  :noname true)
+  :noname true
+  :versioninfo (literal "1.0.10" :type :RDF_PLAIN_LITERAL)
+  :comment "general class inclusion axioms:\n'is part of' some 'physical entity' subClassOf 'is located in' some 'physical entity'\n\nrole chains:\n'has capability' o 'is realized in' -> 'is participant in'"
+  :annotation
+  (annotation
+   (iri "http://purl.org/dc/terms/license")
+   (literal "http://creativecommons.org/licenses/by/3.0/" :type :XSD_ANY_URI))
+  (annotation
+   (iri "http://purl.org/dc/terms/creator")
+   "Michel Dumontier")
+  (annotation
+   (iri "http://purl.org/dc/terms/description")
+   "The semanticscience integrated ontology (SIO) provides a simple, integrated ontology (types, relations) for objects, processes and their attributes.\n\nThis project provides foundational support for the Bio2RDF (http://bio2rdf.org) and SADI (http://sadiframework.org) projects. \n\nwebsite: http://semanticscience.org\nemail: sio-ontology@googlegroups.com\nmailing list: http://groups.google.com/group/sio-ontology\n")
+ (annotation
+  (iri "http://purl.org/dc/terms/rights")
+  (literal "use,share,modify,commercial;\nby attribution [http://creativecommons.org/licenses/by/3.0/]." :type :RDF_PLAIN_LITERAL))
+ (annotation
+  (iri "http://protege.stanford.edu/plugins/owl/protege#defaultLanguage")
+  (literal "en" :type :RDF_PLAIN_LITERAL))
+ (annotation
+  (iri "http://purl.org/dc/terms/title")
+  "Semanticscience Integrated Ontology (SIO)")
+ (annotation
+  (iri "http://purl.org/dc/terms/contributor")
+  "Contributors are those that engage in discussions in the context of SIO (in alphabetical order):\nchristopher baker\njoachim baran\njerven bolleman\nalison callahan\nleonid chepelev\nkevin cohen\nmelanie courtot\ngeraint duck\nlaura furlong\nluke mccarthy\njim mccusker\njose miguel cruz-toledo\nrobert hoehndorf\nsimon jupp\njin-dong kim\ndana klassen\njames malone\nchris mungall\ndavid osumi-sutherland\nnuria queralt\nalexandre riazanov\nmatthias samwald\nrobert stevens\nmark wilkinson\nkarin verspoor\nnatalia villanueva-rosales"))
 
 ;; predump -- necessary
 (clojure.core/load-file "./src/ncl/sio/mysio_ent.clj")
@@ -41,17 +65,12 @@
 (defaproperty hasSynonym)
 
 ;; other aproperty  = 12
-(annotation-property (iri "http://protege.stanford.edu/plugins/owl/protege#defaultLanguage"))
-(annotation-property (iri "http://purl.org/dc/terms/creator"))
-(annotation-property (iri "http://purl.org/dc/terms/description"))
 (annotation-property (iri "http://purl.org/dc/terms/alternativeName"))
-(annotation-property (iri "http://www.w3.org/2000/01/rdf-schema#label"))
-(annotation-property (iri "http://purl.org/dc/terms/license"))
-(annotation-property (iri "http://www.w3.org/2000/01/rdf-schema#comment"))
-(annotation-property (iri "http://www.w3.org/2002/07/owl#versionInfo"))
-(annotation-property (iri "http://www.w3.org/2000/01/rdf-schema#seeAlso"))
-(annotation-property (iri "http://purl.org/dc/terms/rights"))
+(annotation-property (iri "http://purl.org/dc/terms/creator"))
 (annotation-property (iri "http://purl.org/dc/terms/contributor"))
+(annotation-property (iri "http://purl.org/dc/terms/description"))
+(annotation-property (iri "http://purl.org/dc/terms/license"))
+(annotation-property (iri "http://purl.org/dc/terms/rights"))
 (annotation-property (iri "http://purl.org/dc/terms/title"))
 
 ;; patterns

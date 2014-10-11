@@ -16,7 +16,7 @@
 ;; along with this program.  If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.sio
-  (:refer-clojure :only [fn println let spit str instance? doseq])
+  (:refer-clojure :only [fn println let spit str instance? doseq when])
   (:require [tawny.read]
             [tawny.render :only [as-form]]
             [ncl.sio.generic :only
@@ -90,24 +90,36 @@
            (tawny.lookup/resolve-entity e))
           :append true))
 
+  ;; Include ontology annotations
+  (doseq [ann (.getAnnotations sio)]
+    (spit outfile
+          (str "(add-annotation rendered_sio " (tawny.render/as-form ann) ")\n")
+          :append true))
+
   ;; IRI map for SIO entities and output full entity definitions
   (let [ent (.getSignature sio)]
     (doseq [e ent]
       (try
-        (if (tawny.read/iri-starts-with-filter
-              "http://semanticscience.org/resource/" e)
+        (when (tawny.read/iri-starts-with-filter
+                "http://semanticscience.org/resource/" e)
           (spit mapfile
                 (str (.toStringID e) ","
                      (tawny.lookup/resolve-entity e) "\n")
                 :append true))
-        (spit outfile
-              (ncl.sio.generic/pretty-print
-               (str (clojure.core/pr-str
-                     (tawny.render/as-form
-                      e
-                      ;; :explicit true
-                      )) "\n"))
-              :append true)
+
+        (when (clojure.core/or
+               (tawny.read/iri-starts-with-filter
+                 "http://semanticscience.org/resource/" e)
+               (tawny.read/iri-starts-with-filter
+                 "http://purl.org/dc/terms/" e))
+          (spit outfile
+                (ncl.sio.generic/pretty-print
+                 (str (clojure.core/pr-str
+                       (tawny.render/as-form
+                        e
+                        ;; :explicit true
+                        )) "\n"))
+                :append true))
         (catch
             Exception exp (println e " causes " exp))))))
 
