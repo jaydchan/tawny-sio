@@ -15,8 +15,8 @@
 ;; along with this program.  If not, see http://www.gnu.org/licenses/.
 
 (defproject ncl.sio "1.0.0-SNAPSHOT"
-  :description "Recasting of SIO using Tawny-OWL"
-  :dependencies [[uk.org.russet/tawny-owl "1.1.1-SNAPSHOT"]]
+  :description "Refactoring of SIO using Tawny-OWL"
+  :dependencies [[uk.org.russet/tawny-owl "1.2.1-SNAPSHOT"]]
   :scm {:url "https://github.com/jaydchan/tawny-sio.git"
         :name "git"}
   :license {:name "LGPL"
