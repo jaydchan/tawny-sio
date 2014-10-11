@@ -48,8 +48,6 @@
 
 (use-fixtures :once ontology-reasoner-fixture)
 
-;; to run: M-x 'lein' 'test'
-
 (deftest Basic
   (is (r/consistent?))
   (is (r/coherent?)))
@@ -101,7 +99,7 @@
    (= (count (.getDataPropertiesInSignature s/sio))
       (count (.getDataPropertiesInSignature rsio/rendered_sio)))))
 
-;; 7463 vs 7563
+;; 7463 vs 7558
 ;; (deftest axioms
 ;;   (is
 ;;    (= (count (.getAxioms s/sio))
@@ -129,9 +127,6 @@
         #(instance? OWLInverseObjectPropertiesAxiom %)
         (.getAxioms rsio/rendered_sio))))))
 
-;; 1633 vs 1634
-;; 1 extra declarations!!!
-;; Declaration(AnnotationProperty(<http://protege.stanford.edu/plugins/owl/protege#defaultLanguage>))
 (deftest declaration-axioms
   (is
    (= (count
