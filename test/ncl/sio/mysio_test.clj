@@ -51,8 +51,6 @@
 
 (use-fixtures :once ontology-reasoner-fixture)
 
-;; to run: M-x 'lein' 'test'
-
 (deftest Basic
   (is (r/consistent?))
   (is (r/coherent?)))
@@ -76,18 +74,16 @@
               #(tawny.read/iri-starts-with-filter
                  "http://ncl.ac.uk/sio/rendered_sio" %)
               (.getSignature rsio/rendered_sio)))
-      ;; (count (filter
-      ;;         #(tawny.read/iri-starts-with-filter
-      ;;            "http://ncl.ac.uk/sio/mysio" %)
-      ;;         (.getSignature m/mysio)))
-)))
+      (count (filter
+              #(tawny.read/iri-starts-with-filter
+                 "http://ncl.ac.uk/sio/mysio" %)
+              (.getSignature m/mysio))))))
 
 (deftest classes
   (is
    (= (count (.getClassesInSignature s/sio))
       (count (.getClassesInSignature rsio/rendered_sio))
-      ;; (count (.getClassesInSignature m/mysio))
-)))
+      (count (.getClassesInSignature m/mysio)))))
 
 (deftest oproperties
   (is
@@ -99,8 +95,7 @@
   (is
    (= (count (.getAnnotationPropertiesInSignature s/sio))
       (count (.getAnnotationPropertiesInSignature rsio/rendered_sio))
-      ;; (count (.getAnnotationPropertiesInSignature m/mysio))
-))
+      (count (.getAnnotationPropertiesInSignature m/mysio))))
   (is
    (= (count (filter
               #(tawny.read/iri-starts-with-filter
@@ -121,14 +116,14 @@
       (count (.getDataPropertiesInSignature rsio/rendered_sio))
       (count (.getDataPropertiesInSignature m/mysio)))))
 
-
 ;; 7463 vs 7558 vs 7460
-;; (deftest axioms
-;;   (is
-;;    (=
-;;    (count (.getAxioms s/sio))
-;;    ;; (count (.getAxioms rsio/rendered_sio))
-;;    (count (.getAxioms m/mysio)))))
+(deftest axioms
+  (is
+   (=
+   (count (.getAxioms s/sio))
+   ;; (count (.getAxioms rsio/rendered_sio))
+   ;; see disjoint axioms
+   (+ (count (.getAxioms m/mysio)) 3))))
 
 (deftest subproperty-chain-of-axioms
   (let [[s r m]
@@ -161,8 +156,7 @@
     (is
      (= (count s)
         (count r)
-        ;; (count m)
-))))
+        (count m)))))
 
 (deftest object-property-range-axioms
   (let [[s r m]
@@ -252,30 +246,30 @@
         (count r)
         (count m)))))
 
-;; ;; 75 vs 170 vs 72
-;; (deftest disjoint-classes-axioms
-;;   ;; sio
-;;   ;; ("female" "hermaphrodite") ("female" "male") ("hermaphrodite" "male")
-;;   ;; mysio
-;;   ;; ("female" "hermaphrodite" "male")
-;;   ;; Semantically similar => mysio +2
+;; 75 vs 170 vs 72
+(deftest disjoint-classes-axioms
+  ;; sio
+  ;; ("female" "hermaphrodite") ("female" "male") ("hermaphrodite" "male")
+  ;; mysio
+  ;; ("female" "hermaphrodite" "male")
+  ;; Semantically similar => mysio +2
 
-;;   ;; sio
-;;   ;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
-;;   ;; B ("x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
-;;   ;; mysio
-;;   ;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
-;;   ;; Dont think B is necessary => sio -1
+  ;; sio
+  ;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+  ;; B ("x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+  ;; mysio
+  ;; A ("_3D_cartesian_coordinate" "x_cartesian_coordinate" "y_cartesian_coordinate" "z_cartesian_coordinate")
+  ;; Dont think B is necessary => mysio +1
 
-;;   (let [[s r m]
-;;         (for [o [s/sio rsio/rendered_sio m/mysio]]
-;;           (filter
-;;            #(instance? OWLDisjointClassesAxiom %)
-;;            (.getAxioms o)))]
-;;     (is
-;;      (= (count s)
-;;         (count r)
-;;         (count m)))))
+  (let [[s r m]
+        (for [o [s/sio rsio/rendered_sio m/mysio]]
+          (filter
+           #(instance? OWLDisjointClassesAxiom %)
+           (.getAxioms o)))]
+    (is
+     (= (count s)
+        ;; (count r)
+        (+ (count m) 3)))))
 
 (deftest symmetric-object-property-axioms
   (let [[s r m]
