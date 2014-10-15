@@ -36,7 +36,8 @@
 
 (defontology downstream_functions
   :iri "http://ncl.ac.uk/sio/downstream_functions"
-  :prefix "down:")
+  :prefix "down:"
+  :noname true)
 
 ;; BIOCHEMICAL PATHWAY PATTERN -- WORKS
 ;; See https://code.google.com/p/semanticscience/wiki/ODPBiochemistry
@@ -505,17 +506,3 @@
                    [expected_value :XSD_FLOAT]
                    [database :XSD_STRING]
                    [low_complexity_filter :XSD_BOOLEAN])
-
-;; print expansion of downstream_functions
-(let [ent (.getSignature downstream_functions)]
-  (doseq [e ent]
-    (try
-      (spit "./output/downstream_expansion.clj"
-            (ncl.sio.generic/pretty-print
-             (str (clojure.core/pr-str
-                   (tawny.render/as-form
-                    e
-                    )) "\n"))
-            :append true)
-      (catch
-          Exception exp (println e " causes " exp)))))
