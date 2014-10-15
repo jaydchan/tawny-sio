@@ -115,10 +115,7 @@
           (spit outfile
                 (ncl.sio.generic/pretty-print
                  (str (clojure.core/pr-str
-                       (tawny.render/as-form
-                        e
-                        ;; :explicit true
-                        )) "\n"))
+                       (tawny.render/as-form e)) "\n"))
                 :append true))
         (catch
             Exception exp (println e " causes " exp))))))
