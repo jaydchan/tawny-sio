@@ -51,9 +51,6 @@
   (iri "http://purl.org/dc/terms/contributor")
   "Contributors are those that engage in discussions in the context of SIO (in alphabetical order):\nchristopher baker\njoachim baran\njerven bolleman\nalison callahan\nleonid chepelev\nkevin cohen\nmelanie courtot\ngeraint duck\nlaura furlong\nluke mccarthy\njim mccusker\njose miguel cruz-toledo\nrobert hoehndorf\nsimon jupp\njin-dong kim\ndana klassen\njames malone\nchris mungall\ndavid osumi-sutherland\nnuria queralt\nalexandre riazanov\nmatthias samwald\nrobert stevens\nmark wilkinson\nkarin verspoor\nnatalia villanueva-rosales"))
 
-;; predump -- necessary
-(clojure.core/load-file "./src/ncl/sio/mysio_ent.clj")
-
 ;; sio aproperty (and tawny-name) = 8 (+1)
 (defaproperty narrowerThan)
 (defaproperty equivalentTo)
@@ -101,11 +98,5 @@
 ;; oproperty = 203
 (clojure.core/load-file "./src/ncl/sio/oproperties.clj")
 
-;; individuals = 0
-;; NONE
-
-;; classes (excluding atoms) = 1396 - 118
+;; classes = 1396
 (clojure.core/load-file "./src/ncl/sio/mysio_ii.clj")
-
-;; atoms = 118
-(clojure.core/load-file "./src/ncl/sio/atom.clj")

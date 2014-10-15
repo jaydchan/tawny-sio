@@ -873,26 +873,23 @@
 
 (as-subclasses
  line_segment
- (defsclass directed_line_segment "A directed line segment is a line segment that is contained by an ordered pair of endpoints (a start point and an endpoint)."
-   :super (exactly 1 has_component_part endpoint) (exactly 1 has_component_part start_point))
+ (defsclass directed_line_segment "A directed line segment is a line segment that is contained by an ordered pair of endpoints (a start point and an endpoint).")
  (defsclass polygon_edge "A polygon edge is a line segment joining two polygon vertices."
-   :super (owl-some is_part_of polygon) (exactly 2 has_component_part polygon_vertex))
+   :super (owl-some is_part_of polygon))
  (defsclass tick_mark "A tick mark is a line segment that is spatially positioned perpendicular to the axis of a statistical graph and indicates the position of a specific numeric value (which may be indicated by an adjacent value label) on a value axis, or is one of a pair of tick marks that delineates the boundary of a categorical value (which may be indicated by an adjacent category label) on the categorical axis."))
 
 (defsclass arrowed_line_segment "An arrowed line is a directed line segment in which one or both endpoints is tangentially part of a triangle that bisects the line."
-  :super directed_line_segment (owl-some has_part triangle) (at-most 2 has_component_part triangle))
+  :super directed_line_segment)
 (defsclass axis "An axis is a line segment that is part of a statistical graph in which the position along the line corresponds to a numeric or categorical value."
-  :super directed_line_segment (owl-some is_component_part_of statistical_graph)
+  :super directed_line_segment
   :annotation
   (eg "The left vertical and bottom horizontal lines with tickmarks in Graph 1 http://tinyurl.com/opwnvm")
   (owl-comment (literal "The value of a plotted geometric objects (e.g. point) can be obtained from the perpendicular projection of the position of the object onto the axis. Axis may also be associated with a textual description of what the values on the axis represents." :type :RDF_PLAIN_LITERAL)))
 
 (as-disjoint-subclasses
  arrowed_line_segment
- (defsclass single_arrowed_line_segment "A single arrowed line is directed line in which the endpoint is tangentially part of a triangle that bisects the line."
-   :super (exactly 1 has_component_part triangle))
- (defsclass double_arrowed_line_segment "A double arrowed line is an arrowed line in which both terminal points are  tangentially part of different triangles that bisect the line."
-   :super (exactly 2 has_component_part triangle)))
+ (defsclass single_arrowed_line_segment "A single arrowed line is directed line in which the endpoint is tangentially part of a triangle that bisects the line.")
+ (defsclass double_arrowed_line_segment "A double arrowed line is an arrowed line in which both terminal points are  tangentially part of different triangles that bisect the line."))
 
 (as-disjoint-subclasses
  axis
@@ -978,12 +975,9 @@
  (defsclass increasing_line "An increasing line is a line segment in which the startpoint and endpoint are ordered along one dimension and the difference of values in a second dimension is positive.")
  (defsclass plateau_line "An plateau line is a line segment in which the startpoint and endpoint are ordered along one dimension and the difference of values in a second dimension is zero."))
 
-(defsclass _1D_cartesian_point "a 1D cartesian point is a point whose position is specified along a single dimension using Cartesian coordinates."
-  :equivalent (owl-and point (only has_component_part z_cartesian_coordinate) (exactly 1 has_component_part z_cartesian_coordinate)))
-(defsclass _2D_cartesian_point "a 2D cartesian point is a point whose position is specified along two  dimensions using Cartesian coordinates."
-  :equivalent (owl-and point (only has_component_part (owl-or x_cartesian_coordinate y_cartesian_coordinate)) (exactly 1 has_component_part x_cartesian_coordinate) (exactly 1 has_component_part y_cartesian_coordinate)))
-(defsclass _3D_cartesian_point "a 3D cartesian point is a point whose position is specified along three  dimensions using Cartesian coordinates."
-  :equivalent (owl-and point (exactly 1 has_component_part x_cartesian_coordinate) (exactly 1 has_component_part y_cartesian_coordinate) (exactly 1 has_component_part z_cartesian_coordinate)))
+(defsclass _1D_cartesian_point "a 1D cartesian point is a point whose position is specified along a single dimension using Cartesian coordinates.")
+(defsclass _2D_cartesian_point "a 2D cartesian point is a point whose position is specified along two  dimensions using Cartesian coordinates.")
+(defsclass _3D_cartesian_point "a 3D cartesian point is a point whose position is specified along three  dimensions using Cartesian coordinates.")
 (defsclass data_point "A data point is a point that which corresponds to the projection of the values of measurement data against the axes of a statistical graph."
   :super point (owl-some denotes entity))
 (defsclass terminal_point "A terminal point is a point that defines the finite extension of a line."
@@ -1028,14 +1022,11 @@
    :super (only describes entity))
  (defsclass language "Language is a language entity which is the result of encoding and decoding information through systematic creation and usage of systems of symbols, each pairing a specific sign with an intended meaning, established through social conventions")
  (defsclass morpheme "a morpheme is the smallest semantically meaningful unit in a language")
- (defsclass phrase "A phrase is a group of words functioning as a single unit in the syntax of a sentence."
-   :super (at-least 2 has_direct_part word))
+ (defsclass phrase "A phrase is a group of words functioning as a single unit in the syntax of a sentence.")
  (defsclass verbal_language_entity "a verbal language entity is a language entity that is manifested through sound.")
  (defsclass visual_language_entity "A visual language entity is a language entity that is expressed through physical expression of manual  ")
- (defsclass vocabulary "a vocabulary is a collection of terms."
-   :super collection)
- (defsclass word "A word is the smallest free form (an item that may be expressed in isolation with semantic or pragmatic content) in a language."
-   :super (owl-some has_part morpheme) (owl-some has_direct_part character)))
+ (defsclass vocabulary "a vocabulary is a collection of terms.")
+ (defsclass word "A word is the smallest free form (an item that may be expressed in isolation with semantic or pragmatic content) in a language."))
 
 (as-subclasses
  description
@@ -1060,28 +1051,19 @@
 
 (as-subclasses
  proposition
- (defsclass argument "An argument is a set of one or more declarative sentences (or propositions) known as the premises along with another declarative sentence (or proposition) known as the conclusion."
-   :super proposition (owl-and (owl-some has_proper_part premise) (owl-some has_proper_part conclusion)))
- (defsclass premise "A premise is a proposition of an argument from which the conclusion is drawn."
-   :super proposition)
- (defsclass conclusion "A conclusion is a proposition which is reached after considering the evidence, arguments or premises."
-   :super proposition)
- (defsclass hypothesis "a hypothesis is a proposed explanation for a phenomenon."
-   :super proposition)
+ (defsclass argument "An argument is a set of one or more declarative sentences (or propositions) known as the premises along with another declarative sentence (or proposition) known as the conclusion.")
+ (defsclass premise "A premise is a proposition of an argument from which the conclusion is drawn.")
+ (defsclass conclusion "A conclusion is a proposition which is reached after considering the evidence, arguments or premises.")
+ (defsclass hypothesis "a hypothesis is a proposed explanation for a phenomenon.")
  (defsclass objective "an objective is a proposition that indicates a planned or anticipated outcome."
-   :super proposition (only is_specified_by action_specification) (only is_realized_in process))
+   :super (only is_realized_in process))
  (defsclass belief "a belief is a proposition that is believed to be true."
-   :super proposition (owl-some specifies (owl-and _true (owl-some is_quality_of proposition))))
- (defsclass idea "An idea is a proposition about some object of conceptual thought."
-   :super proposition)
- (defsclass justification "A justification is a proposition that defends, explains or excuses some argument."
-   :super proposition)
- (defsclass prognosis "A prognosis is a proposition about the likely course of a disease, the chance of recovery or recurrence."
-   :super proposition)
- (defsclass comment "a comment is a verbal or written remark often related to an added piece of information, or an observation or statement."
-   :super proposition)
- (defsclass statement "a statement is a proposition that is either (a) a meaningful declarative sentence that is either true or false, or (b) that which a true or false declarative sentence asserts"
-   :super proposition))
+   :super (owl-some specifies (owl-and _true (owl-some is_quality_of proposition))))
+ (defsclass idea "An idea is a proposition about some object of conceptual thought.")
+ (defsclass justification "A justification is a proposition that defends, explains or excuses some argument.")
+ (defsclass prognosis "A prognosis is a proposition about the likely course of a disease, the chance of recovery or recurrence.")
+ (defsclass comment "a comment is a verbal or written remark often related to an added piece of information, or an observation or statement.")
+ (defsclass statement "a statement is a proposition that is either (a) a meaningful declarative sentence that is either true or false, or (b) that which a true or false declarative sentence asserts"))
 
 (as-subclasses
  argument
@@ -1096,7 +1078,7 @@
   :super valid_argument (owl-some has_proper_part (owl-and premise (owl-some has_quality _true))))
 
 (defsclass opinion "an opinion is a belief that is the result of emotion or interpretation of facts. "
-  :super belief (owl-some is_product_of medical_diagnosis))
+  :super belief)
 
 (defsclass diagnostic_opinion "A diagnostic opinion is an opinion resulting from a medical diagnostic procedure."
   :super opinion)
@@ -1133,12 +1115,12 @@
 (defsclass standard_operating_procedure "a standard operating procedure is a specification approved for use in specific environments."
   :super experimental_protocol)
 (defsclass study_design "A study design is a protocol for the proper execution of a study which normally requires a carefullly crafted research question or hypothesis and at least one variable under observation and observed values for that variable."
-  :super experimental_protocol (only is_manifested_as (owl-some is_part_of investigation))
+  :super experimental_protocol
   :annotation
   (synonym-rdf "study protocol"))
 
 (defsclass chemical_reaction_pathway "a chemical reaction pathway specifies a series of chemical reactions towards producing some chemical product."
-  :super pathway (owl-some specifies (owl-some has_proper_part chemical_reaction)) (owl-some is_model_of process) (only has_member chemical_reaction))
+  :super pathway (owl-some is_model_of process))
 
 (as-subclasses
  chemical_reaction_pathway
@@ -1269,8 +1251,7 @@
  ;; NOTE _label is its own parent
  (defclass _label
    :label "label"
-   :annotation (desc "a label is a term that is associated with some entity")
-   :super _label)
+   :annotation (desc "a label is a term that is associated with some entity"))
  (defsclass document "A document is a bounded physical or digital representation of a body of information designed with the capacity (and usually intent) to communicate.")
  (defsclass document_component "A bibliographic attribute is an attribute related to publications.")
  (defsclass excerpt "An excerpt is a contiguous or discontiguous portion of a document."
@@ -1278,7 +1259,6 @@
  (defsclass paragraph "A paragraph is a self-contained unit of written discourse consisting of one or more sentences."
    :super (owl-some has_direct_part sentence))
  (defsclass text_span "a text span is a subset of contiguous sequence of characters of a textual entity."
-   :super (owl-and (owl-some has_attribute text_span_start_position) (owl-some has_attribute text_span_end_position))
    :annotation
    (synonym-rdf "selector")))
 
@@ -1297,8 +1277,7 @@
  identifier
  (defsclass informational_entity_identifier "an informational entity identifier is an identifier for an informational entity.")
  (defsclass physical_entity_identifier "a physical entity identifier is an identifier for a physical entity.")
- (defsclass positional_identifier "a positional description is a description of location using some system or frame of reference."
-   :super (owl-some is_attribute_of position))
+ (defsclass positional_identifier "a positional description is a description of location using some system or frame of reference.")
  (defsclass unique_identifier "a unique identifier is an identifier that uniquely identifies some thing."
    :super (owl-some is_unique_identifier_for entity)
    :equivalent (owl-and identifier (owl-some is_unique_identifier_for entity)))
@@ -1370,16 +1349,15 @@
    :annotation
    (synonym-rdf "subtitle, alternative title")))
 (defsclass graph_title "A graph title is a title that describes a graph."
-  :equivalent (owl-and title (owl-some is_direct_part_of statistical_graph))
   :annotation
   (eg "Total value of permits increased slightly in December| in Graph 1 of http://tinyurl.com/opwnvm"))
 
 (defsclass primary_graph_title "A primary graph title is a primary title that describes a statistical graph."
-  :super primary_title (owl-some is_direct_part_of statistical_graph)
+  :super primary_title
   :annotation
   (eg "Total value of permits increased slightly in December| in Graph 1 of http://tinyurl.com/opwnvm"))
 (defsclass secondary_graph_title "A secondary graph title is a secondary title that describes a statistical graph."
-  :super primary_title (owl-some is_direct_part_of statistical_graph))
+  :super primary_title)
 
 (as-subclasses
  document
@@ -1423,7 +1401,7 @@
   :super book)
 
 (defsclass issue "an issue is a single instance of a periodically published journal, magazine, or newspaper."
-  :super edited_publication (owl-some is_proper_part_of periodical))
+  :super edited_publication)
 
 (as-disjoint-subclasses
  thesis_document
@@ -1481,12 +1459,12 @@
  (defsclass pattern "A pattern is a generalized representation of some repeatable concrete or informational item.")
  (defsclass set "a set is a collection of entities, for which there may be zero members."
    :super (only has_member entity))
- (defsclass variable "a variable is a value that may change within the scope of a given problem or set of operations.")
+ (defsclass variable "a variable is a value txchat may change within the scope of a given problem or set of operations.")
  (defsclass set_item "set item is an item in a set."
    :super (owl-some is_member_of set)))
 
 (defsclass collection_item "a collection item is an item in a collection."
-  :super set_item (owl-some is_member_of collection))
+  :super set_item)
 (defsclass list_item "a list item is an item in a list."
   :super set_item (owl-some is_ordered_part_of list))
 
@@ -1498,18 +1476,16 @@
 
 (as-subclasses
  association
- (defsclass chemical-disease_association "a chemical-disease association is an association between a chemical and a disease."
-   :super (owl-and (owl-some refers_to chemical_entity) (owl-some refers_to disease)))
+ (defsclass chemical-disease_association "a chemical-disease association is an association between a chemical and a disease.")
  (defsclass database_cross-reference "a database cross-reference is an association between one data item and another."
    :annotation
    (synonym-rdf "dbxref"))
  (defsclass gene-disease_association "a gene-disease association is an association between a gene and a disease"
-   :super (owl-some refers_to gene) (owl-some refers_to disease))
+   :super (owl-some refers_to disease))
  (defsclass statistical_association "a statistical association is any relationship between two measured quantities that renders them statistically dependent.")
- (defsclass chemical-gene_assocation "a chemical-gene assocation is an assocation between a chemical and a gene."
-   :super (owl-some refers_to chemical_entity) (owl-some refers_to gene))
+ (defsclass chemical-gene_assocation "a chemical-gene assocation is an assocation between a chemical and a gene.")
  (defsclass chemical-pathway_association "a chemical-pathway association is an association between a chemical and a pathway."
-   :super (owl-some refers_to pathway) (owl-some refers_to chemical_entity)
+   :super (owl-some refers_to pathway)
    :annotation
    (synonym-en "drug-pathway association")))
 
@@ -1550,7 +1526,7 @@
   :super differential_equation)
 
 (defsclass diffusion_equation "A diffusion equation describes density fluctuations in a material undergoing diffusion."
-  :super movement_equation (owl-some specifies diffusion))
+  :super movement_equation)
 
 (defsclass page_range "A page range denotes the start and end page in some document."
   :super interval)
@@ -1562,7 +1538,6 @@
    (eg "Example: The two series that correspond to |Seasonally adjusted| and |Trend| are composed of the seasonally adjusted value of permits in each month and values from a trend derived from some mathematical tranformation across those values, respectively, in  Graph 1 of http://tinyurl.com/opwnvm"))
  (defsclass intersection "an intersection is a list of only the values of an attribute for the entities in the defined set where all entities have that value.")
  (defsclass sequence "a sequence is an ordered list of entities. Like a set, it contains members (also called elements, or terms)."
-   :super (owl-some has_member (owl-and entity (owl-some has_attribute ordinal_position) (owl-some refers_to entity)))
    :annotation
    (annotation (iri "http://purl.org/dc/terms/alternativeName") (literal "ordered list" :type :RDF_PLAIN_LITERAL))
    (eg "For example, (M, A, R, Y) is a sequence of letters that differs from (A, R, M, Y), as the ordering matters, and (1, 1, 2, 3, 5, 8), which contains the number 1 at two different positions, is a valid sequence. "))
@@ -1595,8 +1570,7 @@
 (defsclass position "A measurement of a spatial location relative to a frame of reference or other objects."
   :super measurement_value (owl-some has_attribute positional_identifier))
 (defsclass quantity "A quantity is an informational entity that gives the magnitude of a property."
-  :super measurement_value (owl-some is_attribute_of entity) (owl-some is_measurement_value_of entity)
-  :equivalent (owl-or dimensionless_quantity dimensional_quantity))
+  :super measurement_value (owl-some is_attribute_of entity) (owl-some is_measurement_value_of entity))
 
 (as-subclasses
  position
@@ -1616,8 +1590,7 @@
 
 (as-disjoint-subclasses
  cartesian_coordinate
- (defsclass _3D_cartesian_coordinate "a 3D cartesian coordinate is a coordinate that is composed of an x, y and z coordinate."
-   :super (owl-and (exactly 1 has_direct_part x_cartesian_coordinate) (exactly 1 has_direct_part y_cartesian_coordinate) (exactly 1 has_direct_part z_cartesian_coordinate)))
+ (defsclass _3D_cartesian_coordinate "a 3D cartesian coordinate is a coordinate that is composed of an x, y and z coordinate.")
  (defsclass x_cartesian_coordinate "an x cartesian coordinate is the coordinate of an object onto the x-axis of a cartesian coordinate system.")
  (defsclass y_cartesian_coordinate "an y cartesian coordinate is the coordinate of an object onto the y-axis of a cartesian coordinate system.")
  (defsclass z_cartesian_coordinate "a z cartesian coordinate is the coordinate of an object onto the z-axis of a cartesian coordinate system."))
@@ -1671,11 +1644,9 @@
  (defsclass dimensionless_quantity "A dimensionless quantity is a quantity that has no associated unit."
    :super (owl-not (owl-some has_unit unit_of_measurement)))
  (defsclass maximal_value "a maximal value is largest value of an attribute for the entities in the defined set."
-   :super (owl-some is_attribute_of collection)
    :annotation
    (synonym-rdf "max"))
  (defsclass minimal_value "a minimal value is smallest value of an attribute for the entities in the defined set."
-   :super (owl-some is_attribute_of collection)
    :annotation
    (synonym-rdf "min"))
  (defsclass standard_deviation "a standard deviation (represented by the symbol σ) is the quantity of  variation from the average (mean, or expected value).")
@@ -1741,7 +1712,7 @@
   :super length_of_perimeter)
 
 (defsclass concentration "concentration is the quantity of a constituent divided by the total volume of a mixture."
-  :super _3D_extent_quantity (owl-some is_attribute_of (owl-and heterogeneous_substance (owl-some is_proper_part_of chemical_substance))))
+  :super _3D_extent_quantity)
 (defsclass volume "volume is the quantity of three-dimensional space enclosed by some closed boundary."
   :super _3D_extent_quantity)
 
@@ -2089,9 +2060,7 @@
    (subset-rdf "chemical+")
    (eg "atom, ion, molecule, chemical substance,")
    (equivalent-rdf "CHEBI:23367")) ;; should be CHEBI:24431
- (defsclass heterogeneous_substance "a heterogeneous substance is a chemical substance that is composed of more than one different kind of component."
-   :super chemical_substance
-   :disjoint homogeneous_substance)
+ (defsclass heterogeneous_substance "a heterogeneous substance is a chemical substance that is composed of more than one different kind of component.")
  (defsclass specialized_material_entity "a specialized material entity is a material entity that is defined by having some quality, role or capability"
    :equivalent (owl-and material_entity (owl-some has_realizable_property realizable_entity))))
 
@@ -2099,17 +2068,17 @@
  chemical_entity
  (defsclass atom "An atom is composed of a core of protons and/or neutrons which may be surrounded by a cloud of electrons.")
  (defsclass chemical_substance "A chemical substance is a chemical complex of weakly interacting molecular entities, and may include bulk solvent."
-   :equivalent (owl-or heterogeneous_substance homogeneous_substance)
    :annotation
    (see-also-rdf "CHEMINF:440533")) ;; to check
  (defsclass covalently_connected_entity "A covalently connected molecular entity is the mereological sum of a collection of covalently bonded atoms."
-   :super (owl-some has_part (owl-and atom (owl-some is_covalently_connected_to atom))) (owl-some has_component_part covalent_bond))
+   :super (owl-some has_part (owl-and atom (owl-some is_covalently_connected_to atom))))
  (defsclass ion "An ion is an atom or molecule in which the total number of electrons is not equal to the total number of protons, giving it a net positive or negative electrical charge."
    :equivalent (owl-and (owl-or atom molecule) (owl-some has_quality charge_quality)))
- (defsclass molecular_complex "a molecular complex is a chemical complex composed of weakly interacting molecular entities, and excludes bulk solvent."
-   :super (owl-or (owl-some has_direct_part molecular_complex) (at-least 2 has_direct_part molecule)))
+ (defsclass molecular_complex "a molecular complex is a chemical complex composed of weakly interacting molecular entities, and excludes bulk solvent.")
  (defsclass submolecular_entity "A submolecular entity is a part of a molecular entity."
    :super (owl-some is_part_of chemical_entity)))
+
+(clojure.core/load-file "./src/ncl/sio/atom.clj")
 
 (defsclass anion "An anion is an atom or molecule with a net negative electrical charge."
   :equivalent (owl-and ion (owl-some has_quality negative_charge)))
@@ -2123,8 +2092,8 @@
  (defsclass centrifugation_substance "a centrifugation substance is a substance that is the target or product of centrifugation.")
  (defsclass chemical_complex "a chemical complex is a chemical entity composed of a weakly connected ions or molecules."
    :super (owl-some has_part (owl-some is_weakly_interacting_with material_entity)))
- (defsclass homogeneous_substance "a homogeneous substance is a substance that is composed of a uniform type of entity."
-   :disjoint heterogeneous_substance))
+ (defsclass homogeneous_substance "a homogeneous substance is a substance that is composed of a uniform type of entity."))
+(as-disjoint heterogeneous_substance homogeneous_substance)
 (as-disjoint chemical_complex covalently_connected_entity submolecular_entity)
 
 (defsclass ionic_compound "an ionic compound is a mereological maximal sum of weakly connected paired positive and negative ions."
@@ -2156,8 +2125,7 @@
  (defsclass cell_line "A cell line is a collection of genetically identifical cells.")
  (defsclass genome "a genome is a collection of nucleic acids.")
  (defsclass organ "an organ is a collection of tissues joined in structural unit to serve a common function.")
- (defsclass organism "a biological organisn is a biological entity that consists of one or more cells and is capable of genomic replication (independently or not)."
-   :equivalent (owl-or cellular_organism non-cellular_organism))
+ (defsclass organism "a biological organisn is a biological entity that consists of one or more cells and is capable of genomic replication (independently or not).")
  (defsclass tissue "a tissue is a mereologically maximal collection of cells that together perform some function."
    :super (owl-some has_direct_part cell)))
 
@@ -2305,10 +2273,8 @@
    :super (owl-and (owl-some has_part carbon_atom) (owl-some has_part hydrogen_atom)))
  (defsclass pharmaceutical_component "a pharmaceutical component is a part of a pharmaceutical preparation."
    :super (owl-some is_proper_part_of pharmaceutical_preparation))
- (defsclass polymer "a polymer is a molecule composed of a connected set of monomeric residues."
-   :super (owl-some has_direct_part monomer))
- (defsclass primer "a primer is a nucleic acid that enables the synthesis of a complement strand of DNA by binding to it and acting as a point of transcription initiation."
-   :super (owl-and nucleic_acid (owl-some has_capability (owl-and to_bind_to (owl-some has_capability to_serve_as_a_primer_for_DNA_synthesis) (owl-some in_relation_to (owl-and nucleic_acid (owl-some has_capability to_serve_as_a_template_for_DNA_synthesis)))))))
+ (defsclass polymer "a polymer is a molecule composed of a connected set of monomeric residues.")
+ (defsclass primer "a primer is a nucleic acid that enables the synthesis of a complement strand of DNA by binding to it and acting as a point of transcription initiation.")
  (defsclass signal "a signal is an object that initiates a sequence of events.")
  (defsclass signal_transducer "a signal transducer is a molecule that responds to and amplifies a signal in a signalling system."))
 (defsclass isomer "An isomer is a molecule that is compositionally identical to another molecule as a result of a different atomic connectivity."
@@ -2319,7 +2285,6 @@
 ;; NOTE: missing description
 (defclass product
   :label "product"
-  :equivalent (owl-and molecule (owl-some is_output_of chemical_reaction) (owl-some is_derived_from substrate))
   :annotation (label "product"))
 ;; NOTE: missing description
 (defclass target
@@ -2328,8 +2293,7 @@
   :annotation (label "target"))
 
 (defsclass substrate "a substrate is a molecule that is consumed in the course of a biochemical reaction."
-  :super target
-  :equivalent (owl-and molecule (owl-some derives_into product) (owl-some is_target_in chemical_reaction)))
+  :super target)
 
 (defsclass stereoisomer "A stereoisomer is an isomer in which the atomic connectivity is the same, but differs in its spatial arrangement of atoms."
   :super isomer)
@@ -2343,8 +2307,7 @@
  (defsclass enantiomer "An enantiomer is a stereoisomer that is a mirror image of its isomer."))
 
 (defsclass enzyme "an enzyme is a protein or protein complex that realizes its disposition to covalently modify some molecule during a chemical reaction."
-  :super catalyst (owl-or protein protein_complex)
-  :equivalent (owl-and (owl-or protein protein_complex) (owl-some has_function (owl-and to_covalently_modify (owl-some is_realized_in chemical_reaction) (owl-some in_relation_to chemical_entity)))))
+  :super catalyst)
 
 (defsclass poison "A poison is a drug that is harzardous or toxic to an organism when ingested at a certain quantity."
   :super drug)
@@ -2359,20 +2322,15 @@
  (defsclass amino_acid "an amino acid is an organic molecule composed of a carbon bonded to four different groups: a carboxyl group, an amino group, an R group, and a hydrogen atom. In the case of glycine, the R group is another hydrogen atom.")
  (defsclass lipid "a lipid is a water-insoluable organic molecule")
  (defsclass monosaccharide "a monosaccharide is an organic polymer that consists of a single polyhydroxy aldehyde or ketone group.")
- (defsclass organic_polymer "an organic polymer is an organic molecule composed of connected set of monomeric units."
-   :super (owl-some has_direct_part organic_submolecule)))
+ (defsclass organic_polymer "an organic polymer is an organic molecule composed of connected set of monomeric units."))
 (as-disjoint monosaccharide organic_polymer lipid)
 
 (as-subclasses
  organic_polymer
- (defsclass biopolymer "A biopolymer is an organic polymer using biological components."
-   :super (owl-some has_direct_part (owl-or lipid_residue amino_acid_residue nucleotide_residue carbohydrate_residue)))
- (defsclass nucleic_acid "a nucleic acid is an organic polymer composed of a sequence of nucleotide residues."
-   :super (at-least 2 has_component_part nucleotide_residue))
- (defsclass oligosaccharide "an oligosaccharide is an organic polymer composed of monosaccharides joined by glycosidic bonds."
-   :super (at-least 2 has_component_part carbohydrate_residue))
- (defsclass polypeptide "a polypeptide is an organic polymer composed of amino acid residues."
-   :super (at-least 2 has_component_part amino_acid_residue))
+ (defsclass biopolymer "A biopolymer is an organic polymer using biological components.")
+ (defsclass nucleic_acid "a nucleic acid is an organic polymer composed of a sequence of nucleotide residues.")
+ (defsclass oligosaccharide "an oligosaccharide is an organic polymer composed of monosaccharides joined by glycosidic bonds.")
+ (defsclass polypeptide "a polypeptide is an organic polymer composed of amino acid residues.")
  (defsclass protein "a protein is an organic polymer that is composed of one or more linear polymers of amino acids."
    :super (owl-some has_component_part polypeptide)
    :annotation
@@ -2381,13 +2339,9 @@
 
 (as-subclasses
  nucleic_acid
- (defsclass deoxyribonucleic_acid "a deoxyribonucleic acid is an organic polymer composed of a sequence of deoxyribonucleotide residues."
-   :super (at-least 2 has_component_part deoxyribonucleotide_residue))
- (defsclass nucleic_acid_strand "a nucleic acid strand is a single-stranded nucleic acid that is part of a double stranded nucleic acid complex."
-   :super (owl-some is_proper_part_of double_stranded_nucleic_acid)
-   :equivalent (owl-or positive_nucleic_acid_strand negative_nucleic_acid_strand))
- (defsclass ribonucleic_acid "a ribonucleic acid is an organic polymer composed of a sequence of ribonucleotide residues."
-   :super (at-least 2 has_component_part ribonucleotide_residue)))
+ (defsclass deoxyribonucleic_acid "a deoxyribonucleic acid is an organic polymer composed of a sequence of deoxyribonucleotide residues.")
+ (defsclass nucleic_acid_strand "a nucleic acid strand is a single-stranded nucleic acid that is part of a double stranded nucleic acid complex.")
+ (defsclass ribonucleic_acid "a ribonucleic acid is an organic polymer composed of a sequence of ribonucleotide residues."))
 (as-disjoint deoxyribonucleic_acid ribonucleic_acid)
 
 (defsclass deoxyribonucleic_acid_primer "a deoxyribonucleic acid primer is a deoxyribonucleic acid that enables the synthesis of a complement strand of DNA by binding to it and acting as a point of transcription initiation."
@@ -2396,14 +2350,14 @@
 (defsclass deoxyribonucleic_acid_template "a deoxyribonucleic acid template is a deoxyribonucleic acid that provides the template to synthesize a complementary strand of DNA through transcription."
   :super deoxyribonucleic_acid (owl-some has_function (owl-or to_serve_as_a_template_for_RNA_synthesis to_serve_as_a_template_for_DNA_synthesis)))
 
-(defsclass negative_nucleic_acid_strand "the negative nucleic acid strand is the strand that is that is complimentary to the forward strand and appears from 3' to 5'."
-  :super nucleic_acid_strand
-  :annotation
-  (synonym-en "reverse strand"))
-(defsclass positive_nucleic_acid_strand "the positive nucleic acid strand refers to the strand that is to be read 5' to 3'."
-  :super nucleic_acid_strand
-  :annotation
-  (synonym-en "forward strand"))
+(as-subclasses
+ nucleic_acid_strand :cover
+ (defsclass negative_nucleic_acid_strand "the negative nucleic acid strand is the strand that is that is complimentary to the forward strand and appears from 3' to 5'."
+   :annotation
+   (synonym-en "reverse strand"))
+ (defsclass positive_nucleic_acid_strand "the positive nucleic acid strand refers to the strand that is to be read 5' to 3'."
+   :annotation
+   (synonym-en "forward strand")))
 
 (defsclass RNA_transcript "an RNA transcript is an RNA molecule that is produced from transcription of a nucleic acid template."
   :super ribonucleic_acid (owl-some is_transcribed_from (owl-or deoxyribonucleic_acid (owl-some is_part_of deoxyribonucleic_acid))))
@@ -2417,10 +2371,9 @@
 
 (as-subclasses
  messenger_RNA
- (defsclass mRNA_splice_variant "an mRNA splice variant is an mRNA molecule that varies from another mRNA molecule of the same gene origin but having a different final sequence due to differences in its assembly from splice sites."
-   :super (owl-some is_derived_from (owl-and messenger_RNA (owl-some has_direct_part splice_site))))
+ (defsclass mRNA_splice_variant "an mRNA splice variant is an mRNA molecule that varies from another mRNA molecule of the same gene origin but having a different final sequence due to differences in its assembly from splice sites.")
  (defsclass mature_mRNA "a messenger RNA is a ribonucleic acid that contains an untranslated region (UTR) and protein coding sequence and lacks introns."
-   :super (owl-not (owl-some has_proper_part intron)) (owl-not (owl-some derives_into RNA_transcript)) (owl-some is_derived_from RNA_transcript) (owl-some is_translated_into protein))
+   :super (owl-not (owl-some derives_into RNA_transcript)) (owl-some is_derived_from RNA_transcript) (owl-some is_translated_into protein))
  (defsclass pre-mRNA "Precursor mRNA (pre-mRNA) is a single strand of messenger ribonucleic acid (mRNA) that is synthesized from a DNA template throught transcription."
    :super (owl-some derives_into mature_mRNA)))
 
@@ -2429,7 +2382,6 @@
  (defclass small_cytoplasmic_RNA__scRNA_
    :label "small cytoplasmic RNA (scRNA)"
    :annotation (desc "a small cytoplasmic RNA (scRNA) molecule is a small (7S; 129 nucleotides) RNA molecule found in the cytosol and rough endoplasmic reticulum that are normally associated with proteins that are involved in specific selection and transport of other proteins.")
-   :super (owl-some is_encoded_by small_cytoplasmic_RNA__scRNA__gene)
    :annotation
    (synonym-en "scRNA"))
  (defclass small_nuclear_RNA__snRNA_
@@ -2509,8 +2461,7 @@
    :super (owl-and (owl-some has_part carbon_atom) (owl-some has_part oxygen_atom)) (owl-some is_part_of organic_molecule)))
 
 (defsclass ring "a ring is a submolecule with a circular topology."
-  :super chemical_functional_group (at-least 3 has_component_part atom)
-  :equivalent (owl-or heterocyclic_ring homocyclic_ring))
+  :super chemical_functional_group (at-least 3 has_component_part atom))
 
 (as-subclasses
  ring
@@ -2525,7 +2476,7 @@
    :super (owl-some is_derived_from monosaccharide))
  (defsclass lipid_residue "a lipid residue is a part of an organic molecule that was derived from a lipid molecule.")
  (defsclass nucleic_acid_part "a nucleic acid part is a component of a nucleic acid."
-   :super (owl-some is_part_of nucleic_acid) (owl-some has_direct_part nucleotide_residue))
+   :super (owl-some is_part_of nucleic_acid))
  (defsclass protein_part "a protein part is any submolecule of a protein."))
 
 (as-subclasses
@@ -2640,14 +2591,13 @@
 
 (as-subclasses
  nucleotide_residue
- (defsclass deoxyribonucleotide_residue "a deoxyribonucleotide residue is a part of a molecule that derives from a deoxyribonucleotide."
-   :disjoint ribonucleotide_residue)
- (defsclass ribonucleotide_residue "a ribonucleotide residue is a part of a molecule that derives from a ribonucleotide."
-   :disjoint deoxyribonucleotide_residue)
+ (defsclass deoxyribonucleotide_residue "a deoxyribonucleotide residue is a part of a molecule that derives from a deoxyribonucleotide.")
+ (defsclass ribonucleotide_residue "a ribonucleotide residue is a part of a molecule that derives from a ribonucleotide.")
  (defsclass snp "single nucleotide polymorphism (SNP) is a variation in a single base in the genetic composition between different individuals of the same species."
    :super (owl-some is_variant_of nucleotide_residue)
    :annotation
    (annotation (iri "http://purl.org/dc/terms/alternativeName") (literal "single nucleotide polymorphism" :lang "en"))))
+(as-disjoint deoxyribonucleotide_residue ribonucleotide_residue)
 
 (as-subclasses
  protein_part
@@ -2917,7 +2867,6 @@
    :annotation
    (synonym-en "observation"))
  (defsclass regulating "regulating is a process that modulates the attributes of an object or process."
-   :equivalent (owl-or process_maintenance process_up-regulation process_down-regulation)
    :annotation
    (synonym-en "regulation"))
  (defsclass sampling "sampling is the act of obtaining a sample, whether through selection, collection or preparation."
@@ -2927,8 +2876,7 @@
 
 (as-subclasses
  chemical_interaction
- (defsclass chemical_reaction "A chemical reaction is a process that leads to the transformation of one set of chemical substances to another."
-   :super (owl-and (owl-some has_proper_part chemical_synthesis) (owl-some has_proper_part chemical_destruction)))
+ (defsclass chemical_reaction "A chemical reaction is a process that leads to the transformation of one set of chemical substances to another.")
  (defsclass drug_effect "A drug effect is a chemical interaction in which a chemical elicits a marked characteristic of a biological system."
    :super (owl-some has_agent drug))
  (defsclass metabolism "Metabolism is the set of chemical processes that occur within a living organism in order to maintain life."))
@@ -3043,8 +2991,7 @@
 (defsclass regulation_of_capability "regulation of capability is the regulation of the ability of one party by another."
   :super regulating (owl-some affects capability))
 (defsclass regulation_of_process "regulation of a process is a process that modulates the duration, frequency, spatial extent of a target process."
-  :super regulating (owl-some regulates process)
-  :equivalent (owl-or regulation_of_process_frequency regulation_of_process_duration regulation_of_process_spatial_extent regulation_of_object_quantity))
+  :super regulating (owl-some regulates process))
 
 (defsclass regulation_of_catalytic_capability "the regulation of the enzymatic activity."
   :super regulation_of_capability (owl-some regulates to_change_materially))
@@ -3059,12 +3006,10 @@
 (as-subclasses
  regulation_of_process
  (defsclass process_down-regulation "process down-regulation is a process that decreases the frequency, rate or extent of one or more processes in relation to a reference state."
-   :disjoint process_up-regulation
    :annotation
    (synonym-en "negative regulation"))
  (defsclass process_maintenance "the process of maintaining some the frequency, rate or extent of another process.")
  (defsclass process_up-regulation "process up-regulation is a process that increases the frequency, rate or extent of one or more processes in relation to a reference state."
-   :disjoint process_down-regulation
    :annotation
    (synonym-en "positive regulation"))
  (defsclass regulation_of_biochemical_process "regulation of biochemical process is a process that changes the frequency, rate or extent of a target biochemical process.")
@@ -3075,6 +3020,7 @@
  (defsclass regulation_of_process_spatial_extent "regulation of a process spatial extent is a process that modulates the spatial extent of another process relative to some reference process."
    :annotation
    (eg "heating the solution causes greater diffusion of a chemical.")))
+(as-disjoint process_up-regulation process_down-regulation)
 
 (defsclass regulation_of_transcription "A process that modulates the frequency, rate or extent of transcription"
   :super regulation_of_biochemical_process)
@@ -3248,69 +3194,377 @@
    :super (owl-some has_output diagnostic_opinion) (owl-some has_input (owl-and biological_entity (owl-some has_quality disordered))))
  (defsclass medical_screening "A medical screening is a medical test or series used to detect or predict the presence of disease in individuals at risk for disease within a defined group, such as a population, family, or workforce"))
 
-
-(add-superclass to_be_interacted_with (owl-some is_mutual_disposition_of to_interact_with))
-(add-superclass to_interact_with (owl-some is_mutual_disposition_of to_be_interacted_with))
-(add-superclass to_be_translocated (owl-some is_mutual_disposition_of to_translocate))
-(add-superclass to_be_observed (owl-some is_mutual_disposition_of to_observe))
-(add-superclass to_be_recorded (owl-some is_mutual_disposition_of to_record))
-
-(add-superclass to_be_actively_interacted_with (owl-some is_mutually_related_to to_actively_interact_with))
-(add-superclass to_be_passively_interacted_with (owl-some is_mutually_related_to to_passively_interact_with))
-
-(add-superclass chemical_entity_role (owl-some is_role_of chemical_entity))
-(add-superclass chemical_substance_role (owl-some is_role_of chemical_substance))
-(add-superclass molecular_entity_role (owl-some is_role_of molecule))
-(add-superclass buffer_role (owl-some is_role_of buffer))
-(add-superclass reagent_role (owl-some is_role_of reagent))
-(add-superclass product_role (owl-some is_role_of product))
-(add-superclass poison_role (owl-some is_role_of poison))
-(add-superclass professor_role (owl-some is_role_of professor))
-(add-superclass student_role (owl-some is_role_of student))
-
-(add-superclass professor_role (owl-some is_mutual_role_of student_role))
-
-(add-superclass text_quality (owl-some is_quality_of textual_entity))
-(add-superclass informational_quality (owl-some is_quality_of information_content_entity))
-(add-superclass cellular_quality (owl-some is_quality_of cell))
-
-(add-superclass information_content_entity (only has_proper_part information_content_entity))
-(add-superclass material_entity (only has_proper_part material_entity))
-
-(add-superclass database_table (owl-some is_proper_part_of database))
-(add-superclass database_entry (owl-some is_proper_part_of database))
-
-(add-superclass database_key (owl-some has_component_part column))
-(add-superclass specification (owl-some has_component_part objective))
-
-(add-superclass material_entity (owl-some has_attribute mass))
-(add-superclass disposition (owl-some has_attribute probability_measure))
-
-(add-superclass protein_sequence (owl-some represents (owl-and molecular_structure (owl-some is_attribute_of polypeptide))))
-(add-superclass nucleic_acid_sequence (owl-some represents (owl-and molecular_structure (owl-some is_attribute_of nucleic_acid))))
-(add-superclass biopolymer_sequence (owl-some represents (owl-and molecular_structure (owl-some is_attribute_of biopolymer))))
-
-(add-superclass line_segment (exactly 2 has_component_part terminal_point))
 (add-superclass collection_of_points collection)
-(add-superclass collection_of_points (only has_member point))
-(add-superclass polygonal_face (owl-some is_part_of polygon))
-(add-superclass molecular_structure_file (owl-some has_part cartesian_coordinate))
-(add-superclass polyline (at-least 2 has_component_part line_segment))
-(add-superclass polyhedral_surface (owl-some has_part polygonal_face))
-(add-superclass polyhedral_skeleton (owl-some has_direct_part polygon_edge))
-(add-superclass row (owl-some has_proper_part cell__informational_))
-(add-superclass spatial_region (only has_part spatial_region))
-(add-superclass disease (owl-some is_quality_of (owl-and material_entity (owl-some has_quality abnormal))))
-(add-superclass data_item (owl-some is_participant_in (owl-and process (owl-some realizes objective))))
-(add-superclass Cartesian_coordinate_axis (owl-some satisfies cartesian_coordinate_system))
-(add-superclass process (only exists_at time_interval))
-(add-superclass to_serve_as_a_host (owl-some is_capability_of host))
-(add-superclass collection_of_3d_molecular_structure_models (owl-some has_member _3d_structure_model))
-(add-superclass molecular_structure_descriptor (owl-some represents molecular_structure))
-(add-superclass biomolecular_structure_descriptor (owl-some is_about organic_molecule))
-(add-superclass column (only specifies (owl-and cell__informational_ (owl-some has_value :RDFS_LITERAL) (only has_value :RDFS_LITERAL))))
-(add-superclass nucleic_acid_sequence (owl-some is_attribute_of nucleic_acid))
-(add-superclass biopolymer_sequence (owl-some describes biopolymer))
-(add-superclass column (at-least 0 has_attribute name))
+(add-superclass vocabulary collection)
+(add-superclass heterogeneous_substance chemical_substance)
+(add-superclass _label _label)
 
-(add-equivalent anatomical_entity (owl-and (owl-or material_entity spatial_region) (owl-some is_direct_part_of biological_entity)))
+(add-superclass enzyme (owl-or protein protein_complex))
+
+(add-superclass to_be_interacted_with
+                (owl-some is_mutual_disposition_of to_interact_with))
+(add-superclass to_interact_with
+                (owl-some is_mutual_disposition_of to_be_interacted_with))
+(add-superclass to_be_translocated
+                (owl-some is_mutual_disposition_of to_translocate))
+(add-superclass to_be_observed
+                (owl-some is_mutual_disposition_of to_observe))
+(add-superclass to_be_recorded
+                (owl-some is_mutual_disposition_of to_record))
+
+(add-superclass to_be_actively_interacted_with
+                (owl-some is_mutually_related_to to_actively_interact_with))
+(add-superclass to_be_passively_interacted_with
+                (owl-some is_mutually_related_to to_passively_interact_with))
+
+(add-superclass chemical_entity_role
+                (owl-some is_role_of chemical_entity))
+(add-superclass chemical_substance_role
+                (owl-some is_role_of chemical_substance))
+(add-superclass molecular_entity_role
+                (owl-some is_role_of molecule))
+(add-superclass buffer_role
+                (owl-some is_role_of buffer))
+(add-superclass reagent_role
+                (owl-some is_role_of reagent))
+(add-superclass product_role
+                (owl-some is_role_of product))
+(add-superclass poison_role
+                (owl-some is_role_of poison))
+(add-superclass professor_role
+                (owl-some is_role_of professor))
+(add-superclass student_role
+                (owl-some is_role_of student))
+
+(add-superclass professor_role
+                (owl-some is_mutual_role_of student_role))
+
+(add-superclass text_quality
+                (owl-some is_quality_of textual_entity))
+(add-superclass informational_quality
+                (owl-some is_quality_of information_content_entity))
+(add-superclass cellular_quality
+                (owl-some is_quality_of cell))
+
+(add-superclass disease
+                (owl-some is_quality_of
+                          (owl-and material_entity
+                                   (owl-some has_quality abnormal))))
+
+(add-superclass information_content_entity
+                (only has_proper_part information_content_entity))
+(add-superclass material_entity
+                (only has_proper_part material_entity))
+
+(add-superclass row
+                (owl-some has_proper_part cell__informational_))
+(add-superclass mature_mRNA
+                (owl-not (owl-some has_proper_part intron)))
+
+(add-superclass argument
+                (owl-and
+                 (owl-some has_proper_part premise)
+                 (owl-some has_proper_part conclusion)))
+(add-superclass chemical_reaction
+                (owl-and
+                 (owl-some has_proper_part chemical_synthesis)
+                 (owl-some has_proper_part chemical_destruction)))
+
+(add-superclass database_table
+                (owl-some is_proper_part_of database))
+(add-superclass database_entry
+                (owl-some is_proper_part_of database))
+(add-superclass nucleic_acid_strand
+                (owl-some is_proper_part_of double_stranded_nucleic_acid))
+(add-superclass issue
+                (owl-some is_proper_part_of periodical))
+
+(add-superclass
+ concentration
+ (owl-some is_attribute_of
+           (owl-and heterogeneous_substance
+                    (owl-some is_proper_part_of chemical_substance))))
+
+(add-superclass database_key
+                (owl-some has_component_part column))
+(add-superclass specification
+                (owl-some has_component_part objective))
+(add-superclass covalently_connected_entity
+                (owl-some has_component_part covalent_bond))
+(add-superclass line_segment
+                (exactly 2 has_component_part terminal_point))
+(add-superclass polygon_edge
+                (exactly 2 has_component_part polygon_vertex))
+(add-superclass double_arrowed_line_segment
+                (exactly 2 has_component_part triangle))
+
+(add-superclass single_arrowed_line_segment
+                (exactly 1 has_component_part triangle))
+(add-superclass directed_line_segment
+                (exactly 1 has_component_part start_point))
+(add-superclass directed_line_segment
+                (exactly 1 has_component_part endpoint))
+
+(add-superclass polyline
+                (at-least 2 has_component_part line_segment))
+(add-superclass oligosaccharide
+                (at-least 2 has_component_part carbohydrate_residue))
+(add-superclass deoxyribonucleic_acid
+                (at-least 2 has_component_part deoxyribonucleotide_residue))
+(add-superclass ribonucleic_acid
+                (at-least 2 has_component_part ribonucleotide_residue))
+(add-superclass nucleic_acid
+                (at-least 2 has_component_part nucleotide_residue))
+(add-superclass polypeptide
+                (at-least 2 has_component_part amino_acid_residue))
+
+(add-superclass arrowed_line_segment
+                (at-most 2 has_component_part triangle))
+
+(add-superclass material_entity
+                (owl-some has_attribute mass))
+(add-superclass disposition
+                (owl-some has_attribute probability_measure))
+
+(add-superclass column
+                (at-least 0 has_attribute name))
+(add-superclass text_span
+                (owl-and
+                 (owl-some has_attribute text_span_start_position)
+                 (owl-some has_attribute text_span_end_position)))
+
+(add-superclass protein_sequence
+                (owl-some represents
+                          (owl-and molecular_structure
+                                   (owl-some is_attribute_of polypeptide))))
+(add-superclass nucleic_acid_sequence
+                (owl-some represents
+                          (owl-and molecular_structure
+                                   (owl-some is_attribute_of nucleic_acid))))
+(add-superclass biopolymer_sequence
+                (owl-some represents
+                          (owl-and molecular_structure
+                                   (owl-some is_attribute_of biopolymer))))
+
+(add-superclass molecular_structure_descriptor
+                (owl-some represents molecular_structure))
+
+(add-superclass collection_of_points
+                (only has_member point))
+(add-superclass chemical_reaction_pathway
+                (only has_member chemical_reaction))
+
+(add-superclass polygonal_face
+                (owl-some is_part_of polygon))
+
+(add-superclass study_design
+                (only is_manifested_as
+                      (owl-some is_part_of investigation)))
+
+(add-superclass molecular_structure_file
+                (owl-some has_part cartesian_coordinate))
+(add-superclass arrowed_line_segment
+                (owl-some has_part triangle))
+(add-superclass polyhedral_surface
+                (owl-some has_part polygonal_face))
+(add-superclass word
+                (owl-some has_part morpheme))
+
+(add-superclass spatial_region
+                (only has_part spatial_region))
+
+(add-superclass polyhedral_skeleton
+                (owl-some has_direct_part polygon_edge))
+(add-superclass word
+                (owl-some has_direct_part character))
+(add-superclass polymer
+                (owl-some has_direct_part monomer))
+(add-superclass organic_polymer
+                (owl-some has_direct_part organic_submolecule))
+(add-superclass nucleic_acid_part
+                (owl-some has_direct_part nucleotide_residue))
+
+(add-superclass phrase
+                (at-least 2 has_direct_part word))
+
+(add-superclass biopolymer
+                (owl-some has_direct_part
+                          (owl-or lipid_residue amino_acid_residue
+                                  nucleotide_residue carbohydrate_residue)))
+(add-superclass mRNA_splice_variant
+                (owl-some is_derived_from
+                          (owl-and messenger_RNA
+                                   (owl-some has_direct_part splice_site))))
+(add-superclass _3D_cartesian_coordinate
+                (owl-and
+                 (exactly 1 has_direct_part x_cartesian_coordinate)
+                 (exactly 1 has_direct_part y_cartesian_coordinate)
+                 (exactly 1 has_direct_part z_cartesian_coordinate)))
+(add-superclass molecular_complex
+                (owl-or
+                 (owl-some has_direct_part molecular_complex)
+                 (at-least 2 has_direct_part molecule)))
+
+(add-superclass data_item
+                (owl-some is_participant_in
+                          (owl-and process
+                                   (owl-some realizes objective))))
+
+(add-superclass Cartesian_coordinate_axis
+                (owl-some satisfies cartesian_coordinate_system))
+
+(add-superclass process
+                (only exists_at time_interval))
+
+(add-superclass to_serve_as_a_host
+                (owl-some is_capability_of host))
+
+(add-superclass collection_of_3d_molecular_structure_models
+                (owl-some has_member _3d_structure_model))
+(add-superclass sequence
+                (owl-some has_member
+                          (owl-and entity
+                                   (owl-some has_attribute ordinal_position)
+                                   (owl-some refers_to entity))))
+
+(add-superclass biomolecular_structure_descriptor
+                (owl-some is_about organic_molecule))
+
+(add-superclass diffusion_equation
+                (owl-some specifies diffusion))
+(add-superclass chemical_reaction_pathway
+                (owl-some specifies
+                          (owl-some has_proper_part chemical_reaction)))
+(add-superclass column
+                (only specifies
+                      (owl-and cell__informational_
+                               (owl-some has_value :RDFS_LITERAL)
+                               (only has_value :RDFS_LITERAL))))
+
+(add-superclass nucleic_acid_sequence
+                (owl-some is_attribute_of nucleic_acid))
+(add-superclass maximal_value
+                (owl-some is_attribute_of collection))
+(add-superclass minimal_value
+                (owl-some is_attribute_of collection))
+(add-superclass positional_identifier
+                (owl-some is_attribute_of position))
+
+(add-superclass biopolymer_sequence
+                (owl-some describes biopolymer))
+
+(add-superclass axis
+                (owl-some is_component_part_of statistical_graph))
+
+(add-superclass objective
+                (only is_specified_by action_specification))
+
+(add-superclass primary_graph_title
+                (owl-some is_direct_part_of statistical_graph))
+(add-superclass secondary_graph_title
+                (owl-some is_direct_part_of statistical_graph))
+
+(add-superclass opinion
+                (owl-some is_product_of medical_diagnosis))
+
+(add-superclass collection_item
+                (owl-some is_member_of collection))
+
+(add-superclass chemical-disease_association
+                (owl-and
+                 (owl-some refers_to chemical_entity)
+                 (owl-some refers_to disease)))
+
+(add-superclass gene-disease_association
+                (owl-some refers_to gene))
+(add-superclass chemical-gene_assocation
+                (owl-some refers_to chemical_entity))
+(add-superclass chemical-gene_assocation
+                (owl-some refers_to gene))
+(add-superclass chemical-pathway_association
+                (owl-some refers_to chemical_entity))
+
+(add-superclass
+ primer
+ (owl-and
+  nucleic_acid
+  (owl-some
+   has_capability
+   (owl-and
+    to_bind_to
+    (owl-some has_capability to_serve_as_a_primer_for_DNA_synthesis)
+    (owl-some
+     in_relation_to
+     (owl-and
+      nucleic_acid
+      (owl-some has_capability to_serve_as_a_template_for_DNA_synthesis)))))))
+
+(add-superclass small_cytoplasmic_RNA__scRNA_
+                (owl-some is_encoded_by small_cytoplasmic_RNA__scRNA__gene))
+
+;; equivalency
+(add-equivalent organism
+                (owl-or cellular_organism non-cellular_organism))
+(add-equivalent ring
+                (owl-or heterocyclic_ring homocyclic_ring))
+(add-equivalent regulating
+                (owl-or process_maintenance
+                        process_up-regulation
+                        process_down-regulation))
+(add-equivalent regulation_of_process
+                (owl-or regulation_of_process_frequency
+                        regulation_of_process_duration
+                        regulation_of_process_spatial_extent
+                        regulation_of_object_quantity))
+(add-equivalent quantity
+                (owl-or dimensionless_quantity dimensional_quantity))
+(add-equivalent chemical_substance
+                (owl-or heterogeneous_substance homogeneous_substance))
+
+(add-equivalent anatomical_entity
+                (owl-and
+                 (owl-or material_entity spatial_region)
+                 (owl-some is_direct_part_of biological_entity)))
+(add-equivalent graph_title
+                (owl-and title
+                         (owl-some is_direct_part_of statistical_graph)))
+(add-equivalent product
+                (owl-and molecule
+                         (owl-some is_output_of chemical_reaction)
+                         (owl-some is_derived_from substrate)))
+(add-equivalent substrate
+                (owl-and molecule
+                         (owl-some derives_into product)
+                         (owl-some is_target_in chemical_reaction)))
+(add-equivalent
+ enzyme
+ (owl-and
+  (owl-or protein protein_complex)
+  (owl-some has_function
+            (owl-and to_covalently_modify
+                     (owl-some is_realized_in chemical_reaction)
+                     (owl-some in_relation_to chemical_entity)))))
+;; argue that this should be x_cartesian_coordinate
+(add-equivalent
+ _1D_cartesian_point
+ (owl-and point
+          (only has_component_part z_cartesian_coordinate)
+          (exactly 1 has_component_part z_cartesian_coordinate)))
+(add-equivalent
+ _2D_cartesian_point
+ (owl-and point
+          (only has_component_part
+                (owl-or x_cartesian_coordinate y_cartesian_coordinate))
+          (exactly 1 has_component_part x_cartesian_coordinate)
+          (exactly 1 has_component_part y_cartesian_coordinate)))
+;; missing axiom:
+;; (only has_component_part
+;;       (owl-or x_cartesian_coordinate
+;;               y_cartesian_coordinate
+;;               z_cartesian_coordinate))
+(add-equivalent
+ _3D_cartesian_point
+ (owl-and point
+          (exactly 1 has_component_part x_cartesian_coordinate)
+          (exactly 1 has_component_part y_cartesian_coordinate)
+          (exactly 1 has_component_part z_cartesian_coordinate)))
