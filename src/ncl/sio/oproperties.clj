@@ -1,4 +1,3 @@
-
 ;; Must be declared first in order oproperties to work.
 (defclass language_entity)
 (defclass realizable_entity)
