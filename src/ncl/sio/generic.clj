@@ -20,7 +20,7 @@
   ncl.sio.generic
   (:use [clojure.java.shell :only [sh]]
         [clojure.java.io :only [as-file reader]])
-  (:require [tawny.owl :only save-ontology]
+  (:require [tawny.owl :only [save-ontology]]
             [tawny.read :only [iri-starts-with-filter]]
             [tawny.lookup :only [resolve-entity]]))
 
