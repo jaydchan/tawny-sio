@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013-2014, Newcastle University
+;; Copyright (C) 2013-2015, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -18,32 +18,18 @@
 (ns ncl.sio.downstream_functions_test
   (:use [clojure.test])
   (:require [tawny.owl :as o]
-            [tawny.reasoner :as r]
             [ncl.sio.downstream_functions :as d])
   (:import (org.semanticweb.owlapi.model
             OWLAnnotation OWLClass
             OWLObjectIntersectionOf)))
-
-(defn ontology-reasoner-fixture [tests]
-  (r/reasoner-factory :hermit)
-  (tawny.owl/ontology-to-namespace d/downstream_functions)
-  (binding [r/*reasoner-progress-monitor*
-            (atom
-            r/reasoner-progress-monitor-silent)]
-    (tests)))
-
-(use-fixtures :once ontology-reasoner-fixture)
 
 ;; to run: M-x 'lein' 'test'
 
 (defonce to
   (o/ontology :name "to"
               :iri "http://test"
-              :prefix "test:"))
-
-(deftest Basic
-  (is (r/consistent?))
-  (is (r/coherent?)))
+              :prefix "test:"
+              :noname true))
 
 (deftest sio-map
   (is
@@ -69,6 +55,7 @@
 
 (deftest biochemical-pathway
   (let [clazz (d/biochemical-pathway
+               to
                "test"
                [(o/owl-class to "A")
                 (o/owl-class to "B")
