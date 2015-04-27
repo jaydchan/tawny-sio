@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013-2014, Newcastle University
+;; Copyright (C) 2013-2015, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
   (:require [ncl.sio.patterns :as p]))
 
 (defontology mysio
-  :iri "http://ncl.ac.uk/sio/mysio"
+  :iri "http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/mysio"
   :prefix "mysio:"
   :noname true
   :versioninfo (literal "1.0.10" :type :RDF_PLAIN_LITERAL)
@@ -95,8 +95,10 @@
   (annotation subset (literal "relations" :type :RDF_PLAIN_LITERAL))
   (annotation subset (literal "nlp" :type :RDF_PLAIN_LITERAL)))
 
+;; (clojure.core/println mysio)
 ;; oproperty = 203
 (clojure.core/load-file "./src/ncl/sio/oproperties.clj")
+;; (clojure.core/println mysio)
 
 ;; classes = 1396
 (clojure.core/load-file "./src/ncl/sio/mysio_ii.clj")

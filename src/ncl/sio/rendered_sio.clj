@@ -20,7 +20,7 @@
   (:use [tawny.owl]))
 
 (defontology rendered_sio
-  :iri "http://ncl.ac.uk/sio/rendered_sio"
+  :iri "http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/rendered_sio"
   :prefix "rsio:"
   :noname true)
 
