@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013-2014 Newcastle University
+;; Copyright (C) 2013-2015, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
              generate_mysio
              mysio
              downstream_functions
+             downstream_usage
              ])
   (:gen-class))
 
@@ -37,16 +38,17 @@
   (save-ontology ncl.sio.rendered_sio/rendered_sio "rsio.omn" :omn)
   (save-ontology ncl.sio.rendered_sio/rendered_sio "rsio.owl" :owl)
 
-  ;; generate mysio code
-  (ncl.sio.generate_mysio/driver)
+  ;; ;; generate mysio code
+  ;; (ncl.sio.generate_mysio/driver)
 
   ;; patternised recasting of (my)sio
   (save-ontology ncl.sio.mysio/mysio "mysio.omn" :omn)
   (save-ontology ncl.sio.mysio/mysio "mysio.owl" :owl)
 
-  ;; patterns for downstream usage
+  ;; patterns for downstream usage are defined in downstream_functions
+  ;; exammple usage for each pattern are defined in downstream_usage
   (save-ontology
-   ncl.sio.downstream_functions/downstream_functions "downstream.omn" :omn)
+   ncl.sio.downstream_usage/downstream_usage "downstream_usage.omn" :omn)
   (save-ontology
-   ncl.sio.downstream_functions/downstream_functions "downstream.owl" :owl)
+   ncl.sio.downstream_usage/downstream_usage "downstream_usage.owl" :owl)
 )
