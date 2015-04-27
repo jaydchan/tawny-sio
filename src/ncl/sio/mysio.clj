@@ -95,10 +95,8 @@
   (annotation subset (literal "relations" :type :RDF_PLAIN_LITERAL))
   (annotation subset (literal "nlp" :type :RDF_PLAIN_LITERAL)))
 
-;; (clojure.core/println mysio)
 ;; oproperty = 203
 (clojure.core/load-file "./src/ncl/sio/oproperties.clj")
-;; (clojure.core/println mysio)
 
 ;; classes = 1396
 (clojure.core/load-file "./src/ncl/sio/mysio_ii.clj")

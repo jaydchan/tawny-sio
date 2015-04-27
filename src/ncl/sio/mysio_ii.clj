@@ -233,7 +233,7 @@
  written
  (defsclass draft "draft is the quality of text that has not yet complete."
    :annotation
-   (synonym-rdf "drafted")) ;; en?
+   (synonym-rdf "drafted"))
  (defsclass finalized "finalized is the quality of a textual entity that is in its final form.")
  (defsclass reviewed "reviewed is the quality of a textual entity that has been examined and commented on by another party."))
 
@@ -410,10 +410,10 @@
  to_change_the_activation_energy
  (defsclass to_increase_the_activation_energy "to increase the activation energy is to require a larger amount of energy in order to form or break a chemical bond."
    :annotation
-   (synonym-rdf "to inhibit")) ;; en?
+   (synonym-rdf "to inhibit"))
  (defsclass to_reduce_the_activation_energy "to reduce the activation energy is to require a smaller amount of energy in order to form or break a chemical bond."
    :annotation
-   (synonym-rdf "to activate"))) ;; en?
+   (synonym-rdf "to activate")))
 
 (defsclass to_ionize "To ionize is the capability to physically convert an atom or molecule into an ion by adding or removing charged particles such as electrons or other ions."
   :super to_modify_electronically)
@@ -659,7 +659,7 @@
    core)
  (defsclass spatial_region "a spatial region is an object contained in some region of space."
    :annotation
-   (synonym-rdf "region") ;; en?
+   (synonym-rdf "region")
    (eg "the airspace above Ottawa airport; the band around the northern hemisphere between 50 degrees N and 60 degrees N; the spatial region occupied by a bottle"))
  (defsclass anatomical_entity "an anatomical entity is an object that is a structural part (material or immaterial) of a biological entity."))
 
@@ -695,7 +695,7 @@
    :super computational_entity)
  (defsclass database_entry "A database entry is a single, implicitly structured data item in a table."
    :annotation
-   (synonym-rdf "database record")) ;; en?
+   (synonym-rdf "database record"))
  (defsclass database_key "A database key is an informational entity whose value is constructed from one or more database columns."
    :super (owl-some has_value :RDFS_LITERAL))
  (defsclass database_table "a database table is a set of named columns with zero or more rows composed of cells that contain column values and is part of a database.")
@@ -853,7 +853,7 @@
  (defsclass polyhedral_surface "A polyhedral surface is composed of polygonal faces.")
  (defsclass polyline "A polyline is a connected sequence of line segments."
    :annotation
-   (synonym-rdf "polygonal chain, polygonal curve, polygonal path, piecewise linear curve"))) ;;en?
+   (synonym-rdf "polygonal chain, polygonal curve, polygonal path, piecewise linear curve")))
 
 (defsclass curve_segment "a curve segment is a part of a curve that consists of at least three points."
   :super curve)
@@ -931,11 +931,11 @@
  (defsclass x-axis "An x-axis is a Cartesian coordinate axis that is aligned with the horizon."
    :annotation
    (eg "The horizontal axis in http://tinyurl.com/opwnvm")
-   (synonym-rdf "horizontal axis") ;; en?
+   (synonym-rdf "horizontal axis")
    (owl-comment (literal "In most figures, this axis represents categories, such as months, market segments, or other non-numeric data." :type :RDF_PLAIN_LITERAL)))
  (defsclass y-axis "A y-axis is a Cartesian coordinate axis that is spatially oriented perpendicular to the x-axis."
    :annotation
-   (synonym-rdf "vertical axis")) ;; en?
+   (synonym-rdf "vertical axis"))
  (defsclass z-axis "A z-axis is a Cartesian coordinate axis that is spatially oriented normal to the plane formed by the x- and y-axes."))
 ;; y and z are not disjoint
 (as-disjoint x-axis y-axis)
@@ -2544,7 +2544,7 @@
  (defsclass ribosomal_RNA_gene "a ribosomal RNA gene is a gene that codes for a ribosomal RNA molecule."
    :annotation
    (equivalent-uri "http://purl.obolibrary.org/obo/SO_0001637")
-   (synonym-rdf "rRNA gene")) ;; en?
+   (synonym-rdf "rRNA gene"))
  (defclass small_cytoplasmic_RNA__scRNA__gene
    :label "small cytoplasmic RNA (scRNA) gene"
    :annotation (desc "a small cytoplasmic RNA (scRNA) gene is a gene that encodes a small (7S; 129 nucleotides) RNA molecule found in the cytosol and rough endoplasmic reticulum that are normally associated with proteins that are involved in specific selection and transport of other proteins.")
@@ -2837,19 +2837,19 @@
    (equivalent-rdf "biopax:Interaction"))
  (defsclass communicating "communicating is the process of conveying information through the exchange of thoughts, messages, or information, as by speech, visuals, signals, writing, or behaviour."
    :annotation
-   (synonym-rdf "communication")) ;;en?
+   (synonym-rdf "communication"))
  (defsclass comparing "comparing is the process of examining a set of objects and determining their equality or inequality based on one or more features."
    :super (owl-and (owl-some realizes to_be_compared) (owl-some realizes to_compare))
    :annotation
-   (synonym-rdf "comparison")) ;;en?
+   (synonym-rdf "comparison"))
  (defsclass creating "creating is the process in which an entity comes into existence."
    :super (owl-some has_product object)
    :annotation
-   (synonym-rdf "development") ;;en?
-   (synonym-rdf "synthesis") ;;en?
-   (synonym-rdf "production") ;;en?
-   (synonym-rdf "formulation") ;;en?
-   (synonym-rdf "creation")) ;;en?
+   (synonym-rdf "development")
+   (synonym-rdf "synthesis")
+   (synonym-rdf "production")
+   (synonym-rdf "formulation")
+   (synonym-rdf "creation"))
  (defsclass destroying "destroying is a process in which something is broken down and/or ceases to exist."
    :super (owl-some has_substrate object)
    :annotation
@@ -3168,7 +3168,7 @@
 (defsclass experiment "An experiment is an investigation that has the goal of verifying, falsifying, or establishing the validity of a hypothesis. "
   :super investigation
   :annotation
-  (synonym-rdf "study")) ;; en?
+  (synonym-rdf "study"))
 (defsclass study "a study is a process that realizes the steps of a study design."
   :super investigation (owl-some realizes objective) (owl-some is_manifestation_of study_design))
 
