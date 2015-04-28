@@ -19,4 +19,4 @@ Copyright (C) 2013-2015, Newcastle University.
 
 The Semanticscience Integrated Ontology (SIO) can be found [here](http://semanticscience.org/ontology/sio.owl).
 
-My recasting of Semanticscience Integrated Ontology (MySIO) can be found [here](http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/).
+My recasting of Semanticscience Integrated Ontology (MySIO) can be found [here](https://w3id.org/ontolink/mysio).
