@@ -17,10 +17,11 @@
 
 (ns ncl.sio.rendered_sio
   (:refer-clojure :only [])
-  (:use [tawny.owl]))
+  (:use [tawny.owl])
+  (:require [ncl.sio.generic :as g :only [tsio-iri]]))
 
 (defontology rendered_sio
-  :iri "http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/rendered_sio"
+  :iri (clojure.core/str g/tsio-iri "rendered_sio")
   :prefix "rsio:"
   :noname true)
 

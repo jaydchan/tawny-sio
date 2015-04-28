@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013-2014, Newcastle University
+;; Copyright (C) 2013-2015, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 (ns ncl.sio.patterns
   (:use [tawny.owl :exclude [see-also]])
   (:require [ncl.sio.generic
-             :as g :only [specific-replaces]]))
+             :as g :only [specific-replaces tsio-iri]]))
 
 ;; Required: while defclass utilises this, owl-class does not
 (defn make-safe
@@ -100,11 +100,11 @@ annotations."
 
 (defonce ^{:private true
            :doc "sio:see-also IRI"}
-  sio-see-also (iri "http://ncl.ac.uk/sio/mysio#seeAlso"))
+  sio-see-also (iri (str g/tsio-iri "mysio#seeAlso")))
 
 (defonce ^{:private true
            :doc "sio:atom IRI"}
-  sio-atom-class (iri "http://ncl.ac.uk/sio/mysio#atom"))
+  sio-atom-class (iri (str g/tsio-iri "mysio#atom")))
 
 (defn make-label
   "Takes Symbol and tries to generate label value."

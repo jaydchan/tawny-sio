@@ -24,6 +24,9 @@
             [tawny.read :only [iri-starts-with-filter]]
             [tawny.lookup :only [resolve-entity]]))
 
+(defonce
+  tsio-iri "http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/")
+
 (defonce ^{:private true
            :doc "TODO"}
   output-file-path "./output/")

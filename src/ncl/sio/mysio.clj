@@ -20,10 +20,11 @@
   (:use [tawny.owl]
         [ncl.sio.patterns
          :only [defsclass defsatom defsoproperty]])
-  (:require [ncl.sio.patterns :as p]))
+  (:require [ncl.sio.patterns :as p]
+            [ncl.sio.generic :as g :only [tsio-iri]]))
 
 (defontology mysio
-  :iri "http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/mysio"
+  :iri (clojure.core/str g/tsio-iri "mysio")
   :prefix "mysio:"
   :noname true
   :versioninfo (literal "1.0.10" :type :RDF_PLAIN_LITERAL)

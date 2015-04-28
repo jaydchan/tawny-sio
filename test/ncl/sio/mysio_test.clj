@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013-2014, Newcastle University
+;; Copyright (C) 2013-2015, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -16,7 +16,8 @@
 ;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.mysio_test
-  (:use [clojure.test])
+  (:use [clojure.test]
+        [ncl.sio.generic :only [tsio-iri]])
   (:require
    [tawny.owl :only [ontology-to-namespace iri]]
    [tawny.read :only [iri-starts-with-filter]]
@@ -72,11 +73,11 @@
               (.getSignature s/sio)))
       (count (filter
               #(tawny.read/iri-starts-with-filter
-                 "http://ncl.ac.uk/sio/rendered_sio" %)
+                (str tsio-iri "rendered_sio") %)
               (.getSignature rsio/rendered_sio)))
       (count (filter
               #(tawny.read/iri-starts-with-filter
-                 "http://ncl.ac.uk/sio/mysio" %)
+                (str tsio-iri "mysio") %)
               (.getSignature m/mysio))))))
 
 (deftest classes
@@ -103,11 +104,11 @@
               (.getAnnotationPropertiesInSignature s/sio)))
       (count (filter
               #(tawny.read/iri-starts-with-filter
-                 "http://ncl.ac.uk/sio/rendered_sio" %)
+                 (str tsio-iri "rendered_sio") %)
               (.getAnnotationPropertiesInSignature rsio/rendered_sio)))
       (count (filter
               #(tawny.read/iri-starts-with-filter
-                 "http://ncl.ac.uk/sio/mysio" %)
+                 (str tsio-iri "mysio") %)
               (.getAnnotationPropertiesInSignature m/mysio))))))
 
 (deftest dproperties
@@ -352,7 +353,7 @@
 (defn get-mysio-aproperty
   [o aproperty]
   (if (tawny.read/iri-starts-with-filter
-        "http://ncl.ac.uk/sio/rendered_sio" aproperty)
+       (str tsio-iri "rendered_sio") aproperty)
     (tawny.owl/annotation-property
      o (last (clojure.string/split (str aproperty) #"[\#>]")))
     aproperty))

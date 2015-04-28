@@ -17,10 +17,11 @@
 
 (ns ncl.sio.downstream_usage
   (:use [tawny.owl])
-  (:require [ncl.sio.downstream_functions :as d]))
+  (:require [ncl.sio.downstream_functions :as d]
+            [ncl.sio.generic :as g :only [tsio-iri]]))
 
 (defontology downstream_usage
-  :iri "http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/downstream_usage"
+  :iri (str g/tsio-iri "downstream_usage")
   :prefix "downstream:"
   :noname true)
 

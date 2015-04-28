@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2013-2014, Newcastle University
+;; Copyright (C) 2013-2015, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -16,7 +16,8 @@
 ;; along with this program. If not, see http://www.gnu.org/licenses/.
 
 (ns ncl.sio.rendered_sio_test
-  (:use [clojure.test])
+  (:use [clojure.test]
+        [ncl.sio.generic :only [tsio-iri]])
   (:require
    [tawny.owl :only [ontology-to-namespace]]
    [tawny.read :only [iri-starts-with-filter]]
@@ -67,7 +68,7 @@
               (.getSignature s/sio)))
       (count (filter
               #(tawny.read/iri-starts-with-filter
-                 "http://ncl.ac.uk/sio/rendered_sio" %)
+                (str tsio-iri "rendered_sio") %)
               (.getSignature rsio/rendered_sio))))))
 
 (deftest classes
@@ -91,7 +92,7 @@
               (.getAnnotationPropertiesInSignature s/sio)))
       (count (filter
               #(tawny.read/iri-starts-with-filter
-                 "http://ncl.ac.uk/sio/rendered_sio" %)
+                (str tsio-iri "rendered_sio") %)
               (.getAnnotationPropertiesInSignature rsio/rendered_sio))))))
 
 (deftest dproperties
