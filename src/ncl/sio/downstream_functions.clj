@@ -45,18 +45,20 @@
   ""
   [reactions]
   (owl-and (first reactions)
-           (owl-some precedes (rest reactions))))
+           (object-some precedes (rest reactions))))
 
 (defn biochemical-pathway
   ""
   [o name reactions]
-  (owl-class o
-             (p/make-safe name)
-             :equivalent
-             (owl-and pathway
-                      (owl-some has_proper_part
-                                (biochemical-pathway0 reactions))
-                      (owl-some has_proper_part reactions))))
+  (owl-class
+   o
+   (p/make-safe name)
+   :equivalent
+   (object-and
+    pathway
+    (object-some has_proper_part
+                 (biochemical-pathway0 reactions))
+    (object-some has_proper_part reactions))))
 
 ;; BIOCHEMICAL REACTION PATTERN -- WORKS
 ;; See https://code.google.com/p/semanticscience/wiki/ODPBiochemistry
