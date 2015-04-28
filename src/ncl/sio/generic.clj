@@ -1,6 +1,6 @@
 ;; The contents of this file are subject to the LGPL License, Version 3.0.
 
-;; Copyright (C) 2014, Newcastle University
+;; Copyright (C) 2014-2015, Newcastle University
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
             [tawny.lookup :only [resolve-entity]]))
 
 (defonce
-  tsio-iri "http://homepages.cs.ncl.ac.uk/jennifer.warrender/mysio/latest/")
+  tsio-iri "https://w3id.org/ontolink/mysio/")
 
 (defonce ^{:private true
            :doc "TODO"}
